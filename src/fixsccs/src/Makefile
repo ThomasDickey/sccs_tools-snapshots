@@ -1,4 +1,4 @@
-# $Id: Makefile,v 6.1 1994/06/07 12:39:22 dickey Exp $
+# $Id: Makefile,v 6.3 1994/07/21 00:29:20 tom Exp $
 # Make-file for SCCS timestamp utility
 
 TOP	= ../../../..
@@ -9,23 +9,21 @@ THIS	= fixsccs
 ALL	= $B/$(THIS)
 C_SRC	= $(THIS).c
 SOURCES	= $(C_SRC)
-MAIN_O	= $(THIS).o $(LIBS)
 
 ####### (Standard Productions) #################################################
 all\
 install:	$(SOURCES) $B $(ALL)
-clean:				; rm -f $(CLEAN)
-clobber:	clean		; rm -f $(ALL)
+clean:				; $(RM) $(CLEAN)
+clobber:	clean		; $(RM) $(ALL)
 destroy:			; $(DESTROY)
 run_test:
 sources:	$(SOURCES)
 
 ####### (Details of Productions) ###############################################
 $B:				; mkdir $@
-$B/$(THIS):	$(MAIN_O)	; $(LINK) -o $@ $(MAIN_O)
+$B/$(THIS):	$(THIS).o $(LIB_DEPS)	; $(LINK) -o $@ $(THIS).o $(LIB_ARGS)
 $(THIS).o:	$(PTYPES_H) $(SCCSDEFS_H)
 
 ####### (Development) ##########################################################
 $(SOURCES):			; $(GET) $@
 lint.out:	$(C_SRC)	; $(DATE); $(LINT_EACH)
-lincnt.out:	$(C_SRC)	; $(DATE); lincnt $(C_SRC) >>$@

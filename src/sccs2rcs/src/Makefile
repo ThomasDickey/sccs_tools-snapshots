@@ -1,4 +1,4 @@
-# $Id: Makefile,v 6.2 1994/07/14 01:02:10 tom Exp $
+# $Id: Makefile,v 6.3 1994/07/21 00:44:22 tom Exp $
 # Make-file for sccs/RCS conversion utility
 
 TOP	= ../../../..
@@ -25,5 +25,4 @@ $(THIS).o:	$(PTYPES_H) $(RCSDEFS_H)
 #
 ####### (Development) ##########################################################
 $(SOURCES):			; $(GET) $@
-lint.out:	$(CSRC)		; $(DATE); tdlint $(LINTOPTS) $? >>$@
-lincnt.out:	$(CSRC)		; $(DATE); lincnt $(CSRC) >>$@
+lint.out:	$(CSRC)		; $(DATE); $(LINT) $(LINTOPTS) $? >>$@

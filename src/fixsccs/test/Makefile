@@ -1,23 +1,23 @@
-# $Id: Makefile,v 6.1 1994/07/21 00:33:53 tom Exp $
+# $Id: Makefile,v 6.2 1994/07/21 00:33:53 tom Exp $
+# make-file for testing fix-sccs utility
 
-TOP	= ../..
+TOP	= ../../../..
 include $(TOP)/td_lib/support/td_lib.mk
 
 ####### (Standard Lists) #######################################################
-SOURCES	=\
-	README\
-	config.txt\
-	release.txt
+SCRIPTS	=\
+	run_test.sh
+
+SOURCES	= $(SCRIPTS)
 
 ####### (Standard Productions) #################################################
 all:	$(SOURCES) $(ALL)
 clean:				; $(RM) $(CLEAN)
 clobber:	clean		; -$(RM) $(ALL)
 destroy:			; $(DESTROY)
-run_test:
 sources:	$(SOURCES)
-install:
-deinstall:
+run_test:	$(SOURCES)	; $(RUN_TESTS)
+lint.out:
 
 ####### (Details of Productions) ###############################################
 $(SOURCES):			; $(GET) $@

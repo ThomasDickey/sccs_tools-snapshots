@@ -1,4 +1,4 @@
-# $Id: Makefile,v 6.0 1993/05/06 09:17:16 ste_cm Rel $
+# $Id: Makefile,v 6.1 1994/07/21 00:29:19 tom Exp $
 # Top-level make-file for SCCS_TOOLS
 
 TOP	= ..
@@ -39,12 +39,11 @@ sources::	$(MFILES)
 	cd bin;		$(MAKE) $@
 
 run_test\
-lint.out\
-lincnt.out:	$(MFILES)
+lint.out:	$(MFILES)
 	cd src;		$(MAKE) $@
 
 clean\
-clobber::			; rm -f $(CLEAN)
+clobber::			; $(RM) $(CLEAN)
 
 destroy::			; $(DESTROY)
 

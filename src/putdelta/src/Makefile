@@ -1,4 +1,4 @@
-# $Id: Makefile,v 6.3 1994/07/15 09:57:03 tom Exp $
+# $Id: Makefile,v 6.4 1994/07/21 00:43:50 tom Exp $
 # Make-file for SCCS check-in utilities
 
 TOP	= ../../../..
@@ -8,14 +8,12 @@ include $(TOP)/td_lib/support/td_lib.mk
 ALL	= $B/putdelta $B/sccsput
 C_SRC	= putdelta.c sccsput.c
 SOURCES	= $(C_SRC)
-MAIN_O	= putdelta.o $(LIBS)
-TREE_O	= sccsput.o $(LIBS)
 
 ####### (Standard Productions) #################################################
 all\
 install:	$B $(SOURCES) $(ALL)
-clean:				; rm -f $(CLEAN)
-clobber:	clean		; rm -f $(ALL)
+clean:				; $(RM) $(CLEAN)
+clobber:	clean		; $(RM) $(ALL)
 destroy:			; $(DESTROY)
 run_test:
 sources:	$(SOURCES)
@@ -31,4 +29,3 @@ sccsput.o:	$(PTYPES_H) $(RCSDEFS_H) $(SCCSDEFS_H)
 ####### (Development) ##########################################################
 $(SOURCES):			; $(GET) $@
 lint.out:	$(C_SRC)	; $(DATE); $(LINT_EACH)
-lincnt.out:	$(C_SRC)	; $(DATE); lincnt $(C_SRC) >>$@

@@ -1,4 +1,4 @@
-# $Id: Makefile,v 6.0 1993/04/29 09:46:39 ste_cm Rel $
+# $Id: Makefile,v 6.1 1994/07/21 00:33:53 tom Exp $
 # make-file for testing sccs/RCS conversion utility
 
 TOP	= ../../../..
@@ -18,12 +18,11 @@ SOURCES	= $(SCRIPTS) $(S_FILES)
 
 ####### (Standard Productions) #################################################
 all:	$(SOURCES) $(ALL)
-clean:				; rm -f $(CLEAN) *.RCS *.SCCS
-clobber:	clean		; rm -f $(ALL)
+clean:				; $(RM) $(CLEAN) *.RCS *.SCCS
+clobber:	clean		; -$(RM) $(ALL)
 destroy:			; $(DESTROY)
 sources:	$(SOURCES)
-lint.out\
-lincnt.out:
+lint.out:
 run_test:	$(SOURCES)	; $(RUN_TESTS)
 
 ####### (Details of Productions) ###############################################
