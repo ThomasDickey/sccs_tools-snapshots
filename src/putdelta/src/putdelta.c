@@ -3,6 +3,7 @@
  * Author:	T.E.Dickey
  * Created:	25 Apr 1986
  * Modified:
+ *		12 Apr 2000, Y2K fix for rev_date.
  *		03 Sep 1996, added '-b' option
  *		15 Jul 1994, use 'sccspath()'
  *		23 Sep 1993, gcc warnings
@@ -69,7 +70,7 @@
 
 #include	<errno.h>
 
-MODULE_ID("$Id: putdelta.c,v 6.7 1996/09/03 15:38:50 tom Exp $")
+MODULE_ID("$Id: putdelta.c,v 6.8 2000/04/12 14:17:32 tom Exp $")
 
 /************************************************************************
  *	local definitions						*
@@ -110,7 +111,8 @@ static	char	*sid,
 
 static	char	fmt_lock[]  = "%s %s %s %8s %8s\n";
 static	char	fmt_delta[] = "%s %8s %8s %s %d %d\n";
-static	char	fmt_date[]  = "%02d/%02d/%02d";
+static	char	get_date[]  = "%d/%02d/%02d";
+static	char	put_date[]  = "%02d/%02d/%02d";
 static	char	fmt_time[]  = "%02d:%02d:%02d";
 
 				/* names of the current file */
@@ -153,7 +155,7 @@ void	usage (_AR0)
 ,"           which were made."
 ,"  -y TEXT  describes the delta (otherwise you will be prompted)."
 	};
-	register int	j;
+	register unsigned j;
 	for (j = 0; j < sizeof(msg)/sizeof(msg[0]); j++)
 		FPRINTF(stderr, "%s\n", msg[j]);
 	(void)exit(FAIL);
@@ -368,7 +370,7 @@ int	TestLock(_AR0)
 			if ((sscanf(bfr, fmt_lock,
 				old_rev, new_rev, who_rev,
 				rev_date, rev_time) == 5)
-			&&  (sscanf(rev_date, fmt_date,
+			&&  (sscanf(rev_date, get_date,
 				&year, &mon, &mday) == 3)
 			&&  (sscanf(rev_time, fmt_time,
 				&hour, &sec, &min) == 3)
@@ -445,8 +447,11 @@ int	EditDelta(
 	time_t	delta;
 	int	year, mon, mday, hour, min, sec;
 
-	if ((sscanf(rev_date, fmt_date, &year, &mon, &mday) == 3)
+	if ((sscanf(rev_date, get_date, &year, &mon, &mday) == 3)
 	&&  (sscanf(rev_time, fmt_time, &hour, &min, &sec)  == 3)) {
+
+		if (year < 38)
+			year += 100;
 
 		newzone(TIMEZONE,0,FALSE);/* interpret in EST/EDT */
 		delta = packdate (1900+year, mon, mday, hour, min, sec);
@@ -455,7 +460,7 @@ int	EditDelta(
 		TELL("** old: %s", ctime(&delta));
 		TELL("** new: %s", ctime(&modtime));
 
-		FORMAT(rev_date, fmt_date, t->tm_year, t->tm_mon+1, t->tm_mday);
+		FORMAT(rev_date, put_date, t->tm_year, t->tm_mon+1, t->tm_mday);
 		FORMAT(rev_time, fmt_time, t->tm_hour, t->tm_min, t->tm_sec);
 		FORMAT(&bfr[LEN_DELTA], fmt_delta,
 			rev_code, rev_date, rev_time, rev_pgmr,
