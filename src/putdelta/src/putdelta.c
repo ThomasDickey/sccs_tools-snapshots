@@ -71,7 +71,7 @@
 
 #include	<errno.h>
 
-MODULE_ID("$Id: putdelta.c,v 6.12 2002/04/21 15:43:52 tom Exp $")
+MODULE_ID("$Id: putdelta.c,v 6.13 2002/07/06 16:15:15 tom Exp $")
 
 /************************************************************************
  *	local definitions						*
@@ -295,7 +295,7 @@ int	isCODE(
 	_DCL(char *,	string)
 {
 	while (*string)
-		if (isdigit(*string) || *string == '.')
+		if (isdigit(UCH(*string)) || *string == '.')
 			string++;
 		else
 			return (FALSE);
