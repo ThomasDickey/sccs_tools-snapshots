@@ -1,3 +1,7 @@
+1991-04-01  dickey@software.org
+
+	* Makefile: changed install-path
+
 1990-06-28  dickey@software.org
 
 	* user/getdelta.doc: changed sccs-directory name to "SCCS"
