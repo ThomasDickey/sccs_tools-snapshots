@@ -1,3 +1,7 @@
+1988-08-05  dickey@software.org
+
+	* user/getdelta.doc, user/putdelta.doc: New file.
+
 1988-08-04  dickey@software.org
 
 	* user/sccsget.doc:
