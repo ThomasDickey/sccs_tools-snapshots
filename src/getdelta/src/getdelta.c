@@ -1,5 +1,5 @@
 #ifndef	lint
-static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/src/RCS/getdelta.c,v 3.3 1991/06/20 17:18:45 dickey Exp $";
+static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/src/RCS/getdelta.c,v 3.5 1991/06/24 15:11:25 dickey Exp $";
 #endif
 
 /*
@@ -7,6 +7,7 @@ static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/
  * Author:	T.E.Dickey
  * Created:	26 Mar 1986 (as a procedure)
  * Modified:
+ *		24 Jun 1991, set writeable-mode if "-e".
  *		20 Jun 1991, pass-thru "-e" option. Use 'shoarg()'.
  *			     Use 'sccs2name()' and 'name2sccs()'.
  *		22 Mar 1989, corrected 'same()' code so we can get correct
@@ -65,6 +66,7 @@ static	int	writeable = 0,		/* nonzero to make g-file writeable */
 		s_mode,			/* protection of s-file */
 		silent	= FALSE,	/* "-s" option */
 		force	= FALSE,	/* "-f" option */
+		lockit	= FALSE,	/* "-e" option */
 		noop	= FALSE;	/* "-n" option */
 
 static	char	*sid	= NULL,
@@ -136,14 +138,9 @@ char	*name, *s_file;
 		}
 		(void)fclose (fp);
 		oldzone();		/* restore caller's time zone */
-		if (got)
+		if (got) {
 			YELL "** %s %s: %s", name, version, ctime(&date));
-		if (!noop && got) {
-			(void)chmod(name, s_mode);
-			if (setmtime(name, date) < 0) {
-				YELL "%s: cannot set time\n", name);
-			}
-		} else if (!got) {
+		} else {
 			if (sid) {
 				TELL "** no match for sid=%s\n", sid);
 			} else if (opt_c) {
@@ -154,6 +151,14 @@ char	*name, *s_file;
 		}
 	} else
 		TELL "** could not open \"%s\"\n", s_file);
+
+	if (!noop && got) {
+		if (lockit)
+			s_mode |= S_IWRITE;
+		(void)chmod(name, s_mode);
+		if (setmtime(name, date) < 0)
+			YELL "%s: cannot set time\n", name);
+	}
 }
 
 /*
@@ -222,14 +227,9 @@ char	*name, *s_file;
 	 * Check to see if we think that we can extract the file
 	 */
 	if (isFILE(s_file,&s_mode) > 0) {
-		if (noop) {
-			if (isFILE(name,(int *)0) && !force) {
-				YELL "?? \"%s\" already exists\n", name);
-				ok = FALSE;
-			}
-		} else if (isFILE(name,(int *)0)) {
+		if (isFILE(name,(int *)0)) {
 			if (force) {
-				if (unlink(name) < 0)
+				if (!noop && (unlink(name) < 0))
 					failed(name);
 			} else {
 				YELL "?? \"%s\" already exists\n", name);
@@ -314,6 +314,7 @@ char	*argv[];
 			FORMAT(s, "-%c ", j);
 			break;
 		case 'e':
+			lockit	= TRUE;
 		case 'k':
 			FORMAT(s, "-%c ", j);
 			writeable = S_IWRITE;
