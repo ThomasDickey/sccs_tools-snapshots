@@ -1,5 +1,5 @@
 #ifndef	lint
-static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/src/RCS/getdelta.c,v 3.20 1991/11/18 15:36:15 ste_cm Exp $";
+static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/src/RCS/getdelta.c,v 4.0 1991/12/17 12:44:05 ste_cm Rel $";
 #endif
 
 /*
@@ -7,6 +7,7 @@ static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/
  * Author:	T.E.Dickey
  * Created:	26 Mar 1986 (as a procedure)
  * Modified:
+ *		17 Dec 1991, typo in 'catarg()' call for "-r".
  *		18 Nov 1991, use 'catarg()' for building 'get_opts[]'
  *		24 Oct 1991, converted to ANSI
  *		19 Jul 1991, corrected logic, allowing arguments of the form
@@ -396,7 +397,7 @@ _MAIN
 				if (sid[k] == '.')
 					sid[k] = EOS;
 			TELL "sid: %s\n", sid);
-			FORMAT(temp, "-r%s ", sid);
+			FORMAT(temp, "-r%s", sid);
 			catarg(get_opts, temp);
 			break;
 

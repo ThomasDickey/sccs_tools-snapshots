@@ -1,3 +1,10 @@
+1991-12-17  ste_cm@software.org
+
+	* src/getdelta/src/getdelta.c: BASELINE Tue Dec 17 12:49:50 1991
+
+	* src/getdelta/src/getdelta.c:
+	eliminated erroneous space in catarg-call
+
 1991-11-18  ste_cm@software.org
 
 	* src/getdelta/src/getdelta.c: typo
