@@ -1,5 +1,5 @@
 #ifndef	lint
-static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/src/RCS/getdelta.c,v 6.0 1992/07/17 09:34:02 ste_cm Rel $";
+static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/src/RCS/getdelta.c,v 6.1 1993/09/23 19:48:03 dickey Exp $";
 #endif
 
 /*
@@ -7,6 +7,7 @@ static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/
  * Author:	T.E.Dickey
  * Created:	26 Mar 1986 (as a procedure)
  * Modified:
+ *		23 Sep 1993, gcc warnings
  *		17 Dec 1991, typo in 'catarg()' call for "-r".
  *		18 Nov 1991, use 'catarg()' for building 'get_opts[]'
  *		24 Oct 1991, converted to ANSI
@@ -78,9 +79,9 @@ static	char	*sid	= NULL,
  ************************************************************************/
 
 static
-Dots(
-_AR1(char *,	s))
-_DCL(char *,	s)
+int	Dots(
+	_AR1(char *,	s))
+	_DCL(char *,	s)
 {
 	int	count = 0;
 	while (*s)
@@ -146,12 +147,12 @@ _DCL(char *,	version)
  * Process a single file:
  */
 static
-PostProcess (
-_ARX(char *,	name)
-_AR1(char *,	s_file)
-	)
-_DCL(char *,	name)
-_DCL(char *,	s_file)
+void	PostProcess (
+	_ARX(char *,	name)
+	_AR1(char *,	s_file)
+		)
+	_DCL(char *,	name)
+	_DCL(char *,	s_file)
 {
 	FILE	*fp;
 	time_t	date	= 0;
@@ -162,7 +163,7 @@ _DCL(char *,	s_file)
 
 	static	char	fmt[] = "\001d D %s %d/%d/%d %d:%d:%d %s %d %d";
 
-	if (fp = fopen (s_file, "r")) {
+	if ((fp = fopen (s_file, "r")) != NULL) {
 		newzone(5,0,FALSE);	/* interpret in EST/EDT zone */
 		while (fgets(bfr, sizeof(bfr), fp) && *bfr == '\001') {
 			if (sscanf (bfr, fmt, version,
@@ -171,10 +172,13 @@ _DCL(char *,	s_file)
 					pgmr, &new, &old) > 0) {
 				date = packdate(1900+year, mon, mday, hour, min, sec);
 				if (opt_c) {
-					if (date > opt_c)	continue;
-					else if (got = !sid)	break;
+					if (date > opt_c)
+						continue;
+					else if ((got = !sid) != 0)
+						break;
 				}
-				if (got = bump(version))	break;
+				if ((got = bump(version)) != 0)
+					break;
 			}
 		}
 		(void)fclose (fp);
@@ -215,12 +219,12 @@ _DCL(char *,	s_file)
  * See if the specified file exists.  If so, verify that it is indeed a file.
  */
 static
-is_a_file(
-_ARX(char *,	name)
-_AR1(int *,	mode_)
-	)
-_DCL(char *,	name)
-_DCL(int *,	mode_)
+int	is_a_file(
+	_ARX(char *,	name)
+	_AR1(int *,	mode_)
+		)
+	_DCL(char *,	name)
+	_DCL(int *,	mode_)
 {
 	STAT	sb;
 
@@ -242,12 +246,12 @@ _DCL(int *,	mode_)
  * See if we have permission to write in the directory given by 'name'
  */
 static
-Permitted(
-_ARX(char *,	name)
-_AR1(int,	read_only)
-	)
-_DCL(char *,	name)
-_DCL(int,	read_only)
+int	Permitted(
+	_ARX(char *,	name)
+	_AR1(int,	read_only)
+		)
+	_DCL(char *,	name)
+	_DCL(int,	read_only)
 {
 	char	path[BUFSIZ];
 	int	mode	= X_OK | R_OK;
@@ -266,12 +270,13 @@ _DCL(int,	read_only)
  * the name of the corresponding sccs file.  Otherwise, compute the name of the
  * file to be checked-out from the sccs file name.
  */
-DoFile (
-_ARX(char *,	name)
-_AR1(char *,	s_file)
-	)
-_DCL(char *,	name)
-_DCL(char *,	s_file)
+static
+void	DoFile (
+	_ARX(char *,	name)
+	_AR1(char *,	s_file)
+		)
+	_DCL(char *,	name)
+	_DCL(char *,	s_file)
 {
 	auto	int	ok	= TRUE;
 	auto	char	*working = sccs2name(name, FALSE);
@@ -289,7 +294,7 @@ _DCL(char *,	s_file)
 	 * 'chdir()' to accommodate this if necessary.
 	 */
 	(void)strcpy(buffer, working);
-	if (s = strrchr(buffer, '/')) {
+	if ((s = strrchr(buffer, '/')) != NULL) {
 		if (!getwd(old_wd))
 			failed("getwd");
 		*s = EOS;
@@ -352,7 +357,7 @@ _DCL(char *,	s_file)
 }
 
 static
-usage (_AR0)
+void	usage (_AR0)
 {
 	static	char	*msg[] = {
  "Usage: getdelta [options] files"

@@ -1,6 +1,6 @@
 #ifndef	lint
 static char *RCSid =
-"$Header: /users/source/archives/sccs_tools.vcs/src/sccs2rcs/src/RCS/sccs2rcs.c,v 6.0 1993/04/29 12:30:16 ste_cm Rel $";
+"$Header: /users/source/archives/sccs_tools.vcs/src/sccs2rcs/src/RCS/sccs2rcs.c,v 6.1 1993/09/23 20:21:51 dickey Exp $";
 #endif
 
 /*
@@ -8,9 +8,12 @@ static char *RCSid =
  * Author: Ken Greer
  *
  * $Log: sccs2rcs.c,v $
- * Revision 6.0  1993/04/29 12:30:16  ste_cm
- * BASELINE Wed May  5 11:05:31 1993 -- TD_LIB #12
+ * Revision 6.1  1993/09/23 20:21:51  dickey
+ * gcc warnings
  *
+ * Revision 6.0  93/04/29  12:30:16  ste_cm
+ * BASELINE Wed May  5 11:05:31 1993 -- TD_LIB #12
+ * 
  * Revision 5.3  93/04/29  12:30:16  dickey
  * missed an option
  * 
@@ -123,13 +126,12 @@ static char *RCSid =
  * 
  */
 
+#define	CHR_PTYPES
 #define	STR_PTYPES
 #include "ptypes.h"
 #include "rcsdefs.h"
 #include "sccsdefs.h"
-#include <ctype.h>
 #include <errno.h>
-extern	FILE	*tmpfile();
 
 #define SOH	001		/* SCCS lines start with SOH (Control-A) */
 #define RCS	"rcs"
@@ -174,9 +176,20 @@ typedef struct header
     char  *description;
 } HEADER;
 
+static	void	build_new_rcs_file (
+		_arx(HEADER *,	header)
+		_ar1(char *,	sccsfile));
+static	void	print_header (
+		_arx(char *,	sccsfile)
+		_ar1(register HEADER *, header));
 
-quit2(fmt, args)
-char *fmt,*args;
+static
+void	quit2(
+	_ARX(char *,	fmt)
+	_AR1(char *,	args)
+		)
+	_DCL(char *,	fmt)
+	_DCL(char *,	args)
 {
 	WARN "%s: ", WHOAMI);
 	WARN fmt, args);
@@ -184,8 +197,8 @@ char *fmt,*args;
 	/*NOTREACHED*/
 }
 
-quit (fmt)
-char *fmt;
+static
+void	quit _ONE(char *, fmt)
 {
 	WARN "%s: ", WHOAMI);
 	WARN fmt);
@@ -193,9 +206,8 @@ char *fmt;
 	/*NOTREACHED*/
 }
 
-char *
-xalloc (size)
-unsigned size;
+static
+char *	xalloc _ONE(unsigned, size)
 {
     char *p;
     if ((p = malloc (size)) == NULL)
@@ -212,9 +224,8 @@ unsigned size;
 /*
  * Allocate space for string and copy str to it.
  */
-char *
-string (str)
-char *str;
+static
+char *	string _ONE(char *, str)
 {
     register char *p = xalloc ((unsigned) (strlen (str) + 1));
     return (strcpy (p, str));
@@ -224,9 +235,8 @@ char *str;
  * Return pointer to the final file name in a path.
  * I.e. sname ("/foo/baz/mumble") returns a pointer to "mumble".
  */
-char *
-sname (s)
-register char *s;
+static
+char *	sname _ONE(register char *, s)
 {
     register char *p;
 
@@ -236,9 +246,8 @@ register char *s;
     return (s);
 }
 
-DELTA *
-new_delta (line)
-char *line;
+static
+DELTA *	new_delta _ONE(char *, line)
 {
     register DELTA *delta;
     char rev[32];
@@ -251,9 +260,13 @@ char *line;
     return (delta);
 }
 
-char *
-concat (old_str, str)
-char *old_str, *str;
+static
+char *	concat (
+	_ARX(char *,	old_str)
+	_AR1(char *,	str)
+		)
+	_DCL(char *,	old_str)
+	_DCL(char *,	str)
 {
     register int len;
     register char *newstring;
@@ -268,8 +281,8 @@ char *old_str, *str;
     return (newstring);
 }
 
-trimtail (line)
-char *line;
+static
+void	trimtail _ONE(char *, line)
 {
     register char *p = line;
     while (*p) p++;
@@ -278,9 +291,8 @@ char *line;
     *p = '\0';
 }
 
-USERLIST *
-collect_userlist (fd)
-FILE *fd;
+static
+USERLIST * collect_userlist _ONE(FILE *, fd)
 {
     char line[128];
     USERLIST *userlist = NULL, *newuser;
@@ -297,11 +309,10 @@ FILE *fd;
     return (userlist);
 }
 
-HEADER *
-collect_header (fd)
-FILE *fd;
+static
+HEADER * collect_header _ONE(FILE *, fd)
 {
-    DELTA *head = NULL, *delta;
+    DELTA *head = NULL, *delta = NULL;
     USERLIST *userlist = NULL;
     static HEADER header;
     char line[BUFSIZ], *description = NULL;
@@ -336,8 +347,12 @@ FILE *fd;
 }
 
 static
-invoke(command, args)
-char	*command, *args;
+int	invoke (
+	_ARX(char *,	command)
+	_AR1(char *,	args)
+		)
+	_DCL(char *,	command)
+	_DCL(char *,	args)
 {
 	if (trace || verbose)
 		shoarg (stdout, command, args);
@@ -349,11 +364,13 @@ char	*command, *args;
  * Build an initiate a command via a pipe
  */
 static
-FILE *
-to_pipe(command, args)
-char	*command, *args;
+FILE *	to_pipe (
+	_ARX(char *,	command)
+	_AR1(char *,	args)
+		)
+	_DCL(char *,	command)
+	_DCL(char *,	args)
 {
-	extern FILE *popen();
 	char	temp[BUFSIZ];
 
 	if (trace || verbose)
@@ -364,8 +381,7 @@ char	*command, *args;
 }
 
 static
-RCSarg(command)
-char	*command;
+void	RCSarg _ONE(char *, command)
 {
 	*command = EOS;
 	if (quiet) catarg(command, "-q");
@@ -374,8 +390,8 @@ char	*command;
 /*
  * See if a file exists
  */
-fexists(name)
-char	*name;
+static
+int	fexists _ONE(char *, name)
 {
 	struct	stat	sb;
 
@@ -386,9 +402,8 @@ char	*name;
 /*
  * Convert SCCS file to RCS file
  */
-HEADER *
-read_sccs (sccsfile)
-char *sccsfile;
+static
+HEADER * read_sccs _ONE(char *, sccsfile)
 {
     HEADER *header;
     FILE *fd;
@@ -409,9 +424,13 @@ char *sccsfile;
     return (header);
 }
 
-install_userlist (userlist, rcsfile)
-register USERLIST *userlist;
-char *rcsfile;
+static
+int	install_userlist (
+	_ARX(register USERLIST *, userlist)
+	_AR1(char *,	rcsfile)
+		)
+	_DCL(register USERLIST *, userlist)
+	_DCL(char *,	rcsfile)
 {
     char command[BUFSIZ];
     int count;
@@ -430,8 +449,13 @@ char *rcsfile;
     return (invoke(RCS, command));
 }
 
-initialize_rcsfile (description, rcsfile)
-char *description, *rcsfile;
+static
+int	initialize_rcsfile (
+	_ARX(char *,	description)
+	_AR1(char *,	rcsfile)
+		)
+	_DCL(char *,	description)
+	_DCL(char *,	rcsfile)
 {
     char command[BUFSIZ];
     FILE *pd;
@@ -451,7 +475,7 @@ char *description, *rcsfile;
 	catarg(command, temp);
     }
     catarg(command, rcsfile);
-    if (pd = to_pipe(RCS, command)) {
+    if ((pd = to_pipe(RCS, command)) != NULL) {
 	FPRINTF (pd, "%s", description ? description : "\n");
 	return (pclose (pd));
     } else if (trace) {
@@ -461,9 +485,15 @@ char *description, *rcsfile;
 	return (-1);
 }
 
-install_deltas (delta, sccsfile, rcsfile)
-register DELTA *delta;
-char *sccsfile, *rcsfile;
+static
+int	install_deltas (
+	_ARX(register DELTA *, delta)
+	_ARX(char *,	sccsfile)
+	_AR1(char *,	rcsfile)
+		)
+	_DCL(register DELTA *, delta)
+	_DCL(char *,	sccsfile)
+	_DCL(char *,	rcsfile)
 {
     FILE *pd;
     char command[BUFSIZ];
@@ -491,7 +521,7 @@ char *sccsfile, *rcsfile;
 	catarg(command, version);
 	catarg(command, rcsfile);
 
-	if (pd = to_pipe(CI, command)) {
+	if ((pd = to_pipe(CI, command)) != NULL) {
 	    FPRINTF (pd, delta->commentary);
 	    if (pclose (pd) < 0)
 		return (-1);
@@ -503,8 +533,8 @@ char *sccsfile, *rcsfile;
     return (0);
 }
 
-finalize_rcsfile (rcsfile)
-char *rcsfile;
+static
+int	finalize_rcsfile _ONE(char *, rcsfile)
 {
     char command[BUFSIZ];
     RCSarg(command);
@@ -516,7 +546,8 @@ char *rcsfile;
 /*
  * This is called from 'rcsparse_str()' to store comment-text
  */
-store_comment(c)
+static
+void	store_comment _ONE(int, c)
 {
 	register int	len = strlen(comments);
 	comments[len++] = c;
@@ -526,8 +557,8 @@ store_comment(c)
 /*
  * Find the string we are using for a comment-string
  */
-find_comment(filename)
-char	*filename;
+static
+void	find_comment _ONE(char *, filename)
 {
 	auto	int	header	= TRUE;
 	auto	char	key[80];
@@ -561,15 +592,15 @@ char	*filename;
  * '"' is intended to protect against clobbering string literals and comments
  * which are appended after a string literal.
  */
-edit_what(s)
-char	*s;
+static
+int	edit_what _ONE(char *, s)
 {
 	auto	 char	tmp[BUFSIZ];
 	register char	*t;
 	register size_t	len;
 	auto	 int	changes = FALSE;
 
-	while (t = strchr(s, '@')) {
+	while ((t = strchr(s, '@')) != NULL) {
 		if (!strncmp(t, "@(#)", len = 4)
 		&&  t[len] != '"') {
 			s = t;
@@ -597,8 +628,13 @@ char	*s;
 	return (changes);
 }
 
-match(s,t)
-char	*s,*t;
+static
+int	match(
+	_ARX(char *,	s)
+	_AR1(char *,	t)
+		)
+	_DCL(char *,	s)
+	_DCL(char *,	t)
 {
 	register char	*base = s;
 
@@ -619,8 +655,8 @@ char	*s,*t;
  * sequence) the comment-prefix, at least one of the keywords (see MATCH), and
  * a colon.
  */
-edit_log(s)
-char	*s;
+static
+int	edit_log _ONE(char *, s)
 {
 	auto	 char	tmp[BUFSIZ];
 	auto	 char	*base;
@@ -641,7 +677,7 @@ char	*s;
 	}
 
 	/* make a copy in uppercase to simplify matching */
-	for (t = base = s; tmp[t-s] = *t; t++)
+	for (t = base = s; (tmp[t-s] = *t) != EOS; t++)
 		if (isalpha(*t) && islower(*t))
 			tmp[t-s] = toupper(*t);
 
@@ -682,8 +718,8 @@ char	*s;
  * Make a new revision (on the main trunk) which has the sccs keywords
  * substituted into RCS keywords.
  */
-edit_keywords(filename)
-char	*filename;
+static
+void	edit_keywords _ONE(char *, filename)
 {
 	auto	char	bfr[BUFSIZ];
 	auto	char	tmp[BUFSIZ];
@@ -704,7 +740,7 @@ char	*filename;
 		failed(filename);
 	if (!(fpT = tmpfile()))
 		failed("(tmpfile)");
-	if (fpS = fopen(filename, "r")) {
+	if ((fpS = fopen(filename, "r")) != NULL) {
 		while (fgets(bfr, sizeof(bfr), fpS)) {
 			edit_lines++;
 			changes += edit_what(bfr);
@@ -733,9 +769,13 @@ char	*filename;
 	FCLOSE(fpT);
 }
 
-build_new_rcs_file (header, sccsfile)
-HEADER *header;
-char *sccsfile;
+static
+void	build_new_rcs_file (
+	_ARX(HEADER *,	header)
+	_AR1(char *,	sccsfile)
+		)
+	_DCL(HEADER *,	header)
+	_DCL(char *,	sccsfile)
 {
     char *rcsfile = &(sname (sccsfile))[2];
 
@@ -755,9 +795,13 @@ char *sccsfile;
 	quit2 ("Error setting defaults to rcs file %s\n", rcsfile);
 }
 
-print_header (sccsfile, header)
-char *sccsfile;
-register HEADER *header;
+static
+void	print_header (
+	_ARX(char *,	sccsfile)
+	_AR1(register HEADER *, header)
+		)
+	_DCL(char *,	sccsfile)
+	_DCL(register HEADER *, header)
 {
     register DELTA *d;
     register USERLIST *u;

@@ -1,4 +1,4 @@
-# $Id: Makefile,v 6.0 1993/04/29 08:35:20 ste_cm Rel $
+# $Id: Makefile,v 6.1 1993/09/23 19:51:56 dickey Exp $
 # Make-file for SCCS check-in utilities
 
 TOP	= ../../../..
@@ -22,10 +22,10 @@ run_test:
 sources:	$(SOURCES)
 
 ####### (Details of Productions) ###############################################
-$B/putdelta:	$(MAIN_O)	; $(CC) -o $@ $(MAIN_O)
+$B/putdelta:	$(MAIN_O)	; $(LINK) -o $@ $(MAIN_O)
 putdelta.o:	$(PTYPES_H) $(SCCSDEFS_H)
 
-$B/sccsput:	$(TREE_O)	; $(CC) -o $@ $(TREE_O)
+$B/sccsput:	$(TREE_O)	; $(LINK) -o $@ $(TREE_O)
 sccsput.o:	$(PTYPES_H) $(RCSDEFS_H) $(SCCSDEFS_H)
 
 ####### (Development) ##########################################################
