@@ -1,5 +1,5 @@
 #ifndef	lint
-static	char	sccs_id[] = "@(#)getdelta.c	1.3 88/08/08 06:57:50";
+static	char	sccs_id[] = "@(#)getdelta.c	1.5 88/08/09 12:19:50";
 #endif	lint
 
 /*
@@ -7,6 +7,7 @@ static	char	sccs_id[] = "@(#)getdelta.c	1.3 88/08/08 06:57:50";
  * Author:	T.E.Dickey
  * Created:	26 Mar 1986 (as a procedure)
  * Modified:
+ *		09 Aug 1988, corrected overlapping "-s", "-k" options.
  *		29 Jul 1988, renamed from 'sccsbase'.  Preserve executable-mode
  *			     of extracted file (see 'putdelta').
  *		10 Jun 1988, recoded so that "get" is invoked from this module
@@ -34,7 +35,7 @@ static	char	sccs_id[] = "@(#)getdelta.c	1.3 88/08/08 06:57:50";
  *		f	force deletion of existing file
  */
 
-#include	<ptypes.h>
+#include	"ptypes.h"
 
 #include	<stdio.h>
 #include	<ctype.h>
@@ -50,11 +51,6 @@ extern	char	*optarg;
 extern	int	optind;
 
 /* local definitions */
-#define	TRUE	1
-#define	FALSE	0
-
-#define	PRINTF	(void) printf
-#define	FORMAT	(void) sprintf
 #define	YELL	(void) fprintf(stderr,
 #define	TELL	if (!silent) PRINTF(
 
@@ -293,6 +289,8 @@ char	*argv[];
 			break;
 		case 's':
 			silent	= TRUE;
+			FORMAT(s, "-%c ", j);
+			break;
 		case 'k':
 			FORMAT(s, "-%c ", j);
 			writeable = S_IWRITE;

@@ -1,5 +1,5 @@
 #ifndef	lint
-static	char	sccs_id[] = "@(#)putdelta.c	1.1 88/07/29 09:37:45";
+static	char	sccs_id[] = "@(#)putdelta.c	1.2 88/08/09 09:47:19";
 #endif	lint
 
 /*
@@ -44,7 +44,7 @@ static	char	sccs_id[] = "@(#)putdelta.c	1.1 88/07/29 09:37:45";
  *		y note	specifies delta-comment
  */
 
-#include	<ptypes.h>
+#include	"ptypes.h"
 
 #include	<stdio.h>
 #include	<ctype.h>
@@ -67,14 +67,9 @@ extern	int	errno;
 extern	char	*sys_errlist[];
 
 /* local declarations: */
-#define	TRUE	1
-#define	FALSE	0
-
 #define	NAMELEN		80	/* length of tokens in sccs-header */
 #define	TIMEZONE	5	/* time-zone we use to store dates */
 
-#define	PRINTF	(void) printf
-#define	FORMAT	(void) sprintf
 #define	SHOW	if (ShowIt(TRUE))  PRINTF
 #define	TELL	if (ShowIt(FALSE)) PRINTF
 #define	WARN	TELL ("?? %s\n", sys_errlist[errno])

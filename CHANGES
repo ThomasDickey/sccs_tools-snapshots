@@ -1,3 +1,11 @@
+1988-08-09  dickey@software.org
+
+	* src/getdelta/src/getdelta.c:
+	"-s" option fell-thru into "-k" (shouldn't have!)
+
+	* src/putdelta/src/putdelta.c, src/getdelta/src/getdelta.c:
+	absorbed some definitions into "ptypes.h"
+
 1988-08-08  dickey@software.org
 
 	* src/getdelta/src/getdelta.c: lint
