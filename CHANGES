@@ -1,3 +1,7 @@
+2000-04-12  Thomas E. Dickey  <dickey@clark.net>
+
+	* src/putdelta/src/putdelta.c: oops - Y2K fix
+
 2000-04-07  Thomas E. Dickey  <dickey@clark.net>
 
 	* src/getdelta/src/getdelta.c:
