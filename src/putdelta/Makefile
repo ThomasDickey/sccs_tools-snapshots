@@ -1,68 +1,49 @@
-# $Header: /users/source/archives/sccs_tools.vcs/src/putdelta/RCS/Makefile,v 5.0 1989/07/10 08:36:48 ste_cm Rel $
+# $Id: Makefile,v 5.1 1992/10/19 10:49:49 dickey Exp $
 # Top-level makefile for SCCS_TOOLS put-delta utility
-#
-# $Log: Makefile,v $
-# Revision 5.0  1989/07/10 08:36:48  ste_cm
-# BASELINE Mon Jul 20 12:41:28 1992 -- CM_TOOLS #11
-#
-#	Revision 4.0  89/07/10  08:36:48  ste_cm
-#	BASELINE Tue Dec 17 11:56:35 1991
-#	
-#	Revision 3.0  89/07/10  08:36:48  ste_cm
-#	BASELINE Tue Jun 18 08:04:39 1991 -- apollo sr10.3
-#	
-#	Revision 2.0  89/07/10  08:36:48  ste_cm
-#	BASELINE Mon Jul 10 09:26:46 EDT 1989
-#	
-#	Revision 1.2  89/07/10  08:36:48  dickey
-#	corrected 'destroy' rule
-#	
-#	Revision 1.1  89/03/29  13:21:26  dickey
-#	Initial revision
-#	
-####### (Development) ##########################################################
-B	= ../../bin
-L	= ../../../cm_tools/lib
-PUT	= copy -v -d ../$@
-GET	= checkout
-MAKE	= make $(MFLAGS) -k$(MAKEFLAGS)	GET=$(GET)
+
+THIS	= putdelta
+TOP	= ../../..
+include $(TOP)/cm_library/support/cm_library.mk
 
 ####### (Standard Lists) #######################################################
-PROG	= putdelta
-ALL	=\
-	$B/$(PROG)\
+B	= ../../bin
+
+IT	=\
+	$B/$(THIS)\
 	$B/sccsput
-FIRST	=\
-	bin\
+
+MFILES	=\
 	src/Makefile\
 	test/Makefile
 
-####### (Standard Productions) #################################################
-all:		$L/lib.a
+DIRS	=\
+	bin
 
+####### (Standard Productions) #################################################
 all\
 clean\
 clobber\
+destroy\
 run_tests\
 sources\
 lincnt.out\
-lint.out:	$(FIRST)
+lint.out::	$(MFILES)
 	cd src;		$(MAKE) $@
 	cd test;	$(MAKE) $@
 
-rdestroy\
-destroy:	$(FIRST) clobber
-	cd src;		$(MAKE) destroy
-	cd test;	$(MAKE) destroy
-	rmdir bin
-	sh -c 'for i in *;do case $$i in RCS);; *) rm -f $$i;;esac;done'
+clean\
+clobber::		; rm -f $(CLEAN)
 
-install:	all $(ALL)
-deinstall:		; rm -f $(ALL)
+clobber\
+destroy::		; rm -rf $(DIRS)
+
+destroy::		; $(DESTROY)
+
+install:	all $(IT)
+deinstall:		; rm -f $(IT)
 
 ####### (Details of Productions) ###############################################
-bin:				; mkdir $@
-src/Makefile:			; cd src;	$(GET) Makefile
-test/Makefile:			; cd test;	$(GET) Makefile
-$B/$(PROG):	bin/$(PROG)	; cd bin;	$(PUT)
-$B/sccsput:	bin/sccsput	; cd bin;	$(PUT)
+$(DIRS):			; mkdir $@
+$(MFILES):			; $(GET) $@
+$B/$(THIS):	bin/$(THIS)	; $(PUT)
+$B/sccsput:	bin/sccsput	; $(PUT)

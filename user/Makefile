@@ -1,30 +1,20 @@
-# $Id: Makefile,v 5.0 1991/10/24 08:44:27 ste_cm Rel $
-#
+# $Id: Makefile,v 5.1 1992/10/19 10:58:15 dickey Exp $
+
+TOP	= ../..
+include $(TOP)/cm_library/support/cm_library.mk
 
 ####### (Development) ##########################################################
-INSTALL_MAN=../../install_man
-COPY	= cp -p
-GET	= checkout
-PUT	= rm -f $@; $(COPY) $? $@
-
-
 USE	= man
 SECTION	= 1
 PREFIX	= $(INSTALL_MAN)/$(USE)$(SECTION)/
 
-.SUFFIXES:
-.SUFFIXES: .man .cat
-#
-.man.cat:
-	rm -f $@
-	nroff -man $< >$@
-
 ####### (Standard Lists) #######################################################
-ALL	=\
+IT	=\
 	$(PREFIX)getdelta.$(SECTION)\
 	$(PREFIX)putdelta.$(SECTION)\
 	$(PREFIX)sccsget.$(SECTION)\
 	$(PREFIX)sccsput.$(SECTION)
+
 SOURCES	=\
 	getdelta.man\
 	putdelta.man\
@@ -32,15 +22,14 @@ SOURCES	=\
 	sccsput.man
 
 ####### (Standard Productions) #################################################
-all:		; @echo '** use "make install"'
-clean:
-clobber:	clean	; rm -f *.doc_*
-destroy:
-	sh -c 'for i in *;do case $$i in RCS);; *) rm -f $$i;;esac;done'
+all:	$(SOURCES) $(ALL)	; @echo '** use "make install"'
+clean:				; rm -f $(CLEAN)
+clobber:	clean		; rm -f $(ALL)
+destroy:			; $(DESTROY)
 run_tests:
 sources:	$(SOURCES)
-install:	$(ALL)
-deinstall:	; rm -f $(ALL)
+install:	$(IT)
+deinstall:			; rm -f $(IT)
 
 ####### (Details of Productions) ###############################################
 $(PREFIX)getdelta.$(SECTION):	getdelta.$(USE)	; $(PUT)
@@ -48,4 +37,4 @@ $(PREFIX)putdelta.$(SECTION):	putdelta.$(USE)	; $(PUT)
 $(PREFIX)sccsget.$(SECTION):	sccsget.$(USE)	; $(PUT)
 $(PREFIX)sccsput.$(SECTION):	sccsput.$(USE)	; $(PUT)
 
-$(SOURCES):				; $(GET) $@
+$(SOURCES):			; $(GET) $@

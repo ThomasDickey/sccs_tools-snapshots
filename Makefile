@@ -1,13 +1,8 @@
-# $Id: Makefile,v 5.0 1992/07/20 13:01:40 ste_cm Rel $
+# $Id: Makefile,v 5.2 1992/10/19 11:48:14 dickey Exp $
 # Top-level make-file for SCCS_TOOLS
-#
 
-####### (Development) ##########################################################
-INSTALL_BIN = ../install_bin
-INSTALL_MAN = ../install_man
-COPY	= cp -p
-MAKE	= make $(MFLAGS) -k$(MAKEFLAGS) CFLAGS="$(CFLAGS)" COPY="$(COPY)"
-THIS	= sccs_tools
+TOP	= ..
+include $(TOP)/cm_library/support/cm_library.mk
 
 ####### (Standard Lists) #######################################################
 SOURCES	=\
@@ -24,7 +19,7 @@ MFILES	=\
 all\
 sources\
 install\
-deinstall::	$(MFILES) $(SOURCES) bin/makefile
+deinstall::	$(MFILES) $(SOURCES)
 
 all\
 install::
@@ -49,18 +44,10 @@ lincnt.out:	$(MFILES)
 	cd src;		$(MAKE) $@
 
 clean\
-clobber::
-	rm -f *.bak *.log *.out core
+clobber::			; rm -f $(CLEAN)
 
-destroy::
-	sh -c 'for i in *;do case $$i in RCS);; *) rm -f $$i;;esac;done;exit 0'
+destroy::			; $(DESTROY)
 
 ####### (Details of Productions) ###############################################
 $(MFILES)\
-$(SOURCES):			; checkout $@
-
-# Embed default installation path in places where we want it compiled-in.
-# Note that we exploit the use of lower-case makefile for this purpose.
-bin/makefile:	bin/Makefile	Makefile
-	rm -f $@
-	sed -e s+INSTALL_BIN=.*+INSTALL_BIN=`cd $(INSTALL_BIN);pwd`+ bin/Makefile >$@
+$(SOURCES):			; $(GET) $@
