@@ -3,6 +3,8 @@
  * Author:	T.E.Dickey
  * Created:	26 Mar 1986 (as a procedure)
  * Modified:
+ *		07 Apr 2000, if only a cutoff date is given, set retrieved file
+ *			     modification time.
  *		07 Feb 2000, don't use variable named 'new', since gcc 2.95.2
  *			     generates incorrect code for it (sometimes).
  *		27 Jun 1999, correct uninitialized get_opts[] - worked on SunOS.
@@ -54,7 +56,7 @@
 #include	<ptypes.h>
 #include	<sccsdefs.h>
 
-MODULE_ID("$Id: getdelta.c,v 6.20 2000/02/07 15:43:02 tom Exp $")
+MODULE_ID("$Id: getdelta.c,v 6.21 2000/04/07 14:41:38 tom Exp $")
 
 /* local definitions */
 #define	NAMELEN		80	/* length of tokens in sccs-header */
@@ -342,8 +344,9 @@ void	PostProcess (
 		}
 		(void)fclose (fp);
 		oldzone();		/* restore caller's time zone */
-		if (got) {
+		if (got || (opt_c && date && (date < opt_c))) {
 			YELL "** %s %s: %s", name, version, ctime(&date));
+			got = TRUE;
 		} else {
 			if (sid) {
 				TELL "** no match for sid=%s\n", sid);
