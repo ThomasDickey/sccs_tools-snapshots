@@ -14,46 +14,14 @@
 	F49 = Modern 12,
 	F6 = Symbols 12>
 
-<!Page>
+<!Page,
+	Starting Page # = 	Inherit>
 
 <!Autonumber Stream, List, 1>
 
 <!Autonumber Stream, Outline, 3,
 	Level 1 Symbol Type =	UPPER ROMAN,
 	Level 2 Symbol Type =	UPPER ALPHA>
-
-<!Class, bullet,
-	Top Margin =		0.083 inches,
-	Bottom Margin =		0 inches,
-	Left Margin =		0.50 inches,
-	First Indent =		-0.25 inches,
-	Font =			F30>
-
-<!Class, caption,
-	Top Margin =		0.07 inches,
-	Bottom Margin =		0.07 inches,
-	Line Spacing =		1.100 lines,
-	Font =			F30>
-
-<!Class, fixed,
-	Top Margin =		0.083 inches,
-	Bottom Margin =		0.083 inches,
-	Left Margin =		0.25 inches,
-	Right Margin =		-1 inches,
-	Line Spacing =		1.308 lines,
-	Alignment =		Left,
-	Font =			F21,
-	Hyphenation =		off,
-	Allow Page Break Within = no,
-	Left Tab =		0/0.64*10 inches>
-
-<!Class, footnote,
-	Top Margin =		0.07 inches,
-	Bottom Margin =		0.07 inches,
-	Left Margin =		0.25 inches,
-	First Indent =		-0.25 inches,
-	Line Spacing =		1.100 lines,
-	Font =			F30>
 
 <!Class, header,
 	Top Margin =		0.193 inches,
@@ -91,25 +59,6 @@
 	Allow Page Break Within = no,
 	Left Tab =		0/0.64*10 inches>
 
-<!Class, subheader,
-	Top Margin =		0.097 inches,
-	Bottom Margin =		0 inches,
-	Left Margin =		0.25 inches,
-	Alignment =		Left,
-	Font =			F31,
-	Allow Page Break Within = no,
-	Allow Page Break After = no>
-
-<!Class, suboption,
-	Top Margin =		0.042 inches,
-	Bottom Margin =		0 inches,
-	Left Margin =		2.50 inches,
-	First Indent =		-1 inches,
-	Font =			F30,
-	Hyphenation =		off,
-	Allow Page Break Within = no,
-	Left Tab =		0/0.75/1.50 inches>
-
 <!Master Frame,
 	Name =			"At Anchor",
 	Placement =		At Anchor,
@@ -118,69 +67,8 @@
 	Vertical Alignment =	0.03 inches,
 	Diagram =
 V4,
-(g9,32767,0
- (E10,0,0,0,1,1,0.053333,1,15,0,0,1,0,0,0,0,1,1,1,0.066667,0.066667,6,6,0,0.066
-  667,6))>
-
-<!Master Frame,
-	Name =			Bottom,
-	Placement =		Bottom of Page,
-	Horizontal Alignment =	Center,
-	Width =			5.70 inches,
-	Height =		2.85 inches,
-	Diagram =
-V4,
-(g9,32767,0
- (E10,0,0,0,1,1,0.053333,1,15,0,0,1,0,0,0,0,1,1,1,0.066667,0.066667,6,6,0,0.066
-  667,6))>
-
-<!Master Frame,
-	Name =			"Following Anchor",
-	Placement =		Following Anchor,
-	Horizontal Alignment =	Center,
-	Width =			5.70 inches,
-	Height =		2.85 inches,
-	Diagram =
-V4,
-(g9,32767,0
- (E10,0,0,0,1,1,0.053333,1,15,0,0,1,0,0,0,0,1,1,1,0.066667,0.066667,6,6,0,0.066
-  667,6))>
-
-<!Master Frame,
-	Name =			"Following Text",
-	Placement =		Following Text,
-	Horizontal Alignment =	Center,
-	Width =			5.70 inches,
-	Height =		2.85 inches,
-	Diagram =
-V4,
-(g9,32767,0
- (E10,0,0,0,1,1,0.053333,1,15,0,0,1,0,0,0,0,1,1,1,0.066667,0.066667,6,6,0,0.066
-  667,6))>
-
-<!Master Frame,
-	Name =			Footnote,
-	Placement =		Bottom of Page,
-	Horizontal Alignment =	Left,
-	Same Page =		yes,
-	Width =			5.70 inches,
-	Height =		0.204 inches,
-	Diagram =
-V4,
-(g9,32767,0
- (E10,0,0,0,1,1,0.053333,1,15,0,0,1,0,0,0,0,1,1,1,0.066667,0.066667,6,6,0,0.066
-  667,6))>
-
-<!Master Frame,
-	Name =			Top,
-	Placement =		Top of Page,
-	Horizontal Alignment =	Center,
-	Width =			5.70 inches,
-	Height =		2.85 inches,
-	Diagram =
-V4,
-(g9,32767,0
- (E10,0,0,0,1,1,0.053333,1,15,0,0,1,0,0,0,0,1,1,1,0.066667,0.066667,6,6,0,0.066
+(g9,0,0
+ (E10,0,0,0,1,1,0.053333,1,15,0,0,1,0,0,0,1,0,1,1,0.066667,0.066667,6,6,0,0.066
   667,6))>
 
 <Page Header, Frame =
@@ -189,7 +77,7 @@ V4,
  (t8,1,4,5.698608,0.438782,2,17,@nnclas12b,September\ 2\,\ 1988)
  (t8,2,4,2.849304,0.438782,1,17,@nnclas12b,SCCS\ Check-out\ Utility)
  (t8,3,4,0,0.438782,0,17,@nnclas12b,getdelta)
- (E10,0,0,0,1,1,0.053333,1,15,0,0,1,0,0,0,1,1,1,1,0.066667,0.066667,6,6,0,0.066
+ (E10,0,0,0,1,1,0.053333,1,15,0,0,1,0,0,0,0,1,1,1,0.066667,0.066667,6,6,0,0.066
   667,6))>
 
 <Page Footer, Frame =
