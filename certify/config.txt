@@ -1,4 +1,4 @@
-$Header: /users/source/archives/sccs_tools.vcs/certify/RCS/config.txt,v 1.1 1989/03/29 14:56:24 dickey Exp $
+$Header: /users/source/archives/sccs_tools.vcs/certify/RCS/config.txt,v 2.0 1989/06/12 14:46:41 ste_cm Rel $
 
 --------------------------------------------------------------------------------
 
@@ -8,6 +8,11 @@ The tools are written in C.
 The non-RCS tools (e.g., 'getdelta' and 'putdelta') have been tested on the
 Apollo, Gould and Sun systems at the SPC.  All of the programs have been built
 on all three platforms.
+
+--------------------------------------------------------------------------------
+
+To build this set of programs, you need CM_TOOLS common library and interface
+files (baseline 2+).
 
 --------------------------------------------------------------------------------
 
