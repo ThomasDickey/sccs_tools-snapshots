@@ -1,5 +1,5 @@
 #ifndef	lint
-static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/src/RCS/sccsput.c,v 2.3 1991/05/24 08:29:00 dickey Exp $";
+static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/src/RCS/sccsput.c,v 3.0 1991/06/07 08:24:57 ste_cm Rel $";
 #endif
 
 /*
@@ -7,9 +7,19 @@ static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/
  * Author:	T.E.Dickey
  * Created:	08 May 1990 (from sccsput.sh and rcsput.c)
  * $Log: sccsput.c,v $
- * Revision 2.3  1991/05/24 08:29:00  dickey
- * lint (apollo sr10.3)
+ * Revision 3.0  1991/06/07 08:24:57  ste_cm
+ * BASELINE Tue Jun 18 08:04:39 1991 -- apollo sr10.3
  *
+ *		Revision 2.5  91/06/07  08:24:57  dickey
+ *		use 'getopt()'; cleanup option processing, including those
+ *		that we pass-thru to 'putdelta'
+ *		
+ *		Revision 2.4  91/06/07  07:58:52  dickey
+ *		corrected pathname of "-l" value
+ *		
+ *		Revision 2.3  91/05/24  08:51:12  dickey
+ *		lint (apollo sr10.3)
+ *		
  *		Revision 2.2  91/05/23  09:25:57  dickey
  *		apollo sr10.3 cpp complains about endif-tags
  *		
@@ -41,11 +51,13 @@ extern	char	*pathleaf();
 
 static	char	diff_opts[BUFSIZ];
 static	char	*verb = "putdelta";
+static	char	comment[BUFSIZ];
 static	FILE	*log_fp;
 static	int	a_opt;		/* all-directory scan */
 static	int	no_op;		/* no-op mode */
 static	char	*pager;		/* nonzero if we don't cat diffs */
 static	int	force;
+static	char	*k_opt	= "";
 static	int	quiet;
 
 static
@@ -110,7 +122,7 @@ char	*archive;
 			out_diff[BUFSIZ];
 	auto	int	changed;
 
-	FORMAT(buffer, "get %s -k -p %s", quiet ? "-s" : "", archive);
+	FORMAT(buffer, "get %s %s -p %s", quiet ? "-s" : "", k_opt, archive);
 	(void)pipe2file(buffer, in_diff);
 
 	FORMAT(buffer, "diff %s %s %s", diff_opts, in_diff, working);
@@ -169,7 +181,10 @@ char	*name;
 		}
 	}
 
-	(void)strcpy(args, working);
+	*args = EOS;
+	if (quiet)	catarg(args, "-s");
+	if (*comment)	catarg(args, comment);
+	catarg(args, working);
 
 	if (!no_op) {
 		PRINTF("*** %s \"%s\"\n",
@@ -235,56 +250,61 @@ usage(option)
 ,"Options"
 ,"  -a       process all directories, including those beginning with \".\""
 ,"  -b       (passed to sccsdiff)"
-,"  -h       (passed to sccsdiff)"
 ,"  -c       send differences to terminal without $PAGER filtering"
-,"  -l file  write all differences to logfile"
+,"  -f       force (initial) insertion even if file appears to be non-text"
+,"  -h       (passed to sccsdiff)"
+,"  -k       expand keywords from archive before differences"
+,"  -l file  write all differences to log-file"
 ,"  -n       compute differences only, don't try to archive"
-,"  -s       silent"
+,"  -s       silent (passed to putdelta)"
+,"  -y text  comment (passed to putdelta)"
 ,""
 	};
 	register int	j;
 	for (j = 0; j < sizeof(tbl)/sizeof(tbl[0]); j++)
 		FPRINTF(stderr, "%s\n", tbl[j]);
 	if (option == '?')
-		(void)system("checkin -?");
+		(void)system("putdelta -?");
 	exit(FAIL);
 }
 
 main(argc, argv)
 char	*argv[];
 {
+	extern	int	optind;
+	extern	char	*optarg;
+
 	register int	j;
 	register char	*s;
-	auto	 int	had_args = FALSE;
 
 	track_wd((char *)0);
 	pager = dftenv("more -l", "PAGER");
-	/* patch: getopt? */
-	for (j = 1; j < argc; j++) {
-		if (*(s = argv[j]) == '-') {
-			switch (s[1]) {
-			case 'a':	a_opt = TRUE;		break;
-			case 'f':	force = TRUE;		break;
-			case 'b':
-			case 'h':	catarg(diff_opts, s);	break;
-			case 'c':	pager = 0;		break;
-			case 'n':	no_op = TRUE;		break;
-			case 'l':	if (s[2] == EOS)
-						s = "logfile";
-					if (!(log_fp = fopen(s, "a+")))
-						usage(0);
-					break;
-			case 's':	quiet = TRUE;		break;
-			default:	usage(s[1]);
-			}
-		} else {
-			do_arg(s);
-			had_args = TRUE;
+	while ((j = getopt(argc, argv, "abcfhl:nsy:")) != EOF) {
+		switch (j) {
+		case 'a':	a_opt = TRUE;			break;
+		case 'b':	catarg(diff_opts, "-b");	break;
+		case 'c':	pager = 0;			break;
+		case 'f':	force = TRUE;			break;
+		case 'h':	catarg(diff_opts, "-h");	break;
+		case 'k':	k_opt = "-k";			break;
+		case 'l':	if (!(log_fp = fopen(optarg, "a+")))
+					usage(0);
+				break;
+		case 'n':	no_op = TRUE;			break;
+		case 's':	quiet = TRUE;			break;
+		case 'y':	FORMAT(comment, "-y%.*s",
+					sizeof(comment-3), optarg);
+				break;
+		default:	usage(j);
 		}
 	}
 
-	if (!had_args)
+	if (optind < argc) {
+		while (optind < argc)
+			do_arg(argv[optind++]);
+	} else
 		do_arg(".");
+
 	exit(SUCCESS);
 	/*NOTREACHED*/
 }

@@ -1,4 +1,4 @@
-$Id: release.txt,v 2.3 1990/06/22 07:41:52 dickey Exp $
+$Id: release.txt,v 3.0 1991/06/07 09:08:49 ste_cm Rel $
 
 --------------------------------------------------------------------------------
 
@@ -10,6 +10,10 @@ Tested for apollo SR10.1
 Apollo SR10.2 broke 'sccsput' the rest of the way; rewrote into C-language.
 
 Modified sccs directory-name default to "SCCS".
+
+Rewrote 'sccsget' into C.
+
+Added '-k', '-y' options to 'sccsput', pass-thru '-s' to 'putdelta'.
 
 Baseline 2:
 ----------
