@@ -1,3 +1,8 @@
+1996-01-09  Thomas E. Dickey  <dickey@clark.net>
+
+	* src/getdelta/src/getdelta.c:
+	adjusted my hack for CmVision binary files to read past several changes
+
 1995-10-14  Thomas E. Dickey  <dickey@clark.net>
 
 	* src/putdelta/src/sccsput.c:
