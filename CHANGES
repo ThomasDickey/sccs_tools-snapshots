@@ -1,3 +1,16 @@
+1988-09-02  dickey@software.org
+
+	* user/getdelta.doc: removed --d option.
+
+	* user/sccsput.doc: added "-f" option.
+
+	* src/putdelta/src/putdelta.c:
+	use 'sccs_dir()' to encapsulate SCCS-directory name.
+
+	* src/getdelta/src/getdelta.c:
+	use 'sccs_dir()' to encapsulate SCCS-directory name.
+	dropped "-d" option and the corresponding GET_PATH environment variable.
+
 1988-08-30  dickey@software.org
 
 	* src/getdelta/src/getdelta.c:

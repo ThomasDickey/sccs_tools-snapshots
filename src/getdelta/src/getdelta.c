@@ -1,5 +1,5 @@
 #ifndef	lint
-static	char	sccs_id[] = "@(#)getdelta.c	1.6 88/08/30 16:33:54";
+static	char	sccs_id[] = "@(#)getdelta.c	1.7 88/09/02 09:27:22";
 #endif	lint
 
 /*
@@ -7,6 +7,7 @@ static	char	sccs_id[] = "@(#)getdelta.c	1.6 88/08/30 16:33:54";
  * Author:	T.E.Dickey
  * Created:	26 Mar 1986 (as a procedure)
  * Modified:
+ *		02 Sep 1988, use 'sccs_dir()', dropped "-d" option and GET_PATH.
  *		09 Aug 1988, corrected overlapping "-s", "-k" options.
  *		29 Jul 1988, renamed from 'sccsbase'.  Preserve executable-mode
  *			     of extracted file (see 'putdelta').
@@ -21,9 +22,6 @@ static	char	sccs_id[] = "@(#)getdelta.c	1.6 88/08/30 16:33:54";
  * Function:	Extract a specified SCCS-delta of a given file, altering the
  *		modification date to correspond with the delta-date.
  *
- * Environment:	GET_PATH
- *		SCCS_DIR
- *
  * Options:	r SID	(a la 'get') recognizes SCCS-sid description
  *		c cutoff(a la 'get') recognizes SCCS cutoff-date description,
  *			forces this instead to use the last date before
@@ -31,18 +29,16 @@ static	char	sccs_id[] = "@(#)getdelta.c	1.6 88/08/30 16:33:54";
  *		k	passed through to "get"
  *		s	make the operation less noisy (passed to "get")
  *		n	noop: show states we would do
- *		d path	set default SCCS-directory to 'path' vs "sccs"
  *		f	force deletion of existing file
  */
 
 #include	"ptypes.h"
 
-#include	<stdio.h>
 #include	<ctype.h>
 #include	<time.h>
 extern	long	packdate();
 extern	char	*ctime();
-extern	char	*getenv();
+extern	char	*sccs_dir();
 extern	char	*strcpy();
 extern	char	*strrchr();
 extern	time_t	cutoff();
@@ -67,8 +63,6 @@ static	int	writeable = 0,		/* nonzero to make g-file writeable */
 		noop	= FALSE;	/* "-n" option */
 
 static	char	*sid	= NULL,
-		*sccs_dir	= "sccs",
-		*get_path	= "get",
 		get_opts[BUFSIZ],
 		bfr[BUFSIZ];
 
@@ -169,7 +163,7 @@ int	*mode_;
 			return (TRUE);
 		} else {
 			YELL "?? \"%s\" is not a file\n", name);
-			exit(1);
+			(void)exit(FAIL);
 			/*NOTREACHED*/
 		}
 	}
@@ -206,7 +200,7 @@ char	*s;
 		(void)strcpy(s_file, name);
 		name = s;
 	} else {
-		FORMAT(s_file, "%s/s.%s", sccs_dir, name);
+		FORMAT(s_file, "%s/s.%s", sccs_dir(), name);
 	}
 
 	if (isFILE(s_file,&s_mode) > 0) {
@@ -225,9 +219,9 @@ char	*s;
 					return;
 				}
 			}
-			TELL "%s %s\n", get_path, get_opts);
+			TELL "get %s\n", get_opts);
 			newzone(0,0,FALSE);	/* execute in GMT zone */
-			if (execute(get_path, get_opts) < 0) {
+			if (execute("get", get_opts) < 0) {
 				failed(name);
 			}
 		}
@@ -240,8 +234,8 @@ char	*s;
 static
 usage ()
 {
-	YELL "usage: getdelta [-rSID] [-cCUTOFF] [-kns] [-d path] files\n");
-	exit(1);
+	YELL "usage: getdelta [-rSID] [-cCUTOFF] [-kns] files\n");
+	(void)exit(FAIL);
 	/*NOTREACHED*/
 }
 
@@ -252,7 +246,7 @@ failed(s)
 char	*s;
 {
 	perror(s);
-	exit(1);
+	(void)exit(FAIL);
 	/*NOTREACHED*/
 }
 
@@ -262,14 +256,10 @@ char	*argv[];
 	register int	j, k;
 	register char	*s;
 
-	if (s = getenv("GET_PATH"))
-		get_path = s;
-	if (s = getenv("SCCS_DIR"))
-		sccs_dir = s;
 	oldzone();
 	s = get_opts;
 
-	while ((j = getopt(argc, argv, "r:c:skndf")) != EOF) {
+	while ((j = getopt(argc, argv, "r:c:sknf")) != EOF) {
 		switch (j) {
 		/* options interpreted & pass through to "get" */
 		case 'r':
@@ -297,7 +287,6 @@ char	*argv[];
 			break;
 		/* options belonging to this program only */
 		case 'n':	noop	 = TRUE;	break;
-		case 'd':	sccs_dir = optarg;	break;
 		case 'f':	force	 = TRUE;	break;
 		default:	usage();
 		}
@@ -305,6 +294,6 @@ char	*argv[];
 	}
 	for (j = optind; j < argc; j++)
 		DoFile (argv[j], s);
-	exit(0);
+	(void)exit(SUCCESS);
 	/*NOTREACHED*/
 }
