@@ -1,3 +1,94 @@
+1989-03-22  dickey@software.org
+
+	* src/sccs2rcs/src/sccs2rcs.c:
+	added code to support "-e" option (edit sccs keywords, changing them to
+	RCS keywords).
+
+	* src/sccs2rcs/src/Makefile: use 'rcsedit.o' module in common/lib
+
+	* src/sccs2rcs/test/run_test.sh: added test cases for "-e" option.
+
+	* src/sccs2rcs/test/s.testfile3.c: New file.
+
+1989-03-22  ste_cm@software.org
+
+	* src/sccs2rcs/test/s.testfile3.c:
+	BASELINE Mon Jul 10 09:19:20 EDT 1989
+
+	* src/sccs2rcs/test/s.testfile3.c:
+	BASELINE Mon Jul 20 12:41:28 1992 -- CM_TOOLS #11
+
+	* src/sccs2rcs/test/s.testfile3.c: BASELINE Tue Dec 17 11:56:35 1991
+
+	* src/sccs2rcs/test/s.testfile3.c:
+	BASELINE Tue Jun 18 08:04:39 1991 -- apollo sr10.3
+
+	* src/sccs2rcs/test/s.testfile3.c:
+	BASELINE Wed May  5 11:05:31 1993 -- TD_LIB #12
+
+1989-03-22  dickey@software.org
+
+	* src/sccs2rcs/src/sccs2rcs.c: linted, use "ptypes.h" and 'getopt()'.
+	added -e option (not done)
+
+	* src/sccs2rcs/src/Makefile: use "ptypes.h" include-file
+
+	* src/sccs2rcs/test/do_test.sh, src/sccs2rcs/test/run_test.sh, src/sccs2rcs/test/Makefile:
+	New file.
+
+	* src/getdelta/src/getdelta.c:
+	corrected code which determines how we find particular SID
+
+	* src/getdelta/src/getdelta.c: sccs2rcs keywords
+
+1989-03-22  ste_cm@software.org
+
+	* src/getdelta/src/getdelta.c: BASELINE Mon Jul 10 09:28:43 EDT 1989
+
+1989-03-22  dickey@software.org
+
+	* src/sccs2rcs/test/s.testfile2.c: New file.
+
+1989-03-22  ste_cm@software.org
+
+	* src/sccs2rcs/test/s.testfile2.c:
+	BASELINE Mon Jul 10 09:19:20 EDT 1989
+
+	* src/sccs2rcs/test/s.testfile2.c:
+	BASELINE Mon Jul 20 12:41:28 1992 -- CM_TOOLS #11
+
+	* src/sccs2rcs/test/s.testfile2.c: BASELINE Tue Dec 17 11:56:35 1991
+
+	* src/sccs2rcs/test/s.testfile2.c:
+	BASELINE Tue Jun 18 08:04:39 1991 -- apollo sr10.3
+
+	* src/sccs2rcs/test/s.testfile2.c:
+	BASELINE Wed May  5 11:05:31 1993 -- TD_LIB #12
+
+1989-03-22  dickey@software.org
+
+	* src/sccs2rcs/test/s.testfile1.c: New file.
+
+1989-03-22  ste_cm@software.org
+
+	* src/sccs2rcs/test/s.testfile1.c:
+	BASELINE Mon Jul 10 09:19:20 EDT 1989
+
+	* src/sccs2rcs/test/s.testfile1.c:
+	BASELINE Mon Jul 20 12:41:28 1992 -- CM_TOOLS #11
+
+	* src/sccs2rcs/test/s.testfile1.c: BASELINE Tue Dec 17 11:56:35 1991
+
+	* src/sccs2rcs/test/s.testfile1.c:
+	BASELINE Tue Jun 18 08:04:39 1991 -- apollo sr10.3
+
+	* src/sccs2rcs/test/s.testfile1.c:
+	BASELINE Wed May  5 11:05:31 1993 -- TD_LIB #12
+
+1989-03-22  dickey@software.org
+
+	* src/sccs2rcs/src/Makefile: New file.
+
 1989-03-20  dickey@software.org
 
 	* src/sccs2rcs/src/sccs2rcs.c:

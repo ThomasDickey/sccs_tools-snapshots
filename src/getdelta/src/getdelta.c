@@ -1,12 +1,20 @@
 #ifndef	lint
-static	char	sccs_id[] = "@(#)getdelta.c	1.7 88/09/02 09:27:22";
+static	char	sccs_id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/src/RCS/getdelta.c,v 2.0 1989/03/22 09:24:38 ste_cm Rel $";
 #endif	lint
 
 /*
  * Title:	getdelta.c (get an sccs-delta)
  * Author:	T.E.Dickey
  * Created:	26 Mar 1986 (as a procedure)
- * Modified:
+ * $Log: getdelta.c,v $
+ * Revision 2.0  1989/03/22 09:24:38  ste_cm
+ * BASELINE Mon Jul 10 09:28:43 EDT 1989
+ *
+ *		Revision 1.9  89/03/22  09:24:38  dickey
+ *		sccs2rcs keywords
+ *		
+ *		22 Mar 1989, corrected 'same()' code so we can get correct
+ *			     date from branches.
  *		02 Sep 1988, use 'sccs_dir()', dropped "-d" option and GET_PATH.
  *		09 Aug 1988, corrected overlapping "-s", "-k" options.
  *		29 Jul 1988, renamed from 'sccsbase'.  Preserve executable-mode
@@ -80,13 +88,18 @@ char	*version;
 {
 	int	code	= (sid == NULL);
 
-	if (sid) {
-	register len = strlen (sid),
-		cmp = strlen (version);
+	if (!code) {
+		register int	len = strlen (sid),
+				cmp = strlen (version),
+				dot;
 		if (len == cmp)
 			code = ! strcmp(sid,version);
 		else if (len < cmp) {
-			if (version[len] == '.')
+			for (cmp = dot = 0; sid[cmp]; cmp++)
+				if (sid[cmp] == '.')
+					dot++;
+			if ((dot == 0 || dot == 2)	/* "R" or "R.L.B" */
+			&&  (version[len] == '.'))
 				code = ! strncmp(sid,version,len);
 		}
 	}
