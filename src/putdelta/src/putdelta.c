@@ -1,12 +1,19 @@
 #ifndef	lint
-static	char	sccs_id[] = "@(#)putdelta.c	1.4 88/09/06 07:27:59";
+static	char	sccs_id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/src/RCS/putdelta.c,v 2.0 1988/09/13 09:00:19 ste_cm Rel $";
 #endif	lint
 
 /*
  * Title:	putdelta.c (create new or initial sccs delta)
  * Author:	T.E.Dickey
  * Created:	25 Apr 1986
- * Modified:
+ * $Log: putdelta.c,v $
+ * Revision 2.0  1988/09/13 09:00:19  ste_cm
+ * BASELINE Mon Jul 10 09:25:16 EDT 1989
+ *
+ *		Revision 1.6  88/09/13  09:00:19  dickey
+ *		sccs2rcs keywords
+ *		
+ *		13 Sep 1988, use 'catchall()'
  *		06 Sep 1988, 'admin' doesn't recognize "-s" switch.
  *		02 Sep 1988, use 'sccs_dir()'
  *		28 Jul 1988, renamed from 'sccsbase', rewrote to be a complete
@@ -338,8 +345,6 @@ EditFile(lines)
 long	lines;
 {
 	FILE	*fpS;
-	int	(*sv_int)();
-	int	(*sv_quit)();
 	register int j;
 	char	bfr[BUFSIZ];
 
@@ -347,8 +352,7 @@ long	lines;
 		   TELL ("** cannot write-enable \"%s\"\n", s_file);
 		   return;
 	}
-	sv_int  = signal (SIGINT, SIG_IGN);
-	sv_quit = signal (SIGQUIT, SIG_IGN);
+	catchall(SIG_IGN);
 	fpS = fopen (s_file, "w");
 	(void) fprintf (fpS, "\001h%05d\n", chksum);
 	(void) rewind (fpT);
@@ -358,10 +362,9 @@ long	lines;
 	}
 	(void) fclose (fpS);
 	(void) chmod (s_file, s_mode);
+	catchall(SIG_DFL);
 	SHOW ("** %d lines processed\n", lines);
 	(void) fflush (stdout);
-	(void) signal (SIGINT,  sv_int);
-	(void) signal (SIGQUIT, sv_quit);
 }
 
 /*

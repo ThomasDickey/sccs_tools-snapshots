@@ -1,3 +1,14 @@
+1988-09-13  dickey@software.org
+
+	* src/putdelta/src/putdelta.c: sccs2rcs keywords
+
+	* src/putdelta/src/putdelta.c:
+	use 'catchall()' to encapsulate file-copy protection
+
+1988-09-13  ste_cm@software.org
+
+	* src/putdelta/src/putdelta.c: BASELINE Mon Jul 10 09:25:16 EDT 1989
+
 1988-09-06  dickey@software.org
 
 	* src/putdelta/src/putdelta.c: "admin" doesn't recognize "-s" switch.
