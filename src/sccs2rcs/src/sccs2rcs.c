@@ -1,14 +1,15 @@
-#ifndef	lint
-static char *RCSid =
-"$Header: /users/source/archives/sccs_tools.vcs/src/sccs2rcs/src/RCS/sccs2rcs.c,v 6.3 1994/07/19 15:27:34 tom Exp $";
-#endif
-
 /*
  * SCCSTORCS - build RCS file from SCCS file preserving deltas.
  * Author: Ken Greer
  *
  * $Log: sccs2rcs.c,v $
- * Revision 6.3  1994/07/19 15:27:34  tom
+ * Revision 6.5  1995/05/13 23:19:39  tom
+ * use MODULE_ID
+ *
+ * Revision 6.4  1995/05/13 23:19:39  tom
+ * setmtime
+ *
+ * Revision 6.3  1994/07/19  15:27:34  tom
  * require repeating "-e" option to enable Log-comment editing.
  *
  * Revision 6.1  1993/09/23  20:21:51  dickey
@@ -135,6 +136,8 @@ static char *RCSid =
 #include "rcsdefs.h"
 #include "sccsdefs.h"
 #include <errno.h>
+
+MODULE_ID("$Id: sccs2rcs.c,v 6.5 1995/05/13 23:19:39 tom Exp $")
 
 #define SOH	001		/* SCCS lines start with SOH (Control-A) */
 #define RCS	"rcs"
@@ -763,7 +766,7 @@ void	edit_keywords _ONE(char *, filename)
 	}
 	if (changes) {
 		if (copyback(fpT, filename, (int)sb.st_mode, edit_lines))
-			if (setmtime(filename, sb.st_mtime) < 0)
+			if (setmtime(filename, sb.st_mtime, sb.st_atime) < 0)
 				failed("(setmtime)");
 		if (verbose) {
 			(void)invoke("rcsdiff", filename);
