@@ -1,8 +1,12 @@
-$Id: release.txt,v 4.0 1991/10/24 08:46:55 ste_cm Rel $
+$Id: release.txt,v 5.0 1992/07/17 09:41:36 ste_cm Rel $
 
 --------------------------------------------------------------------------------
 
-Baseline 4:
+Baseline 5:	(1992/jul/17)
+----------
+Mods to work with CM_TOOLS #11
+
+Baseline 4:	(1991/oct/04)
 ----------
 Revised 'getdelta' and 'putdelta' to operate properly as set-uid programs.
 

@@ -1,5 +1,5 @@
 #ifndef	lint
-static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/src/RCS/putdelta.c,v 4.0 1991/10/24 09:11:08 ste_cm Rel $";
+static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/src/RCS/putdelta.c,v 6.0 1992/07/17 09:37:40 ste_cm Rel $";
 #endif
 
 /*
@@ -239,10 +239,10 @@ _DCL(int,	begin)
 static
 NeedDirectory(
 _ARX(char *,	path)
-_AR1(struct stat *,sb)
+_AR1(STAT *,	sb)
 	)
 _DCL(char *,	path)
-_DCL(struct stat *,sb)
+_DCL(STAT *,	sb)
 {
 	if (stat(path, sb) < 0)
 		failed(path);
@@ -260,14 +260,14 @@ _DCL(struct stat *,sb)
  * See if the specified file exists.  If so, verify that it is indeed a file.
  */
 static
-isFILE(
+is_a_file(
 _ARX(char *,	name)
 _AR1(int *,	mode_)
 	)
 _DCL(char *,	name)
 _DCL(int *,	mode_)
 {
-	struct	stat	sb;
+	STAT	sb;
 
 	if (stat(name, &sb) >= 0) {
 		if ((sb.st_mode & S_IFMT) == S_IFREG) {
@@ -586,7 +586,7 @@ _DCL(char *,	name)
 	register char	*s;
 	auto	time_t	put_time,
 			ref_time = time(0);
-	struct	stat	sb;
+	auto	STAT	sb;
 	auto	char	temp[BUFSIZ],
 			*put_verb,
 			put_opts[BUFSIZ];
@@ -597,7 +597,7 @@ _DCL(char *,	name)
 	(void)strcpy(g_file, sccs2name(name, FALSE));
 
 	/* The file must exist; otherwise we give up! */
-	if ((put_time = isFILE(g_file, &s_mode)) == 0)
+	if ((put_time = is_a_file(g_file, &s_mode)) == 0)
 		failed(g_file);
 
 	/* It is possible (particularly on Apollo ring) for our clock time
@@ -652,7 +652,7 @@ _DCL(char *,	name)
 	}
 
 	/* If the s-file exists, we make a delta; otherwise initial insertion */
-	if (isFILE(s_file, (int *)0)) {
+	if (is_a_file(s_file, (int *)0)) {
 		if (!TestLock())
 			return;
 		put_verb = DELTA_TOOL;
