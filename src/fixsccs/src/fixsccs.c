@@ -20,126 +20,126 @@
 #include	<sccsdefs.h>
 #include	<time.h>	/* declares 'ctime()' */
 
-MODULE_ID("$Id: fixsccs.c,v 6.9 2002/07/05 13:42:07 tom Exp $")
+MODULE_ID("$Id: fixsccs.c,v 6.10 2004/03/08 01:20:58 tom Exp $")
 
-static	int	a_opt;		/* all-directory scan */
-static	int	no_op;		/* no-op mode */
-static	int	quiet;
-static	int	fixed;
+static int a_opt;		/* all-directory scan */
+static int no_op;		/* no-op mode */
+static int quiet;
+static int fixed;
 
-static
-void	FixSCCS(
-	_ARX(char *,	path)
-	_ARX(char *,	archive)
-	_AR1(Stat_t *,	sp)
-		)
-	_DCL(char *,	path)
-	_DCL(char *,	archive)
-	_DCL(Stat_t *,	sp)
+static void
+FixSCCS( char *path, char *archive, Stat_t * sp)
 {
-	auto	time_t	date;
-	auto	char	*vers,
-			*locker;
+    time_t date;
+    char *vers;
+    char *locker;
 
-	sccslast(path, sccs2name(archive,TRUE), &vers, &date, &locker);
-	if (*vers != '?'
-	 && sp->st_mtime != date) {
-		if (!quiet) {
-			PRINTF("%s %s\n", archive, vers);
-			PRINTF("   now: %s", ctime(&(sp->st_mtime)));
-			PRINTF("   set: %s", ctime(&date));
-		}
-		if (!no_op) {
-			if (setmtime(archive, date, (time_t)0) < 0)
-				failed(archive);
-		}
-		fixed++;
+    sccslast(path, sccs2name(archive, TRUE), &vers, &date, &locker);
+    if (*vers != '?'
+	&& sp->st_mtime != date) {
+	if (!quiet) {
+	    PRINTF("%s %s\n", archive, vers);
+	    PRINTF("   now: %s", ctime(&(sp->st_mtime)));
+	    PRINTF("   set: %s", ctime(&date));
 	}
+	if (!no_op) {
+	    if (setmtime(archive, date, (time_t) 0) < 0)
+		failed(archive);
+	}
+	fixed++;
+    }
 }
 
 /*ARGSUSED*/
-static
-int	WALK_FUNC(scan_tree)
+static int
+WALK_FUNC(scan_tree)
 {
-	static	char	prefix[] = SCCS_PREFIX;
-	auto	char	tmp[MAXPATHLEN],
-			*leaf;
+    static char prefix[] = SCCS_PREFIX;
+    char tmp[MAXPATHLEN];
+    char *leaf;
 
-	leaf = pathleaf(pathcat(tmp, path, name));
+    leaf = pathleaf(pathcat(tmp, path, name));
 
-	if (sp == 0 || readable < 0) {
-		readable = -1;
-		perror(name);
-	} else if (isDIR(sp->st_mode)) {
-		if (!a_opt && !dotname(leaf) && *leaf == '.')
-			readable = -1;
-		else if (!quiet)
-			track_wd(path);
-	} else if (!strncmp(leaf, prefix, sizeof(prefix)-sizeof(char))
-	    &&    isFILE(sp->st_mode)) {
-		if (!quiet)
-			track_wd(path);
-		FixSCCS(path, tmp, sp);
-	} else
-		readable = -1;
+    if (sp == 0 || readable < 0) {
+	readable = -1;
+	perror(name);
+    } else if (isDIR(sp->st_mode)) {
+	if (!a_opt && !dotname(leaf) && *leaf == '.')
+	    readable = -1;
+	else if (!quiet)
+	    track_wd(path);
+    } else if (!strncmp(leaf, prefix, sizeof(prefix) - sizeof(char))
+	       && isFILE(sp->st_mode)) {
+	if (!quiet)
+	    track_wd(path);
+	FixSCCS(path, tmp, sp);
+    } else
+	readable = -1;
 
-	return(readable);
+    return (readable);
+}
+
+static void
+do_arg( char *name)
+{
+    (void) walktree((char *) 0, name, scan_tree, "r", 0);
 }
 
 static
-void	do_arg(
-	_AR1(char *,	name))
-	_DCL(char *,	name)
+void
+usage(void)
 {
-	(void)walktree((char *)0, name, scan_tree, "r", 0);
-}
-
-static
-void	usage(_AR0)
-{
-	static	char	*tbl[] = {
- "Usage: fixsccs [options] files_or_directories"
-,""
-,"Sets SCCS archive file times to match the checkin time of the tip version."
-,""
-,"Options"
-,"  -a       process all directories, including those beginning with \".\""
-,"  -n       scan archives only, don't try to set mod-times"
-,"  -q       quiet"
-,""
-	};
-	unsigned j;
-	for (j = 0; j < sizeof(tbl)/sizeof(tbl[0]); j++)
-		FPRINTF(stderr, "%s\n", tbl[j]);
-	exit(FAIL);
+    static char *tbl[] =
+    {
+	"Usage: fixsccs [options] files_or_directories"
+	,""
+	,"Sets SCCS archive file times to match the checkin time of the tip version."
+	,""
+	,"Options"
+	,"  -a       process all directories, including those beginning with \".\""
+	,"  -n       scan archives only, don't try to set mod-times"
+	,"  -q       quiet"
+	,""
+    };
+    unsigned j;
+    for (j = 0; j < sizeof(tbl) / sizeof(tbl[0]); j++)
+	FPRINTF(stderr, "%s\n", tbl[j]);
+    exit(FAIL);
 }
 
 /*ARGSUSED*/
 _MAIN
 {
-	register int	j;
+    register int j;
 
-	while ((j = getopt(argc, argv, "anq")) != EOF) {
-		switch (j) {
-		case 'a':	a_opt = TRUE;			break;
-		case 'n':	no_op = TRUE;			break;
-		case 'q':	quiet = TRUE;			break;
-		default:	usage();
-		}
+    while ((j = getopt(argc, argv, "anq")) != EOF) {
+	switch (j) {
+	case 'a':
+	    a_opt = TRUE;
+	    break;
+	case 'n':
+	    no_op = TRUE;
+	    break;
+	case 'q':
+	    quiet = TRUE;
+	    break;
+	default:
+	    usage();
 	}
+    }
 
-	if (!quiet)
-		track_wd((char *)0);
-	if (optind < argc) {
-		while (optind < argc)
-			do_arg(argv[optind++]);
-	} else
-		do_arg(".");
+    if (!quiet)
+	track_wd((char *) 0);
+    if (optind < argc) {
+	while (optind < argc)
+	    do_arg(argv[optind++]);
+    } else
+	do_arg(".");
 
-	if (fixed)
-		PRINTF("%d files %sfixed\n", fixed, no_op ? "would be " : "");
-	else
-		PRINTF("No files %sfixed\n", no_op ? "would be " : "");
-	exit(SUCCESS);
-	/*NOTREACHED*/
+    if (fixed)
+	PRINTF("%d files %sfixed\n", fixed, no_op ? "would be " : "");
+    else
+	PRINTF("No files %sfixed\n", no_op ? "would be " : "");
+    exit(SUCCESS);
+    /*NOTREACHED */
 }
