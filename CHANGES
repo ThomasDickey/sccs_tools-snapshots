@@ -1,3 +1,23 @@
+1993-05-05  dickey@software.org
+
+	* certify/release.txt: baseline-date
+
+1993-05-05  ste_cm@software.org
+
+	* certify/release.txt: BASELINE Wed May  5 11:05:31 1993 -- TD_LIB #12
+
+1993-05-05  dickey@software.org
+
+	* COPYING: updated year
+
+1993-05-05  ste_cm@software.org
+
+	* COPYING: BASELINE Wed May  5 11:05:31 1993 -- TD_LIB #12
+
+1993-05-05  Thomas E. Dickey  <dickey@software.org>
+
+	* COPYING: updated notice
+
 1993-04-29  dickey@software.org
 
 	* certify/config.txt, certify/release.txt: shorten-filenames

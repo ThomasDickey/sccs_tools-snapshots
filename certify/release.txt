@@ -1,8 +1,8 @@
-$Id: release.txt,v 5.2 1993/04/29 12:46:39 dickey Exp $
+$Id: release.txt,v 6.0 1993/05/05 11:03:38 ste_cm Rel $
 
 --------------------------------------------------------------------------------
 
-Baseline 6
+Baseline 6:	(1993/may/05)
 ----------
 Adapted to TD_LIB #12.
 
@@ -19,7 +19,7 @@ directory (by temporarily changing working directories).
 
 Adapted to CM_TOOLS #10
 
-Baseline 3:
+Baseline 3:	(1991/jun/18)
 ----------
 Modified sccs2rcs to generate 'Id' keyword rather than 'Header'.
 Tested for apollo SR10.1
@@ -32,7 +32,6 @@ Rewrote 'sccsget' into C.
 
 Added '-k', '-y' options to 'sccsput', pass-thru '-s' to 'putdelta'.
 
-Baseline 2:
+Baseline 2:	(1989/jul/10)
 ----------
-
 This version of SCCS_TOOLS implements sccsget and sccsput as shell-scripts.
