@@ -1,3 +1,9 @@
+1991-07-01  dickey@software.org
+
+	* src/putdelta/src/putdelta.c:
+	if this is not running in set-uid mode, provide intermediate
+	values for user/group for "mkdir SCCS" operation.
+
 1991-06-28  ste_cm@software.org
 
 	* src/getdelta/src/getdelta.c:
