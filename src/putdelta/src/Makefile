@@ -1,50 +1,45 @@
-# @(#)Makefile	1.1 88/07/29 09:17:51
+# @(#)Makefile	1.2 88/08/03 16:24:07
 # Make-file for SCCS check-in utilities
+#
+####### (Environment) ##########################################################
 B	= ../../bin
 I	= ../lib
 GET	= getdelta
 #
+####### (Command-line Options) #################################################
 INCLUDES= -I$I
 CFLAGS  = $(DEFINES) $(INCLUDES) -O
-LIBS	=\
-	../lib/lib.a
+LIBS	= ../lib/lib.a
+DATE	= echo '****'`date` >> $@
+LINTOPT	= $(DEFINES) $(INCLUDES) -ltd
 #
-ALL	=\
-	putdelta
+####### (Standard Lists) #######################################################
+ALL	= putdelta
+CSRC	= putdelta.c
+SCRIPTS	= sccsput.sh
+SRCS	= $(CSRC) $(SCRIPTS)
+MAIN_O	= putdelta.o $(LIBS)
 #
-all:	$(ALL)
+####### (Standard Productions) #################################################
+all:		$(ALL)
 #
-clean:
-	rm -f *.out *.o
-clobber: clean
-	rm -f $(ALL)
-destroy:
-	rm -f *
+clean:				; rm -f *.o *.out
+clobber:	clean		; rm -f $(ALL)
+destroy:			; rm -f *
+sources:	$(SRCS)
 #
-SRCS	=\
-	putdelta.c
+install:	$B/putdelta\
+		$B/sccsput
 #
-putdelta:	putdelta.o $(LIBS)
-	$(CC) -o $@ putdelta.o $(LIBS)
+####### (Details of Productions) ###############################################
+putdelta:	$(MAIN_O)	; $(CC) -o $@ $(MAIN_O)
 #
-putdelta.o:	$I/ptypes.h	putdelta.c
-#
-# Install this stuff in public bin:
-install:\
-	$B/putdelta\
-	$B/sccsput
+putdelta.o:	$I/ptypes.h
 #
 $B/putdelta:	putdelta	; rm -f $@; cp $? $@; chmod +x $@
 $B/sccsput:	sccsput.sh	; rm -f $@; cp $? $@; chmod +x $@
 #
-sccsput.sh\
-$(SRCS):
-	$(GET) -s $@
-#
-# Development stuff:
-lint.out:	$(SRCS)
-	echo '****'`date` | tee -a $@
-	lintit.sh $? | tee -a $@
-lincnt.out:	$(SRCS)
-	echo '**** '`date` | tee -a $@
-	lincnt $(SRCS) | tee -a $@
+####### (Development) ##########################################################
+$(SRCS):			; $(GET) -s sccs/s.$@
+lint.out:	$(CSRC)		; $(DATE); tdlint $(LINTOPT) $? >>$@
+lincnt.out:	$(CSRC)		; $(DATE); lincnt $(CSRC) >>$@

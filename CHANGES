@@ -1,3 +1,8 @@
+1988-08-03  dickey@software.org
+
+	* src/putdelta/src/Makefile, src/getdelta/src/Makefile:
+	rewrote into standard format.
+
 1988-07-29  dickey@software.org
 
 	* src/getdelta/src/getdelta.c:
