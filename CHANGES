@@ -1,3 +1,7 @@
+1991-09-13  dickey@software.org
+
+	* src/putdelta/src/sccsput.c: broke out 'filesize()'
+
 1991-07-24  dickey@software.org
 
 	* src/putdelta/src/sccsput.c:
