@@ -1,6 +1,6 @@
 #ifndef	lint
 static char *RCSid =
-"$Header: /users/source/archives/sccs_tools.vcs/src/sccs2rcs/src/RCS/sccs2rcs.c,v 1.7 1989/03/22 15:04:39 dickey Exp $";
+"$Header: /users/source/archives/sccs_tools.vcs/src/sccs2rcs/src/RCS/sccs2rcs.c,v 1.10 1989/03/23 13:32:25 dickey Exp $";
 #endif	lint
 
 /*
@@ -8,10 +8,20 @@ static char *RCSid =
  * Author: Ken Greer
  *
  * $Log: sccs2rcs.c,v $
- * Revision 1.7  1989/03/22 15:04:39  dickey
+ * Revision 1.10  1989/03/23 13:32:25  dickey
+ * translate only one Log-keyword per file
+ *
+ * Revision 1.9  89/03/23  10:37:26  dickey
+ * require a colon after reserved-words before splitting a Log-line.
+ * 
+ * Revision 1.8  89/03/23  08:14:08  dickey
+ * added '-c' option (to pass-thru to 'rcs'), refined code which splits line
+ * after Log-keyword.
+ * 
+ * Revision 1.7  89/03/22  15:04:39  dickey
  * added code to support "-e" option (edit sccs keywords, changing them to
  * RCS keywords).
- *
+ * 
  * Revision 1.6  89/03/22  10:37:00  dickey
  * linted, use "ptypes.h" and 'getopt()'.
  * added -e option (not done)
@@ -70,6 +80,7 @@ extern	FILE	*tmpfile();
 
 static	char	*workfile;	/* set iff we infer working file */
 static	char	comments[80];	/* set in 'find_comment()' */
+static	char	*comment_opt;	/* set by '-c' option */
 static	int	edit_lines;	/* total lines written to temp-file */
 
 int
@@ -169,7 +180,8 @@ char *line;
     register DELTA *delta;
     char rev[32];
 
-    sscanf (line, "%*s %*s %s", rev);
+    if (sscanf (line, "%*s %*s %s", rev) < 1)
+	quit("delta format");
     delta = (DELTA *) xalloc (sizeof (DELTA));
     delta -> revision = string (rev);
     delta -> commentary = NULL;
@@ -359,7 +371,10 @@ char *description, *rcsfile;
     FILE *pd;
 
     mkdir("RCS", 0755);		/* forces common naming convention */
-    FORMAT (command, "%s -i -U %s", RCS, rcsfile);
+    FORMAT (command, "%s -i -U ", RCS);
+    if (comment_opt)
+	FORMAT(command + strlen(command), "-c'%s' ", comment_opt);
+    (void)strcat(command, rcsfile);
     if (trace || verbose)
 	printf ("%% %s\n", command);
     if (trace)
@@ -437,11 +452,15 @@ char	*filename;
 {
 	auto	int	header	= TRUE;
 	auto	char	key[80];
-	auto	char	*rcsfile = name2rcs(filename);
+	auto	char	*rcsfile;
 	register char	*s = 0;
 
+	if (comment_opt) {
+		(void)strcpy(comments, comment_opt);
+		return;
+	}
 	comments[0] = EOS;
-	if (!rcsopen(rcsfile, -verbose))
+	if (!rcsopen(rcsfile = name2rcs(filename), -verbose))
 		quit2("Could not find archive %s\n", rcsfile);
 	while (header && (s = rcsread(s))) {
 		s = rcsparse_id(key, s);
@@ -557,9 +576,11 @@ char	*s;
 			s += len;
 			SKIP(s);
 		} else {
-			if (*s == ':')
+			if (*s == ':') {
 				s++;
-			break;
+				break;
+			}
+			return (FALSE);		/* colon makes it unambiguous */
 		}
 	}
 	if (ok) {
@@ -570,7 +591,8 @@ char	*s;
 			edit_lines++;		/* split the line */
 			(void)strcat(strcat(base, "\n"), comments);
 		}
-		(void)strcat(base, tmp);
+		for (t = tmp; (*t == ' ') || (*t == '\t'); t++);
+		(void)strcat(base, t);
 	}
 	return (ok);
 }
@@ -586,7 +608,8 @@ char	*filename;
 	auto	FILE	*fpT,
 			*fpS;
 	auto	struct	stat	sb;
-	auto	int	changes = 0;
+	auto	int	log_tag	= FALSE,
+			changes = 0;
 
 	edit_lines = 0;
 	find_comment(filename);
@@ -601,7 +624,10 @@ char	*filename;
 		while (fgets(bfr, sizeof(bfr), fpS)) {
 			edit_lines++;
 			changes += edit_what(bfr);
-			changes += edit_log(bfr);
+			if (!log_tag && edit_log(bfr)) {
+				log_tag = TRUE;
+				changes++;
+			}
 			(void)fputs(bfr, fpT);
 		}
 		FCLOSE(fpS);
@@ -673,11 +699,15 @@ main (argc, argv)
 char *argv[];
 {
 	extern	int	optind;
+	extern	char *	optarg;
 	auto	int	errors = 0;
 	register int	j;
 
-	while ((j = getopt(argc, argv, "eqtv")) != EOF)
+	while ((j = getopt(argc, argv, "c:eqtv")) != EOF)
 		switch (j) {
+		case 'c':
+			comment_opt = optarg;
+			break;
 		case 'e':
 			edit_key = TRUE;
 			break;
@@ -699,7 +729,7 @@ char *argv[];
 		}
 
 	if (argc <= 1)
-		quit2 ("Usage: %s [-e -t -v -q] s.file ...\n", WHOAMI);
+		quit2 ("Usage: %s [-cTEXT -e -t -v -q] s.file ...\n", WHOAMI);
 
 	for (j = optind; j < argc; j++) {
 		auto	char *sccsfile = argv[j];
