@@ -1,3 +1,9 @@
+2000-04-07  Thomas E. Dickey  <dickey@clark.net>
+
+	* src/getdelta/src/getdelta.c:
+	make this set modification time properly(?) if I'm using cutoff date
+	(tested pre-Y2K)
+
 2000-02-07  Thomas E. Dickey  <dickey@clark.net>
 
 	* src/getdelta/src/getdelta.c: workaround for gcc bug
