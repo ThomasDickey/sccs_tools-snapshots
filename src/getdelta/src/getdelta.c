@@ -1,5 +1,5 @@
 #ifndef	lint
-static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/src/RCS/getdelta.c,v 3.11 1991/06/28 16:58:07 ste_cm Exp $";
+static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/src/RCS/getdelta.c,v 3.16 1991/07/19 10:18:05 dickey Exp $";
 #endif
 
 /*
@@ -7,6 +7,10 @@ static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/
  * Author:	T.E.Dickey
  * Created:	26 Mar 1986 (as a procedure)
  * Modified:
+ *		19 Jul 1991, corrected logic, allowing arguments of the form
+ *			     "SCCS/s.file". Modified version-compare logic to
+ *			     allow versions to 'bump' to higher level, rather
+ *			     than simply match for equality.
  *		27 Jun 1991, added "-b" option.
  *		24 Jun 1991, Test directory permissions for archive- and
  *			     working-file.
@@ -43,6 +47,7 @@ extern	long	packdate();
 extern	char	*ctime();
 extern	char	*pathcat();
 extern	char	*relpath();
+extern	char	*stralloc();
 extern	time_t	cutoff();
 
 extern	char	*optarg;
@@ -78,30 +83,64 @@ static	char	*sid	= NULL,
  *	local procedures						*
  ************************************************************************/
 
+static
+Dots(s)
+char	*s;
+{
+	int	count = 0;
+	while (*s)
+		if (*s++ == '.')
+			count++;
+	return (count);
+}
+
 /*
- * Compare the SCCS version string against the '-r' option's value
+ * Compare the SCCS version string against the '-r' option's value for equality
  */
 static
 int
 same (version)
 char	*version;
 {
-	int	code	= (sid == NULL);
+	int	code	= 0;
+	register size_t	len = strlen (sid),
+			cmp = strlen (version);
+	if (len == cmp)
+		code = ! strcmp(sid,version);
+	else if (len < cmp && version[len] == '.') {
+		if ((Dots(sid) + 1) == Dots(version))
+			code = ! strncmp(sid,version,len);
+	}
+	return (code);
+}
 
-	if (!code) {
-		register size_t	len = strlen (sid),
-				cmp = strlen (version),
-				dot;
-		if (len == cmp)
-			code = ! strcmp(sid,version);
-		else if (len < cmp) {
-			for (cmp = dot = 0; sid[cmp]; cmp++)
-				if (sid[cmp] == '.')
-					dot++;
-			if ((dot == 0 || dot == 2)	/* "R" or "R.L.B" */
-			&&  (version[len] == '.'))
-				code = ! strncmp(sid,version,len);
-		}
+/*
+ * Compare the SCCS version string against the '-r' option's value, allowing it
+ * to 'bump' up to a higher version.
+ */
+static
+int
+bump (version)
+char	*version;
+{
+	int	code;
+
+	if (sid == NULL) {	/* match first "R.L" */
+		register char *s;
+		int	dot = 0;
+		for (s = version; *s; s++)
+			if (*s == '.')
+				dot++;
+		return (dot == 1);
+	} else if (!(code = same(version))) {
+		char	temp[BUFSIZ];
+		register char *s, *d;
+		for (s = sid, d = temp;
+			*s != EOS && *s != '.';
+				*d++ = *s++);
+		for (s = version; *s != EOS && *s != '.'; s++);
+		(void)strcpy(d,s);
+		code = same(temp);
 	}
 	return (code);
 }
@@ -134,7 +173,7 @@ char	*name, *s_file;
 					if (date > opt_c)	continue;
 					else if (got = !sid)	break;
 				}
-				if (got = same(version))	break;
+				if (got = bump(version))	break;
 			}
 		}
 		(void)fclose (fp);
@@ -253,6 +292,7 @@ char	*name, *s_file;
 			failed(new_wd);
 		(void)relpath(s_file, new_wd, s_file);
 	} else {
+		name = working;
 		*old_wd = *new_wd = EOS;
 		(void)strcpy(s_file, archive);
 	}
@@ -260,7 +300,7 @@ char	*name, *s_file;
 	/*
 	 * Check to see if we think that we can extract the file
 	 */
-	if (isFILE(s_file,&s_mode) > 0) {
+	if (isFILE(s_file,&s_mode)) {
 		if (isFILE(name,(int *)0)) {
 			if (force) {
 				if (!noop && (unlink(name) < 0))
@@ -344,11 +384,14 @@ char	*argv[];
 	oldzone();
 	s = get_opts;
 
-	while ((j = getopt(argc, argv, "c:efknr:s")) != EOF) {
+	while ((j = getopt(argc, argv, "bc:efknr:s")) != EOF) {
 		switch (j) {
 		/* options interpreted & pass through to "get" */
 		case 'r':
-			sid = optarg;
+			sid = stralloc(optarg);
+			if ((k = strlen(sid)-1) > 0)
+				if (sid[k] == '.')
+					sid[k] = EOS;
 			TELL "sid: %s\n", sid);
 			FORMAT(s, "-r%s ", sid);
 			break;
@@ -380,8 +423,11 @@ char	*argv[];
 		}
 		s += strlen(s);
 	}
-	for (j = optind; j < argc; j++)
-		DoFile (argv[j], s);
+	if (optind < argc) {
+		for (j = optind; j < argc; j++)
+			DoFile (argv[j], s);
+	} else
+		usage();
 	(void)exit(SUCCESS);
 	/*NOTREACHED*/
 }

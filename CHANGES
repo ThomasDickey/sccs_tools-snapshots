@@ -1,3 +1,29 @@
+1991-07-19  dickey@software.org
+
+	* src/putdelta/src/sccsput.c: added "-r" option
+
+	* src/getdelta/src/getdelta.c:
+	more corrections to 'same()' -- made the logic ensure that
+	we match R/R.L or R.L.B/R.L.B.V
+
+	* src/getdelta/src/getdelta.c:
+	if no "-r" option is specified, we match only the "R.L"
+	versions (no branches!)
+
+	* src/putdelta/src/putdelta.c:
+	allow "-r" option (need this if there is more than one lock)
+
+	* src/getdelta/src/getdelta.c: oops: forgot to add "-b" to getopt call
+
+	* src/getdelta/src/getdelta.c:
+	modified version-comparison logic so that we can bump version
+	numbers to a higher level (e.g., as a side-effect of locking)
+
+	* src/getdelta/src/getdelta.c:
+	corrected logic: if a name of the form "SCCS/s.file" was
+	given, this did not set the variable 'name' properly.
+	also, if no argument is given, show usage.
+
 1991-07-18  dickey@software.org
 
 	* src/putdelta/src/sccsput.c: corrected description of "-k" option
