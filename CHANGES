@@ -1,3 +1,10 @@
+1991-07-09  dickey@software.org
+
+	* src/putdelta/test/run_test.sh: show delta-history as well as s-file
+
+	* src/putdelta/src/putdelta.c:
+	set timestamp of s-file to ensure that we don't confuse 'make'
+
 1991-07-01  dickey@software.org
 
 	* src/putdelta/src/putdelta.c:
