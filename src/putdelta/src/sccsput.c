@@ -1,5 +1,5 @@
 #ifndef	lint
-static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/src/RCS/sccsput.c,v 3.11 1991/07/24 15:46:20 dickey Exp $";
+static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/src/RCS/sccsput.c,v 3.12 1991/09/13 09:12:31 dickey Exp $";
 #endif
 
 /*
@@ -7,6 +7,7 @@ static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/
  * Author:	T.E.Dickey
  * Created:	08 May 1990 (from sccsput.sh and rcsput.c)
  * Modified:
+ *		13 Sep 1991, use common 'filesize()'
  *		24 Jul 1991, corrected size of 'comment[]'
  *		22 Jul 1991, cleanup use of 'catarg()'
  *		19 Jul 1991, accept "-r" option (for diff and putdelta)
@@ -40,6 +41,7 @@ extern	char	*dftenv();
 extern	char	*pathcat();
 extern	char	*pathleaf();
 extern	char	*stralloc();
+extern	off_t	filesize();
 
 #define	isDIR(mode)	((mode & S_IFMT) == S_IFDIR)
 #define	isFILE(mode)	((mode & S_IFMT) == S_IFREG)
@@ -57,15 +59,6 @@ static	char	*k_opt	= "";
 static	char	*r_opt	= "";
 static	int	quiet;
 static	int	found_diffs;	/* true iff we keep logfile */
-
-static
-filesize(name)
-char	*name;
-{
-	auto	struct	stat	sb;
-	return (stat(name, &sb) >= 0 && (sb.st_mode & S_IFMT) == S_IFREG
-		? sb.st_size : -1);
-}
 
 static
 cat2fp(fp, name)
