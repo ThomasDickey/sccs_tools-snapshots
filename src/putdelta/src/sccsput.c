@@ -37,7 +37,7 @@
 #include	<rcsdefs.h>
 #include	<sccsdefs.h>
 
-MODULE_ID("$Id: sccsput.c,v 6.7 1998/04/22 16:05:31 tom Exp $")
+MODULE_ID("$Id: sccsput.c,v 6.8 2001/12/11 15:03:40 tom Exp $")
 
 #define	DEBUG		if (debug) PRINTF
 #define	VERBOSE		if (!quiet) PRINTF
@@ -296,7 +296,7 @@ int	WALK_FUNC(scan_tree)
 		if (!a_opt && *pathleaf(s) == '.')
 			readable = -1;
 		else if (sameleaf(s, sccs_dir((char *)0,(char *)0))
-		    ||	 sameleaf(s, rcs_dir()))
+		    ||	 sameleaf(s, rcs_dir(NULL, NULL)))
 			readable = -1;
 		else if (debug)
 			track_wd(path);

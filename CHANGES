@@ -1,3 +1,8 @@
+2001-12-11  Thomas E. Dickey  <dickey@invisible-island.net>
+
+	* src/sccs2rcs/src/sccs2rcs.c, src/putdelta/src/sccsput.c, src/putdelta/src/putdelta.c, src/getdelta/src/sccsget.c:
+	change interface to rcs_dir()
+
 2001-06-22  Thomas E. Dickey  <dickey@clark.net>
 
 	* install-sh: resync with my-autoconf

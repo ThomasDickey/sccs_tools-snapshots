@@ -70,7 +70,7 @@
 
 #include	<errno.h>
 
-MODULE_ID("$Id: putdelta.c,v 6.10 2000/07/03 20:02:10 tom Exp $")
+MODULE_ID("$Id: putdelta.c,v 6.11 2001/12/11 15:03:33 tom Exp $")
 
 /************************************************************************
  *	local definitions						*
@@ -637,8 +637,8 @@ void	DoFile(
 				 *
 				 * patch: should verify group-compatibility
 				 */
-				if (getuid() != d_user
-				 || getgid() != d_group)
+				if ((int)getuid() != d_user
+				 || (int)getgid() != d_group)
 					d_mode |= (S_IWRITE>>3);
 					/* force to group-writeable */
 				if (getuid() == geteuid())
@@ -650,7 +650,7 @@ void	DoFile(
 	} else		/* ...else... user is putting files in "." */
 		NeedDirectory(".", &sb);
 
-	if (getuid() == d_user) {
+	if ((int)getuid() == d_user) {
 		revert("set-uid mode redundant");
 		d_group = getegid();
 	}
