@@ -1,5 +1,5 @@
 #ifndef	NO_IDENT
-static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/src/RCS/getdelta.c,v 6.14 1995/10/14 15:49:00 tom Exp $";
+static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/src/RCS/getdelta.c,v 6.15 1996/01/09 18:05:54 tom Exp $";
 #endif
 
 /*
@@ -7,6 +7,8 @@ static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/
  * Author:	T.E.Dickey
  * Created:	26 Mar 1986 (as a procedure)
  * Modified:
+ *		09 Jan 1996, skip several lines in CheckForBinary to account
+ *			     for files being binary _after_ initial import.
  *		14 Oct 1995, allow 14-character s-filenames
  *		08 Sep 1995, get CmVision file-mode, if present.
  *		07 Sep 1995, added processing for CmVision binary-files.
@@ -164,6 +166,7 @@ void	CheckForBinary(
 {
 	FILE	*fp;
 	int	first	= TRUE;
+	int	changes	= 0;
 
 	file_is_binary = FALSE;
 	file_is_SCCS   = TRUE;
@@ -181,10 +184,13 @@ void	CheckForBinary(
 			}
 			if (buf[0] == CTL_A
 			 && buf[1] == 'I') {
-				if (fgets(buf, sizeof(buf), fp)
-				 && !strncmp(buf, cmv_binary, 4))
+				if (!fgets(buf, sizeof(buf), fp)
+				 || (changes++ > 10))	/* FIXME */
+					break;
+				if (!strncmp(buf, cmv_binary, 4)) {
 					file_is_binary = TRUE;
-				break;
+					break;
+				}
 			}
 		}
 	}
