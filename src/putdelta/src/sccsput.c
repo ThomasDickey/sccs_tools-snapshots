@@ -1,5 +1,5 @@
 #ifndef	lint
-static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/src/RCS/sccsput.c,v 6.1 1993/09/23 20:00:08 dickey Exp $";
+static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/src/RCS/sccsput.c,v 6.4 1994/07/15 09:57:21 tom Exp $";
 #endif
 
 /*
@@ -7,6 +7,8 @@ static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/
  * Author:	T.E.Dickey
  * Created:	08 May 1990 (from sccsput.sh and rcsput.c)
  * Modified:
+ *		27 May 1994, added "-e" and "-C" options.  Made verbosity
+ *			more consistent with CM_TOOLS.
  *		23 Sep 1993, gcc warnings
  *		24 Oct 1991, converted to ANSI
  *		13 Sep 1991, use common 'filesize()'
@@ -38,8 +40,7 @@ static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/
 #include	<rcsdefs.h>
 #include	<sccsdefs.h>
 
-#define	isDIR(mode)	((mode & S_IFMT) == S_IFDIR)
-#define	isFILE(mode)	((mode & S_IFMT) == S_IFREG)
+#define	DEBUG		if (debug) PRINTF
 #define	VERBOSE		if (!quiet) PRINTF
 
 static	char	diff_opts[BUFSIZ];
@@ -50,10 +51,26 @@ static	int	a_opt;		/* all-directory scan */
 static	int	no_op;		/* no-op mode */
 static	char	*pager;		/* nonzero if we don't cat diffs */
 static	int	Force, force;
+static	int	e_opt;
 static	char	*k_opt	= "";
 static	char	*r_opt	= "";
+static	char	*logname = NULL;
+static	int	debug;
 static	int	quiet;
 static	int	found_diffs;	/* true iff we keep logfile */
+
+static
+void	ExitProgram (
+	_AR1(int,	code))
+	_DCL(int,	code)
+{
+	if (log_fp != 0) {
+		FCLOSE(log_fp);
+		if (!found_diffs)
+			(void)unlink(logname);
+	}
+	exit(code);
+}
 
 static
 void	cat2fp(
@@ -92,7 +109,7 @@ int	pipe2file(
 		failed("tmpnam");
 	if (!(ofp = fopen(name,"w")))
 		failed("tmpnam-open");
-	if (!quiet) {
+	if (debug) {
 		FORMAT(buffer, "%s > ", cmd);
 		shoarg(stdout, buffer, name);
 	}
@@ -117,6 +134,7 @@ int	different(
 	_DCL(char *,	working)
 	_DCL(char *,	archive)
 {
+	static	char	format[] = "------- %s -------\n";
 	auto	char	buffer[BUFSIZ],
 			in_diff[MAXPATHLEN],
 			out_diff[MAXPATHLEN];
@@ -125,7 +143,7 @@ int	different(
 	*buffer = EOS;
 	catarg(buffer, "get");
 	catarg(buffer, "-p");
-	if (quiet)	catarg(buffer, "-s");
+	if (!debug)	catarg(buffer, "-s");
 	if (*k_opt)	catarg(buffer, k_opt);
 	if (*r_opt)	catarg(buffer, r_opt);
 	catarg(buffer, archive);
@@ -140,15 +158,17 @@ int	different(
 
 	if (changed) {
 		if (!quiet) {
-			if (pager == 0)
+			if (pager == 0) {
+				PRINTF(format, working);
 				cat2fp(stdout, out_diff);
-			else {
+			} else {
 				if (execute(pager, out_diff) < 0)
 					failed(pager);
 			}
 		}
 		if (log_fp != 0) {
 			VERBOSE("... appending to logfile");
+			FPRINTF(log_fp, format, working);
 			cat2fp(log_fp, out_diff);
 			if (!found_diffs && filesize(out_diff) > 0)
 				found_diffs = TRUE;
@@ -159,6 +179,8 @@ int	different(
 
 	(void)unlink(in_diff);
 	(void)unlink(out_diff);
+	if (e_opt && !changed)
+		ExitProgram(FAIL);
 	return (changed);
 }
 
@@ -197,7 +219,7 @@ void	checkin(
 	}
 
 	*args = EOS;
-	if (quiet)	catarg(args, "-s");
+	if (!debug)	catarg(args, "-s");
 	if (force)	catarg(args, "-f");
 	if (*k_opt)	catarg(args, k_opt);
 	if (*r_opt)	catarg(args, r_opt);
@@ -205,15 +227,16 @@ void	checkin(
 	catarg(args, working);
 
 	if (!no_op) {
-		PRINTF("*** %s \"%s\"\n",
+		VERBOSE("*** %s \"%s\"\n",
 			first	? "Initial SCCS insertion of"
 				: "Applying SCCS delta to",
 			name);
-		if (!quiet) shoarg(stdout, verb, args);
+		if (debug)
+			shoarg(stdout, verb, args);
 		if (execute(verb, args) < 0)
 			failed(working);
 	} else {
-		PRINTF("--- %s \"%s\"\n",
+		VERBOSE("--- %s \"%s\"\n",
 			first	? "This would be initial for"
 				: "Delta would be applied to",
 			name);
@@ -236,13 +259,14 @@ int	WALK_FUNC(scan_tree)
 		abspath(s);		/* get rid of "." and ".." names */
 		if (!a_opt && *pathleaf(s) == '.')
 			readable = -1;
-		else if (sameleaf(s, sccs_dir())
+		else if (sameleaf(s, sccs_dir((char *)0,(char *)0))
 		    ||	 sameleaf(s, rcs_dir()))
 			readable = -1;
-		else
+		else if (debug)
 			track_wd(path);
 	} else if (isFILE(sp->st_mode)) {
-		track_wd(path);
+		if (debug)
+			track_wd(path);
 		checkin(path,name);
 	} else
 		readable = -1;
@@ -269,7 +293,9 @@ void	usage(
 ,"Options"
 ,"  -a       process all directories, including those beginning with \".\""
 ,"  -b       (passed to \"diff\")"
+,"  -C       (passed to \"diff\")"
 ,"  -c       send differences to terminal without $PAGER filtering"
+,"  -e       error if no differences"
 ,"  -f       force (passed to putdelta)"
 ,"  -h       (passed to \"diff\")"
 ,"  -k       suppress keyword expansion from archive before differences"
@@ -295,20 +321,21 @@ void	usage(
 /*ARGSUSED*/
 _MAIN
 {
-	auto	char	deferred[BUFSIZ],
-			*logname = NULL;
+	auto	char	deferred[BUFSIZ];
 #define	DEFERRED	strcat(strcpy(deferred, "-"), optarg)
 
 	register int	j;
 
 	revert("not a setuid-program");	/* ensure this is not misused */
-	track_wd((char *)0);
 	pager = dftenv("more -l", "PAGER");
-	while ((j = getopt(argc, argv, "abcfhkl:nr:sy:D:FT:")) != EOF) {
+	debug = sccs_debug();
+	while ((j = getopt(argc, argv, "abCcefhkl:nr:sy:D:FT:")) != EOF) {
 		switch (j) {
 		case 'a':	a_opt = TRUE;			break;
 		case 'b':	catarg(diff_opts, "-b");	break;
+		case 'C':	catarg(diff_opts, "-c");	break;
 		case 'c':	pager = 0;			break;
+		case 'e':	e_opt = TRUE;			break;
 		case 'f':	force = TRUE;			break;
 		case 'h':	catarg(diff_opts, "-h");	break;
 		case 'k':	k_opt = "-k";			break;
@@ -322,7 +349,7 @@ _MAIN
 				break;
 		case 's':	quiet = TRUE;			break;
 		case 'y':	FORMAT(comment, "-y%.*s",
-					sizeof(comment)-3, optarg);
+					(int)(sizeof(comment)-3), optarg);
 				break;
 		case 'D':	catarg(diff_opts, DEFERRED);	break;
 		case 'F':	Force = TRUE;			break;
@@ -331,18 +358,15 @@ _MAIN
 		}
 	}
 
+	if (debug)
+		track_wd((char *)0);
 	if (optind < argc) {
 		while (optind < argc)
 			do_arg(argv[optind++]);
-	} else
+	} else {
 		do_arg(".");
-
-	if (log_fp != 0) {
-		FCLOSE(log_fp);
-		if (!found_diffs)
-			(void)unlink(logname);
 	}
 
-	exit(SUCCESS);
+	ExitProgram(SUCCESS);
 	/*NOTREACHED*/
 }

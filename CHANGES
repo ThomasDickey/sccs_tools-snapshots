@@ -1,3 +1,28 @@
+1994-07-15  Thomas E. Dickey  <dickey@clark.net>
+
+	* src/putdelta/src/putdelta.c: use 'sccspath()'
+
+	* src/putdelta/src/sccsput.c: changed interface to 'sccs_dir()'
+
+	* src/putdelta/src/Makefile: autoconf supplies sccs-path
+
+	* src/getdelta/src/getdelta.c: use 'sccspath()'
+
+	* src/getdelta/src/sccsget.c: change interface to 'sccs_dir()'
+
+	* src/getdelta/src/Makefile: autoconf supplies sccs-path
+
+1994-07-13  Thomas E. Dickey  <dickey@clark.net>
+
+	* src/putdelta/src/sccsput.c:
+	added -e, -C options, and made less verbose
+
+	* src/sccs2rcs/src/Makefile, src/putdelta/src/sccsput.c, src/putdelta/src/putdelta.c, src/putdelta/src/Makefile:
+	autoconf-adjustments
+
+	* src/getdelta/src/Makefile, src/getdelta/src/getdelta.c:
+	autoconf adjustments
+
 1994-06-07  dickey@clark.net
 
 	* src/fixsccs/src/fixsccs.c:
