@@ -1,5 +1,5 @@
 #ifndef	lint
-static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/src/RCS/sccsput.c,v 6.4 1994/07/15 09:57:21 tom Exp $";
+static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/src/RCS/sccsput.c,v 6.5 1995/10/14 16:16:46 tom Exp $";
 #endif
 
 /*
@@ -7,6 +7,7 @@ static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/
  * Author:	T.E.Dickey
  * Created:	08 May 1990 (from sccsput.sh and rcsput.c)
  * Modified:
+ *		14 Oct 1995, allow archive leafname to be limited to 14-chars
  *		27 May 1994, added "-e" and "-C" options.  Made verbosity
  *			more consistent with CM_TOOLS.
  *		23 Sep 1993, gcc warnings
@@ -185,7 +186,19 @@ int	different(
 }
 
 static
-void	checkin(
+int	ok_file(
+	_AR1(char *,	name))
+	_DCL(char *,	name)
+{
+	if (!Force && !istextfile(name)) {
+		PRINTF("*** \"%s\" does not seem to be a text file\n", name);
+		return FALSE;
+	}
+	return TRUE;
+}
+
+static
+void	SccsPut(
 	_ARX(char *,	path)
 	_AR1(char *,	name)
 		)
@@ -196,25 +209,50 @@ void	checkin(
 	auto	char	*working = sccs2name(name,FALSE);
 	auto	char	*archive = name2sccs(name,FALSE);
 	auto	int	first;
+#if S_FILES_14
+	auto	char	temp[MAXPATHLEN];
+#endif
 
-	if ((first = (filesize(archive) < 0)) != 0) {
-		if (!Force && !istextfile(working)) {
-			PRINTF("*** \"%s\" does not seem to be a text file\n",
-				working);
-			return;
-		}
+	/*
+	 * Start by assuming that if we find a non-empty file with the correct
+	 * name for an archive, that this isn't the first delta.
+	 */
+	if (filesize(archive) >= 0) {
+		first = FALSE;
+	}
+#if S_FILES_14
+	else if (fleaf14(strcpy(temp, archive))
+		&& filesize(temp) >= 0) {
+		archive = temp;
+		first = FALSE;
+	}
+#endif
+	else {
 		first = TRUE;
+	}
+
+	/*
+	 * For the initial insertion, verify that the file looks like text.
+	 * Otherwise we'll catch garbage files when differencing them.
+	 *
+	 * If we've found something that looks like an archive, check if it's
+	 * got at least one version.
+	 */
+	if (first) {
+		if (!ok_file(working))
+			return;
 	} else {
 		auto	time_t	date;
 		auto	char	*vers,
 				*locker;
 		sccslast(path, working, &vers, &date, &locker);
-		if (*vers == '?')
+		if (*vers == '?') {
 			first = TRUE;	/* no revisions present */
-		else {
+			if (!ok_file(working))
+				return;
+		} else {
 			if (!Force && !different(working, archive))
 				return;
-			first = FALSE;
 		}
 	}
 
@@ -267,7 +305,7 @@ int	WALK_FUNC(scan_tree)
 	} else if (isFILE(sp->st_mode)) {
 		if (debug)
 			track_wd(path);
-		checkin(path,name);
+		SccsPut(path,name);
 	} else
 		readable = -1;
 

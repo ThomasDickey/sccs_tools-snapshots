@@ -1,5 +1,5 @@
 #ifndef	NO_IDENT
-static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/src/RCS/getdelta.c,v 6.11 1995/09/08 14:16:36 tom Exp $";
+static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/src/RCS/getdelta.c,v 6.14 1995/10/14 15:49:00 tom Exp $";
 #endif
 
 /*
@@ -7,6 +7,7 @@ static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/
  * Author:	T.E.Dickey
  * Created:	26 Mar 1986 (as a procedure)
  * Modified:
+ *		14 Oct 1995, allow 14-character s-filenames
  *		08 Sep 1995, get CmVision file-mode, if present.
  *		07 Sep 1995, added processing for CmVision binary-files.
  *		16 Mar 1995, allow -r, -s options to repeat (use last).
@@ -253,6 +254,18 @@ void	DeHexify(
 }
 #endif
 
+static
+char *	LeafOf(
+	_AR1(char *,	name)
+		)
+	_DCL(char *,	name)
+{
+	char	*leaf = fleaf(name);
+	if (leaf == 0)
+		leaf = name;
+	return leaf;
+}
+
 /*
  * Process a single file by finding the check-in date and using that to
  * timestamp the file.
@@ -330,6 +343,18 @@ void	PostProcess (
 		TELL "** could not open \"%s\"\n", s_file);
 
 	if (!noop && got) {
+#if S_FILES_14
+		/*
+		 * If we extracted a shortened (14-char) name, try to rename it
+		 * to the longer name supplied by the user.
+		 */
+		s = LeafOf(s_file) + 2;
+		if (strcmp(s, LeafOf(name))) {
+			char temp[MAXPATHLEN];
+			(void)strcpy(LeafOf(strcpy(temp, name)), s);
+			(void)rename(temp, name);
+		}
+#endif /* S_FILES_14 */
 #ifdef CMV_PATH
 		if (file_is_binary)
 			DeHexify(name);
@@ -339,11 +364,7 @@ void	PostProcess (
 			YELL "%s: cannot set time\n", name);
 		else if (lockit && !geteuid()) {
 			char	p_file[MAXPATHLEN];
-			if ((s = strrchr(strcpy(p_file, s_file), '/')) != 0)
-				s++;
-			else
-				s = p_file;
-			*s = 'p';
+			*LeafOf(strcpy(p_file, s_file)) = 'p';
 			if (chown(p_file, getuid(), getgid()) < 0)
 				failed("chown");
 		}
@@ -390,7 +411,7 @@ int	Permitted(
 {
 	char	path[MAXPATHLEN];
 	int	mode	= X_OK | R_OK;
-	char	*mark	= strrchr(pathcat(path, ".", name), '/');
+	char	*mark	= fleaf_delim(pathcat(path, ".", name));
 
 	if (mark != 0)	*mark = EOS;
 	if (!read_only)	mode |= W_OK;
@@ -432,7 +453,7 @@ void	DoFile (
 	 * 'chdir()' to accommodate this if necessary.
 	 */
 	(void)strcpy(buffer, working);
-	if ((s = strrchr(buffer, '/')) != NULL) {
+	if ((s = fleaf_delim(buffer)) != NULL) {
 		if (!getwd(old_wd))
 			failed("getwd");
 		*s = EOS;
@@ -453,9 +474,14 @@ void	DoFile (
 	}
 
 	/*
-	 * Check to see if we think that we can extract the file
+	 * Check for the file first by its given name, then with a 14-character
+	 * limit, to see if we'll be able to extract it.
 	 */
-	if (is_a_file(s_file,&s_mode)) {
+	if (is_a_file(s_file,&s_mode)
+#if S_FILES_14
+	 || (fleaf14(s_file) && is_a_file(s_file, &s_mode))
+#endif
+	   ) {
 #ifdef CMV_PATH
 		CheckForBinary(s_file);
 		/*
