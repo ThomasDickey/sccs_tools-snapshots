@@ -1,3 +1,13 @@
+1989-10-05  dickey@software.org
+
+	* src/sccs2rcs/src/sccs2rcs.c:
+	changed ident-keyword to 'Id' from 'Header'
+
+	* src/putdelta/src/sccsput.sh:
+	modified so this works on apollo SR10.1 (sys5-dirname broken)
+
+	* Makefile: added lint.out, lincnt.out rules
+
 1989-07-10  dickey@software.org
 
 	* user/Makefile: corrected 'destroy' rule

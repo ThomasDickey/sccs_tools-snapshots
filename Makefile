@@ -1,15 +1,12 @@
-# $Header: /users/source/archives/sccs_tools.vcs/RCS/Makefile,v 2.0 1989/07/10 08:19:31 ste_cm Rel $
+# $Id: Makefile,v 2.1 1989/10/05 10:37:14 dickey Exp $
 # Top-level make-file for SCCS_TOOLS
 #
 # $Log: Makefile,v $
-# Revision 2.0  1989/07/10 08:19:31  ste_cm
-# BASELINE Mon Jul 10 09:14:49 EDT 1989
+# Revision 2.1  1989/10/05 10:37:14  dickey
+# added lint.out, lincnt.out rules
 #
-#	Revision 1.2  89/07/10  08:19:31  dickey
-#	corrected 'destroy' rule
-#	
-#	Revision 1.1  89/03/29  13:09:17  dickey
-#	Initial revision
+#	Revision 2.0  89/07/10  08:19:31  ste_cm
+#	BASELINE Mon Jul 10 09:14:49 EDT 1989
 #	
 
 ####### (Development) ##########################################################
@@ -52,12 +49,16 @@ deinstall:	$(FIRST)
 	cd user;	$(MAKE) $@
 	cd bin;		$(MAKE) $@ INSTALL_PATH=$(INSTALL_PATH)
 
+lint.out\
+lincnt.out:	$(MFILES)
+	cd src;		$(MAKE) $@
+
 destroy:	$(MFILES)
 	cd certificate;	$(MAKE) $@
 	cd src;		$(MAKE) $@
 	cd user;	$(MAKE) $@
 	cd bin;		$(MAKE) $@
-	sh -c 'for i in *;do case $$i in RCS);; *) rm -f $$i;;esac;done'
+	sh -c 'for i in *;do case $$i in RCS);; *) rm -f $$i;;esac;done;exit 0'
 
 ####### (Details of Productions) ###############################################
 .first:		$(FIRST)
