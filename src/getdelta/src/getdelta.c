@@ -1,14 +1,8 @@
-#ifndef	NO_IDENT
-static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/src/RCS/getdelta.c,v 6.15 1996/01/09 18:05:54 tom Exp $";
-#endif
-
 /*
  * Title:	getdelta.c (get an sccs-delta)
  * Author:	T.E.Dickey
  * Created:	26 Mar 1986 (as a procedure)
  * Modified:
- *		09 Jan 1996, skip several lines in CheckForBinary to account
- *			     for files being binary _after_ initial import.
  *		14 Oct 1995, allow 14-character s-filenames
  *		08 Sep 1995, get CmVision file-mode, if present.
  *		07 Sep 1995, added processing for CmVision binary-files.
@@ -56,6 +50,8 @@ static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/
 #define	TIM_PTYPES
 #include	<ptypes.h>
 #include	<sccsdefs.h>
+
+MODULE_ID("$Id: getdelta.c,v 6.17 1996/08/08 15:29:24 tom Exp $")
 
 /* local definitions */
 #define	NAMELEN		80	/* length of tokens in sccs-header */
@@ -155,9 +151,10 @@ static	int	file_is_SCCS;
 static	char	cmv_binary[] = "\\\\\\\\";
 
 /*
- * Inspect the file to see if it's a binary file. If so, we must suppress
+ * Inspect the file to see if it's a binary file.  If so, we must suppress
  * keyword-expansion for the current file.  We "know" that s-files that hold
- * binary data begin with 4 backslashes.
+ * binary data begin with 4 backslashes.  If we look for the first text line in
+ * the tip-version, that's enough to find the 'cmv_binary' string.
  */
 static
 void	CheckForBinary(
@@ -165,32 +162,40 @@ void	CheckForBinary(
 	_DCL(char *,	s_file)
 {
 	FILE	*fp;
-	int	first	= TRUE;
-	int	changes	= 0;
+	int	state	= 0;
+	int	delete	= 0;
 
 	file_is_binary = FALSE;
 	file_is_SCCS   = TRUE;
 	if ((fp = fopen (s_file, "r")) != NULL) {
 		char	buf[BUFSIZ];
 		while (fgets(buf, sizeof(buf), fp) != 0) {
-			if (first) {
+			if (state == 0) {
 				if (buf[0] != CTL_A
 				 || buf[1] != 'h') {
 					file_is_binary = TRUE;
 					file_is_SCCS   = FALSE;
 					break;
 				}
-				first = FALSE;
-			}
-			if (buf[0] == CTL_A
-			 && buf[1] == 'I') {
-				if (!fgets(buf, sizeof(buf), fp)
-				 || (changes++ > 10))	/* FIXME */
+				state = 1;
+			} else if (buf[0] == CTL_A) {
+				switch(buf[1]) {
+				case 'E':
+					if (delete == atoi(buf+2))
+						delete = 0;
 					break;
-				if (!strncmp(buf, cmv_binary, 4)) {
-					file_is_binary = TRUE;
+				case 'I':
+					state = 2;
+					break;
+				case 'D':
+					if (!delete)
+						delete = atoi(buf+2);
 					break;
 				}
+			} else if (state == 2 && !delete) {
+				if (!strncmp(buf, cmv_binary, 4))
+					file_is_binary = TRUE;
+				break;
 			}
 		}
 	}
