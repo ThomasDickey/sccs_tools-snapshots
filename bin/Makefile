@@ -1,14 +1,12 @@
-# $Id: Makefile,v 5.0 1991/10/24 08:00:05 ste_cm Rel $
-#
+# $Id: Makefile,v 5.2 1992/10/19 11:48:46 dickey Exp $
 
-####### (Development) ##########################################################
-INSTALL_BIN=../../install_bin
-COPY	= cp -p
-B	= $(INSTALL_BIN)
-PUT	= $(COPY) $? $@
+TOP	= ../..
+include $(TOP)/cm_library/support/cm_library.mk
 
 ####### (Standard Lists) #######################################################
-ALL	=\
+B	= $(INSTALL_BIN)
+
+IT	=\
 	$B/getdelta\
 	$B/putdelta\
 	$B/sccsget\
@@ -16,15 +14,14 @@ ALL	=\
 	$B/sccs2rcs
 
 ####### (Standard Productions) #################################################
-all:		; @echo '** use "make install"'
-clean:			; rm -f *.bak *.log *.out core
-clobber:	clean	; rm -f [a-z]*
-destroy:
-	sh -c 'for i in *;do case $$i in RCS);; *) rm -f $$i;;esac;done'
+all:	$(SOURCES) $(ALL)	; @echo '** use "make install"'
+clean:				; rm -f $(CLEAN)
+clobber:	clean		; rm -f [a-z]*
+destroy:			; $(DESTROY)
 run_tests:
 sources:
-install:	$(ALL)
-deinstall:	; rm -f $(ALL)
+install:	$(IT)
+deinstall:			; rm -f $(IT)
 
 ####### (Details of Productions) ###############################################
 $B/getdelta:	getdelta	; $(PUT)

@@ -1,32 +1,11 @@
-# $Header: /users/source/archives/sccs_tools.vcs/src/RCS/Makefile,v 5.0 1989/07/10 08:10:32 ste_cm Rel $
+# $Id: Makefile,v 5.1 1992/10/19 10:41:29 dickey Exp $
 # Top-level makefile for SCCS_TOOLS src-directory
-#
-# $Log: Makefile,v $
-# Revision 5.0  1989/07/10 08:10:32  ste_cm
-# BASELINE Mon Jul 20 12:41:28 1992 -- CM_TOOLS #11
-#
-#	Revision 4.0  89/07/10  08:10:32  ste_cm
-#	BASELINE Tue Dec 17 11:56:35 1991
-#	
-#	Revision 3.0  89/07/10  08:10:32  ste_cm
-#	BASELINE Tue Jun 18 08:04:39 1991 -- apollo sr10.3
-#	
-#	Revision 2.0  89/07/10  08:10:32  ste_cm
-#	BASELINE Mon Jul 10 09:18:37 EDT 1989
-#	
-#	Revision 1.2  89/07/10  08:10:32  dickey
-#	corrected FIRST, destroy rules
-#	
-#	Revision 1.1  89/03/29  13:12:06  dickey
-#	Initial revision
-#	
 
-####### (Development) ##########################################################
-GET	= checkout
-MAKE	= make $(MFLAGS) -k$(MAKEFLAGS)	GET=$(GET)
+TOP	= ../..
+include $(TOP)/cm_library/support/cm_library.mk
 
 ####### (Standard Lists) #######################################################
-FIRST	=\
+MFILES	=\
 	getdelta/Makefile\
 	putdelta/Makefile\
 	sccs2rcs/Makefile
@@ -35,21 +14,20 @@ FIRST	=\
 all\
 clean\
 clobber\
-rdestroy\
+destroy\
 sources\
 lint.out\
 lincnt.out\
 run_tests\
 install\
-deinstall:	$(FIRST)
+deinstall::	$(MFILES)
 	cd getdelta;	$(MAKE) $@
 	cd putdelta;	$(MAKE) $@
 	cd sccs2rcs;	$(MAKE) $@
 
-destroy: rdestroy
-	sh -c 'for i in *;do case $$i in RCS);; *) rm -f $$i;;esac;done'
+clean\
+clobber::			; rm -f $(CLEAN)
+destroy::			; $(DESTROY)
 
 ####### (Details of Productions) ###############################################
-getdelta/Makefile:	; cd getdelta;	$(GET) Makefile
-putdelta/Makefile:	; cd putdelta;	$(GET) Makefile
-sccs2rcs/Makefile:	; cd sccs2rcs;	$(GET) Makefile
+$(MFILES):			; $(GET) $@

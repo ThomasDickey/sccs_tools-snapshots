@@ -1,4 +1,4 @@
-$Id: config.txt,v 5.0 1992/07/17 09:41:57 ste_cm Rel $
+$Id: config.txt,v 5.1 1992/10/19 11:34:40 dickey Exp $
 
 --------------------------------------------------------------------------------
 
@@ -10,20 +10,8 @@ following systems at the SPC:
 
 	Apollo SR10.2 (DN3000, DN3500)				cc 6.7
 	Apollo SR10.3.4 (DN5500)				cc 6.8
-	SunOs 4.1.1 (Sun3, Sun4)
+	SunOs 4.1.1 (Sun4)
 
---------------------------------------------------------------------------------
+To build this set of programs, you need
 
-To build this set of programs, you need CM_TOOLS common library and interface
-files (baseline 11+).
-
---------------------------------------------------------------------------------
-
-	Miscellaneous tools not included here, which are used in non-critical
-	make-rules:
-
-	Lint tools for the above systems:
-		tdlint
-		makellib
-
-	lincnt - C-language line counter
+	CM_LIBRARY (baseline 12+).

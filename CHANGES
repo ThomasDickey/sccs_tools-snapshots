@@ -1,3 +1,16 @@
+1992-10-19  dickey@software.org
+
+	* COPYING: new verbiage
+
+	* src/sccs2rcs/Makefile: typo
+
+	* bin/Makefile: forgot to define 'B' macro
+
+	* Makefile: don't generate a makefile
+
+	* certify/release.txt, certify/config.txt, src/sccs2rcs/src/Makefile, src/sccs2rcs/test/Makefile, user/Makefile, src/sccs2rcs/Makefile, src/putdelta/test/Makefile, src/putdelta/src/Makefile, src/putdelta/Makefile, src/getdelta/test/Makefile, src/getdelta/src/Makefile, src/getdelta/Makefile, src/Makefile, certify/Makefile, bin/Makefile, Makefile:
+	adapted to CM_LIBRARY #12
+
 1992-07-20  dickey@software.org
 
 	* Makefile: -x option of 'checkout' is obsolete
