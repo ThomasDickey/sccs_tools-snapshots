@@ -1,45 +1,54 @@
-# $Header: /users/source/archives/sccs_tools.vcs/src/getdelta/src/RCS/Makefile,v 2.0 1989/07/10 08:30:12 ste_cm Rel $
-# Make-file for SCCS checkout utilities
+# $Header: /users/source/archives/sccs_tools.vcs/src/getdelta/src/RCS/Makefile,v 2.1 1991/05/23 13:05:59 dickey Exp $
+# Make-file for SCCS check-in utilities
 #
 ####### (Environment) ##########################################################
 B	= ../bin
 I	= ../../../../cm_tools/interface
 L	= ../../../../cm_tools/lib
-GET	= getdelta
+GET	= checkout
 #
 ####### (Command-line Options) #################################################
+DEFINES	=
 INCLUDES= -I$I
-CFLAGS  = $(DEFINES) $(INCLUDES) -O
+CPP_OPTS= $(DEFINES) $(INCLUDES)
+CFLAGS	= -O
 LIBS	= $L/lib.a
 DATE	= echo '****'`date` >> $@
-LINTOPT	= $(DEFINES) $(INCLUDES) -ltd
+LINTOPT	= $(CPP_OPTS) -ltd
+.c.o:	; $(CC) -c $(CFLAGS) $(CPP_OPTS) $*.c
 #
 ####### (Standard Lists) #######################################################
 ALL	= $B/getdelta $B/sccsget
-CSRC	= getdelta.c
-SCRIPTS	= sccsget.sh
-SRCS	= $(CSRC) $(SCRIPTS)
+C_SRC	= getdelta.c sccsget.c
+SOURCES	= $(C_SRC)
 MAIN_O	= getdelta.o $(LIBS)
+TREE_O	= sccsget.o $(LIBS)
 #
 ####### (Standard Productions) #################################################
 all:		$(ALL)
 #
-clean:				; rm -f *.o *.out
+clean:				; rm -f *.o *.bak *.out
 clobber:	clean		; rm -f $(ALL)
 destroy:
-	sh -c 'for i in *;do case $$i in RCS);; *) rm -f $$i;;esac;done'
-sources:	$(SRCS)
+	sh -c 'for i in *;do case $$i in RCS);; *) rm -f $$i;;esac;done;exit 0'
+sources:	$(SOURCES)
 #
 install:	$B/getdelta\
 		$B/sccsget
 #
 ####### (Details of Productions) ###############################################
 $B/getdelta:	$(MAIN_O)	; $(CC) -o $@ $(MAIN_O)
-getdelta.o:	$I/ptypes.h
+getdelta.o:	$I/ptypes.h\
+		$I/sccsdefs.h
 #
-$B/sccsget:	sccsget.sh	; copy $? $@
+$B/sccsget:	$(TREE_O)	; $(CC) -o $@ $(TREE_O)
+sccsget.o:	$I/ptypes.h\
+		$I/rcsdefs.h\
+		$I/sccsdefs.h
 #
 ####### (Development) ##########################################################
-$(SRCS):			; $(GET) $@
-lint.out:	$(CSRC)		; $(DATE); tdlint $(LINTOPT) $? >>$@
-lincnt.out:	$(CSRC)		; $(DATE); lincnt $(CSRC) >>$@
+$(SOURCES):			; $(GET) $@
+lint.out:	$(C_SRC)
+	$(DATE)
+	sh -c 'for i in $?;do echo $$i:>>$@;tdlint $(LINTOPT) $$i >>$@;done'
+lincnt.out:	$(C_SRC)	; $(DATE); lincnt $(C_SRC) >>$@

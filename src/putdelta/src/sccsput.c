@@ -1,15 +1,18 @@
 #ifndef	lint
-static	char	Id[] = "$Id: sccsput.c,v 2.1 1990/05/08 14:20:59 dickey Exp $";
-#endif	lint
+static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/src/RCS/sccsput.c,v 2.2 1991/05/23 09:10:43 dickey Exp $";
+#endif
 
 /*
  * Title:	sccsput.c (sccs put-tree)
  * Author:	T.E.Dickey
  * Created:	08 May 1990 (from sccsput.sh and rcsput.c)
  * $Log: sccsput.c,v $
- * Revision 2.1  1990/05/08 14:20:59  dickey
- * RCS_BASE
+ * Revision 2.2  1991/05/23 09:10:43  dickey
+ * apollo sr10.3 cpp complains about endif-tags
  *
+ *		Revision 2.1  90/05/08  14:31:46  dickey
+ *		RCS_BASE
+ *		
  *
  * Function:	Use 'putdelta' to archive one or more files from the
  *		SCCS-directory which is located in the current working

@@ -1,15 +1,18 @@
 #ifndef	lint
-static	char	Id[] = "$Id: putdelta.c,v 2.2 1990/05/08 14:10:01 dickey Exp $";
-#endif	lint
+static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/src/RCS/putdelta.c,v 2.3 1991/05/23 09:11:18 dickey Exp $";
+#endif
 
 /*
  * Title:	putdelta.c (create new or initial sccs delta)
  * Author:	T.E.Dickey
  * Created:	25 Apr 1986
  * $Log: putdelta.c,v $
- * Revision 2.2  1990/05/08 14:10:01  dickey
- * lint
+ * Revision 2.3  1991/05/23 09:11:18  dickey
+ * apollo sr10.3 cpp complains about cpp-tags
  *
+ *		Revision 2.2  90/05/08  14:33:42  dickey
+ *		lint
+ *		
  *		Revision 2.1  89/10/16  16:56:50  dickey
  *		show error if we cannot execute subprocess
  *		

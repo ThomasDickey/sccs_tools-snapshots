@@ -1,14 +1,14 @@
 #ifndef	lint
-static	char	sccs_id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/src/RCS/getdelta.c,v 2.0 1989/03/22 09:24:38 ste_cm Rel $";
-#endif	lint
+static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/src/RCS/getdelta.c,v 2.1 1991/05/23 09:26:57 dickey Exp $";
+#endif
 
 /*
  * Title:	getdelta.c (get an sccs-delta)
  * Author:	T.E.Dickey
  * Created:	26 Mar 1986 (as a procedure)
  * $Log: getdelta.c,v $
- * Revision 2.0  1989/03/22 09:24:38  ste_cm
- * BASELINE Mon Jul 10 09:28:43 EDT 1989
+ * Revision 2.1  1991/05/23 09:26:57  dickey
+ * apollo sr10.3 cpp complains about endif-tags
  *
  *		Revision 1.9  89/03/22  09:24:38  dickey
  *		sccs2rcs keywords
