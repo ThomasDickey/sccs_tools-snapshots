@@ -1,5 +1,13 @@
-$Header: /users/source/archives/sccs_tools.vcs/certify/RCS/release.txt,v 2.0 1989/03/29 14:55:15 ste_cm Rel $
+$Id: release.txt,v 2.1 1989/10/10 15:56:09 dickey Exp $
 
 --------------------------------------------------------------------------------
+
+Baseline 3:
+----------
+Modified sccs2rcs to generate 'Id' keyword rather than 'Header'.
+Tested for apollo SR10.1
+
+Baseline 2:
+----------
 
 This version of SCCS_TOOLS implements sccsget and sccsput as shell-scripts.

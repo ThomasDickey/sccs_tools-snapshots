@@ -1,4 +1,6 @@
-: '$Id: sccsput.sh,v 2.1 1989/10/05 10:47:57 dickey Exp $'
+#!/bin/sh
+# $Id: sccsput.sh,v 2.2 1989/10/10 15:50:46 dickey Exp $
+#
 # Check-in one or more modules to SCCS (T.E.Dickey)
 # 
 # Notes:

@@ -1,4 +1,4 @@
-$Header: /users/source/archives/sccs_tools.vcs/certify/RCS/config.txt,v 2.0 1989/06/12 14:46:41 ste_cm Rel $
+$Id: config.txt,v 2.1 1989/10/10 15:54:57 dickey Exp $
 
 --------------------------------------------------------------------------------
 
@@ -6,8 +6,13 @@ The SCCS_TOOLS set of programs is designed to be run in a BSD-unix environment.
 The tools are written in C.
 
 The non-RCS tools (e.g., 'getdelta' and 'putdelta') have been tested on the
-Apollo, Gould and Sun systems at the SPC.  All of the programs have been built
-on all three platforms.
+following systems at the SPC:
+
+	Apollo SR9.7, SR10.1
+	Gould
+	Sun 3.4
+
+All of the programs have been built on all three platforms.
 
 --------------------------------------------------------------------------------
 

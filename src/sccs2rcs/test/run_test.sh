@@ -1,10 +1,14 @@
-: '$Header: /users/source/archives/sccs_tools.vcs/src/sccs2rcs/test/RCS/run_test.sh,v 2.0 1989/03/23 08:00:59 ste_cm Rel $'
+#!/bin/sh
+# $Id: run_test.sh,v 3.0 1989/10/10 15:27:51 ste_cm Rel $
 # Perform tests to ensure that the sccs/RCS conversion works properly.
 # $Log: run_test.sh,v $
-# Revision 2.0  1989/03/23 08:00:59  ste_cm
-# BASELINE Mon Jul 10 09:19:20 EDT 1989
+# Revision 3.0  1989/10/10 15:27:51  ste_cm
+# BASELINE Tue Jun 18 08:04:39 1991 -- apollo sr10.3
 #
-# Revision 1.3  89/03/23  08:00:59  dickey
+# Revision 2.1  89/10/10  15:27:51  dickey
+# fix for apollo sr10.1
+# 
+# Revision 1.3  89/03/23  08:20:55  dickey
 # refined test-case for '-e' option using '-c' option
 # 
 # Revision 1.2  89/03/22  14:49:43  dickey

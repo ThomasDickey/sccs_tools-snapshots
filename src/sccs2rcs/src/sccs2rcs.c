@@ -1,6 +1,6 @@
 #ifndef	lint
 static char *RCSid =
-"$Id: sccs2rcs.c,v 2.1 1989/10/05 10:52:54 dickey Exp $";
+"$Id: sccs2rcs.c,v 2.2 1989/10/10 10:03:12 dickey Exp $";
 #endif	lint
 
 /*
@@ -8,9 +8,13 @@ static char *RCSid =
  * Author: Ken Greer
  *
  * $Log: sccs2rcs.c,v $
- * Revision 2.1  1989/10/05 10:52:54  dickey
- * changed ident-keyword to 'Id' from 'Header'
+ * Revision 2.2  1989/10/10 10:03:12  dickey
+ * use RCS_DIR environment variable ('rcs_dir()' function) where needed to
+ * make this work better with CM_TOOLS
  *
+ * Revision 2.1  89/10/05  10:53:38  dickey
+ * changed ident-keyword to 'Id' from 'Header'
+ * 
  * Revision 2.0  89/04/28  14:48:28  ste_cm
  * BASELINE Mon Jul 10 09:22:04 EDT 1989
  * 
@@ -73,6 +77,7 @@ static char *RCSid =
 #include "rcsdefs.h"
 #include <ctype.h>
 extern	FILE	*tmpfile();
+extern	char	*rcs_dir();
 
 #define SOH	001		/* SCCS lines start with SOH (Control-A) */
 #define RCS	"rcs"
@@ -118,13 +123,6 @@ typedef struct header
     char  *description;
 } HEADER;
 
-
-failed(s)
-char	*s;
-{
-	perror(s);
-	exit(FAIL);
-}
 
 quit2(fmt, args)
 char *fmt,*args;
@@ -379,7 +377,7 @@ char *description, *rcsfile;
     extern FILE *popen();
     FILE *pd;
 
-    mkdir("RCS", 0755);		/* forces common naming convention */
+    mkdir(rcs_dir(), 0755);		/* forces common naming convention */
     FORMAT (command, "%s -i -U ", RCS);
     if (comment_opt)
 	FORMAT(command + strlen(command), "-c'%s' ", comment_opt);

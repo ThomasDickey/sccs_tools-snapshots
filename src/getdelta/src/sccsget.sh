@@ -1,4 +1,5 @@
-: '$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/src/RCS/sccsget.sh,v 2.0 1988/07/29 10:00:56 ste_cm Rel $'
+#!/bin/sh
+# $Id: sccsget.sh,v 2.1 1989/10/10 15:52:05 dickey Exp $
 # Check files out of SCCS (T.E.Dickey)
 #
 # Use SCCS-get to checkout one or more files from the sccs-directory which is
@@ -7,19 +8,6 @@
 # (rather than the current date, as SCCS assumes).
 #
 # Options are designed to feed-thru to 'get(1)'.
-#
-# $Log: sccsget.sh,v $
-# Revision 2.0  1988/07/29 10:00:56  ste_cm
-# BASELINE Mon Jul 10 09:28:43 EDT 1989
-#
-#	Revision 1.2  88/07/29  10:00:56  dickey
-#	sccs2rcs keywords
-#	
-#	29 Jul 1988	renamed 'sccsdate' to 'getdelta'
-#	10 Jun 1988	packaged "get" within "sccsdate"
-#	04 May 1988	to add -n, -f, -s options, and make this recur on
-#			directories.
-#	23 Nov 1987	from 'extract', an earlier version on System 5.	
 #
 # Environment:
 #	GET_PATH- location of "get" utility
