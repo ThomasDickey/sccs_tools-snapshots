@@ -1,4 +1,4 @@
-# $Id: Makefile,v 4.0 1991/10/24 09:31:03 ste_cm Rel $
+# $Id: Makefile,v 5.0 1992/07/20 13:01:40 ste_cm Rel $
 # Top-level make-file for SCCS_TOOLS
 #
 
@@ -57,7 +57,7 @@ destroy::
 
 ####### (Details of Productions) ###############################################
 $(MFILES)\
-$(SOURCES):			; checkout -x $@
+$(SOURCES):			; checkout $@
 
 # Embed default installation path in places where we want it compiled-in.
 # Note that we exploit the use of lower-case makefile for this purpose.
