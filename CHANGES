@@ -1,3 +1,11 @@
+1997-09-13  Thomas E. Dickey  <dickey@clark.net>
+
+	* aclocal.m4: RCS_BASE
+
+1997-09-07  Thomas E. Dickey  <dickey@clark.net>
+
+	* mkdirs.sh, install-sh: RCS_BASE
+
 1996-09-03  Thomas E. Dickey  <dickey@clark.net>
 
 	* src/putdelta/src/putdelta.c: add -b option
