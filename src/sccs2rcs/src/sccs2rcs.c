@@ -1,6 +1,6 @@
 #ifndef	lint
 static char *RCSid =
-"$Header: /users/source/archives/sccs_tools.vcs/src/sccs2rcs/src/RCS/sccs2rcs.c,v 1.10 1989/03/23 13:32:25 dickey Exp $";
+"$Header: /users/source/archives/sccs_tools.vcs/src/sccs2rcs/src/RCS/sccs2rcs.c,v 2.0 1989/04/28 14:48:28 ste_cm Rel $";
 #endif	lint
 
 /*
@@ -8,9 +8,15 @@ static char *RCSid =
  * Author: Ken Greer
  *
  * $Log: sccs2rcs.c,v $
- * Revision 1.10  1989/03/23 13:32:25  dickey
- * translate only one Log-keyword per file
+ * Revision 2.0  1989/04/28 14:48:28  ste_cm
+ * BASELINE Mon Jul 10 09:22:04 EDT 1989
  *
+ * Revision 1.11  89/04/28  14:48:28  dickey
+ * "toupper" is more portable than "_toupper"
+ * 
+ * Revision 1.10  89/03/23  13:32:25  dickey
+ * translate only one Log-keyword per file
+ * 
  * Revision 1.9  89/03/23  10:37:26  dickey
  * require a colon after reserved-words before splitting a Log-line.
  * 
@@ -563,7 +569,8 @@ char	*s;
 	/* make a copy in uppercase to simplify matching */
 	for (t = base = s; tmp[t-s] = *t; t++)
 		if (isalpha(*t) && islower(*t))
-			tmp[t-s] = _toupper(*t);
+			tmp[t-s] = toupper(*t);
+
 	while (*s) {
 		SKIP(s);
 		if (	MATCH("LAST")
