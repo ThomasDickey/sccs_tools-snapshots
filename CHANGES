@@ -1,3 +1,7 @@
+1989-03-27  dickey@software.org
+
+	* certify/Makefile: New file.
+
 1989-03-23  dickey@software.org
 
 	* src/sccs2rcs/src/sccs2rcs.c: translate only one Log-keyword per file
