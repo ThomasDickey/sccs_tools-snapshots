@@ -58,7 +58,7 @@
 #include	<ptypes.h>
 #include	<sccsdefs.h>
 
-MODULE_ID("$Id: getdelta.c,v 6.23 2000/06/30 10:31:47 tom Exp $")
+MODULE_ID("$Id: getdelta.c,v 6.24 2000/07/03 20:34:52 tom Exp $")
 
 /* local definitions */
 #define	NAMELEN		80	/* length of tokens in sccs-header */
@@ -246,7 +246,10 @@ void	DeHexify(
 		if (first) {
 			if (strncmp(buffer, cmv_binary, 4)) {
 				FPRINTF(stderr, "? not a binary: %s\n", name);
-				GiveUp();
+				fclose(ifp);
+				fclose(ofp);
+				remove(temp);
+				return;
 			}
 			first = FALSE;
 			s += 4;
