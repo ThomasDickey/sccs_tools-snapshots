@@ -1,5 +1,5 @@
 #ifndef	lint
-static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/src/RCS/putdelta.c,v 3.27 1991/07/18 13:17:38 dickey Exp $";
+static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/src/RCS/putdelta.c,v 3.28 1991/07/19 09:22:31 dickey Exp $";
 #endif
 
 /*
@@ -7,6 +7,7 @@ static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/
  * Author:	T.E.Dickey
  * Created:	25 Apr 1986
  * Modified:
+ *		19 Jul 1991, allow "-r" option in case of branches
  *		18 Jul 1991, added "-f", "-k" options.
  *		09 Jul 1991, set mtime of s-file so that 'make' will not be
  *			     tempted to undo my hard work.
@@ -109,7 +110,8 @@ static	int	force	= FALSE,
 		silent	= FALSE,
 		no_op	= FALSE,
 		ShowedIt;
-static	char	username[NAMELEN],
+static	char	*sid,
+		username[NAMELEN],
 		admin_opts[BUFSIZ],
 		delta_opts[BUFSIZ];
 
@@ -152,6 +154,7 @@ usage ()
 ,"  -f       (force) creates a new delta even if no lock was made."
 ,"  -k       (keys) if initial, causes \"admin\" to require keywords."
 ,"  -n       (no-op) shows actions, but does not perform them."
+,"  -r SID   specify SCCS-sid in case of multiple pending deltas"
 ,"  -s       (silent) suppress all but essential messages reporting updates"
 ,"           which were made."
 ,"  -y TEXT  describes the delta (otherwise you will be prompted)."
@@ -668,7 +671,7 @@ char	*argv[];
 
 	catarg(delta_opts, "-n");
 	fpT = tmpfile();
-	while ((j = getopt(argc, argv, "fknsy:")) != EOF)
+	while ((j = getopt(argc, argv, "fknr:sy:")) != EOF)
 		switch (j) {
 		case 'f':
 			force	= TRUE;
@@ -678,6 +681,10 @@ char	*argv[];
 			break;
 		case 'n':
 			no_op	= TRUE;
+			break;
+		case 'r':
+			FORMAT(tmp, "-r%s", sid = optarg);
+			catarg(delta_opts, tmp);
 			break;
 		case 's':
 			silent	= TRUE;

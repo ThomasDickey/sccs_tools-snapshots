@@ -1,5 +1,5 @@
 #ifndef	lint
-static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/src/RCS/sccsput.c,v 3.7 1991/07/18 14:05:03 dickey Exp $";
+static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/src/RCS/sccsput.c,v 3.8 1991/07/19 13:33:38 dickey Exp $";
 #endif
 
 /*
@@ -7,6 +7,7 @@ static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/
  * Author:	T.E.Dickey
  * Created:	08 May 1990 (from sccsput.sh and rcsput.c)
  * Modified:
+ *		19 Jul 1991, accept "-r" option (for diff and putdelta)
  *		18 Jul 1991, renamed "-f" option to "-F", added new "-f" to
  *			pass-down to 'putdelta'.  Also, pass-thru "-k" to
  *			'putdelta'.
@@ -35,6 +36,7 @@ extern	FILE	*popen();
 extern	char	*dftenv();
 extern	char	*pathcat();
 extern	char	*pathleaf();
+extern	char	*stralloc();
 
 #define	isDIR(mode)	((mode & S_IFMT) == S_IFDIR)
 #define	isFILE(mode)	((mode & S_IFMT) == S_IFREG)
@@ -49,6 +51,7 @@ static	int	no_op;		/* no-op mode */
 static	char	*pager;		/* nonzero if we don't cat diffs */
 static	int	Force, force;
 static	char	*k_opt	= "";
+static	char	*r_opt	= "";
 static	int	quiet;
 static	int	found_diffs;	/* true iff we keep logfile */
 
@@ -91,6 +94,7 @@ char	*cmd, *name;
 		failed("tmpnam");
 	VERBOSE("%% %s >%s\n", cmd, name);
 
+	/* patch: this does not account for embedded blanks in a command */
 	if (!(ifp = popen(cmd, "r")))
 		failed("popen");
 	/* copy the result to a file so we can send it two places */
@@ -114,10 +118,20 @@ char	*archive;
 			out_diff[BUFSIZ];
 	auto	int	changed;
 
-	FORMAT(buffer, "get %s %s -p %s", quiet ? "-s" : "", k_opt, archive);
+	*buffer = EOS;
+	catarg(buffer, "get");
+	catarg(buffer, "-p");
+	if (quiet)	catarg(buffer, "-s");
+	if (*k_opt)	catarg(buffer, k_opt);
+	if (*r_opt)	catarg(buffer, r_opt);
+	catarg(buffer, archive);
 	(void)pipe2file(buffer, in_diff);
 
-	FORMAT(buffer, "diff %s %s %s", diff_opts, in_diff, working);
+	*buffer = EOS;
+	catarg(buffer, "diff");
+	catarg(buffer, diff_opts);
+	catarg(buffer, in_diff);
+	catarg(buffer, working);
 	changed = pipe2file(buffer, out_diff);
 
 	if (changed) {
@@ -179,6 +193,7 @@ char	*name;
 	if (quiet)	catarg(args, "-s");
 	if (force)	catarg(args, "-f");
 	if (*k_opt)	catarg(args, k_opt);
+	if (*r_opt)	catarg(args, r_opt);
 	if (*comment)	catarg(args, comment);
 	catarg(args, working);
 
@@ -253,6 +268,7 @@ usage(option)
 ,"           (also passed to putdelta; implies file has unexpanded keywords)"
 ,"  -l file  write all differences to log-file"
 ,"  -n       compute differences only, don't try to archive"
+,"  -r SID   specify SCCS-sid (version)"
 ,"  -s       silent (passed to putdelta)"
 ,"  -y text  comment (passed to putdelta)"
 ,"  -D opts  special options to pass to \"diff\""
@@ -282,7 +298,7 @@ char	*argv[];
 	revert("not a setuid-program");	/* ensure this is not misused */
 	track_wd((char *)0);
 	pager = dftenv("more -l", "PAGER");
-	while ((j = getopt(argc, argv, "abcfhkl:nsy:D:FT:")) != EOF) {
+	while ((j = getopt(argc, argv, "abcfhkl:nr:sy:D:FT:")) != EOF) {
 		switch (j) {
 		case 'a':	a_opt = TRUE;			break;
 		case 'b':	catarg(diff_opts, "-b");	break;
@@ -295,6 +311,9 @@ char	*argv[];
 					usage(0);
 				break;
 		case 'n':	no_op = TRUE;			break;
+		case 'r':	FORMAT(deferred, "-r%s", optarg);
+				r_opt = stralloc(deferred);
+				break;
 		case 's':	quiet = TRUE;			break;
 		case 'y':	FORMAT(comment, "-y%.*s",
 					sizeof(comment-3), optarg);
