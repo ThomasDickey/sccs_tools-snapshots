@@ -20,7 +20,7 @@
 #include	<sccsdefs.h>
 #include	<time.h>	/* declares 'ctime()' */
 
-MODULE_ID("$Id: fixsccs.c,v 6.8 1997/09/28 19:37:49 tom Exp $")
+MODULE_ID("$Id: fixsccs.c,v 6.9 2002/07/05 13:42:07 tom Exp $")
 
 static	int	a_opt;		/* all-directory scan */
 static	int	no_op;		/* no-op mode */
@@ -108,7 +108,7 @@ void	usage(_AR0)
 ,"  -q       quiet"
 ,""
 	};
-	register int	j;
+	unsigned j;
 	for (j = 0; j < sizeof(tbl)/sizeof(tbl[0]); j++)
 		FPRINTF(stderr, "%s\n", tbl[j]);
 	exit(FAIL);

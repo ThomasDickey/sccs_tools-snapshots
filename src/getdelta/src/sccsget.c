@@ -29,7 +29,7 @@
 #include	<rcsdefs.h>
 #include	<sccsdefs.h>
 
-MODULE_ID("$Id: sccsget.c,v 6.6 2001/12/11 15:03:06 tom Exp $")
+MODULE_ID("$Id: sccsget.c,v 6.7 2002/07/05 13:42:07 tom Exp $")
 
 static	char	get_opts[BUFSIZ];
 static	char	*verb = "getdelta";
@@ -191,7 +191,7 @@ void	usage(_AR0)
 ,"  -k       suppress keyword expansion"
 ,"  -r SID   specify revision"
 	};
-	register int	j;
+	unsigned j;
 	for (j = 0; j < sizeof(tbl)/sizeof(tbl[0]); j++)
 		FPRINTF(stderr, "%s\n", tbl[j]);
 	FFLUSH(stderr);	/* for CLIX */

@@ -3,6 +3,9 @@
  * Author: Ken Greer
  *
  * $Log: sccs2rcs.c,v $
+ * Revision 6.7  2002/07/05 13:42:07  tom
+ * gcc warning
+ *
  * Revision 6.6  2001/12/11 15:04:07  tom
  * change interface to rcs_dir()
  *
@@ -140,7 +143,7 @@
 #include "sccsdefs.h"
 #include <errno.h>
 
-MODULE_ID("$Id: sccs2rcs.c,v 6.6 2001/12/11 15:04:07 tom Exp $")
+MODULE_ID("$Id: sccs2rcs.c,v 6.7 2002/07/05 13:42:07 tom Exp $")
 
 #define SOH	001		/* SCCS lines start with SOH (Control-A) */
 #define RCS	"rcs"
@@ -625,7 +628,7 @@ int	edit_what _ONE(char *, s)
 					len--;
 			len++;
 			if (	(t = strchr(tmp, '"'))
-			&&	(t-tmp < len) )
+			&&	(t-tmp < (int)len) )
 				len = t - tmp;
 			if (len > 0) {
 				*s++ = '$';
