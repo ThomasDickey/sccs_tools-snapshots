@@ -1,5 +1,5 @@
 #!/bin/sh
-# $Id: run_test.sh,v 3.0 1991/05/24 09:20:01 ste_cm Rel $
+# $Id: run_test.sh,v 3.1 1991/07/09 07:24:17 dickey Exp $
 # test-script for see that 'putdelta' is working.
 #
 SCCS=${SCCS_DIR-SCCS}
@@ -27,6 +27,8 @@ then
 	fi
 	echo '** archived file is'
 	ls -l $SCCS/s.dummy
+	echo '** history:'
+	prs $SCCS/s.dummy
 else
 	echo '?? $tool failed'
 fi

@@ -1,5 +1,5 @@
 #ifndef	lint
-static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/src/RCS/putdelta.c,v 3.22 1991/07/01 09:35:50 dickey Exp $";
+static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/src/RCS/putdelta.c,v 3.23 1991/07/09 07:15:33 dickey Exp $";
 #endif
 
 /*
@@ -7,6 +7,8 @@ static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/
  * Author:	T.E.Dickey
  * Created:	25 Apr 1986
  * Modified:
+ *		09 Jul 1991, set mtime of s-file so that 'make' will not be
+ *			     tempted to undo my hard work.
  *		26 Jun 1991, added 'reftime' hack to account for filesystem
  *			     times ahead of system-clock.  Added code to make
  *			     z-file around critical zones.  Use x-file for
@@ -446,7 +448,8 @@ struct	tm	*t;
  * original SCCS-file:
  */
 static
-EditFile(lines)
+EditFile(modtime, lines)
+time_t	modtime;
 long	lines;
 {
 	register int j;
@@ -457,13 +460,15 @@ long	lines;
 	MakeName(x_file, 'x');
 	if (!(fpS = fopen (x_file, "w")))
 		failed(x_file);
-	FPRINTF (fpS, "\001h%05d\n", chksum);
+	FPRINTF (fpS, "\001h%05d\n", 0xffff & chksum);
 	(void) rewind (fpT);
 	for (j = 1; j < lines; j++) {
 		(void) fgets (bfr, sizeof(bfr), fpT);
 		(void) fputs (bfr, fpS);
 	}
 	FCLOSE(fpS);
+	if (setmtime(x_file, modtime) < 0)
+		perror(x_file);
 	if (chmod(x_file, s_mode) < 0
 	 || rename(x_file, s_file) < 0)
 		perror(x_file);
@@ -512,7 +517,7 @@ time_t	modtime,	/* file's mod-time */
 		FCLOSE (fpS);
 
 		if (changed)
-			EditFile(lines);
+			EditFile(modtime + reftime, lines);
 	} else {
 		TELL ("** could not open \"%s\"\n", s_file);
 	}
