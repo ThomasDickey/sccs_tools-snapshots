@@ -1,16 +1,19 @@
-# $Id: Makefile,v 2.1 1989/10/05 10:37:14 dickey Exp $
+# $Id: Makefile,v 2.2 1991/04/01 08:23:59 dickey Exp $
 # Top-level make-file for SCCS_TOOLS
 #
 # $Log: Makefile,v $
-# Revision 2.1  1989/10/05 10:37:14  dickey
-# added lint.out, lincnt.out rules
+# Revision 2.2  1991/04/01 08:23:59  dickey
+# changed install-path
 #
+#	Revision 2.1  89/10/05  10:37:55  dickey
+#	added lint.out, lincnt.out rules
+#	
 #	Revision 2.0  89/07/10  08:19:31  ste_cm
 #	BASELINE Mon Jul 10 09:14:49 EDT 1989
 #	
 
 ####### (Development) ##########################################################
-INSTALL_PATH = /ste_site/ste/bin
+INSTALL_PATH = /local/impact/bin
 GET	= checkout
 THIS	= Makefile
 MAKE	= make $(MFLAGS) -k$(MAKEFLAGS)	GET=$(GET)
