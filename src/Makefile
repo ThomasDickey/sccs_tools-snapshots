@@ -1,4 +1,4 @@
-# $Id: Makefile,v 6.0 1993/04/29 08:35:21 ste_cm Rel $
+# $Id: Makefile,v 6.1 1994/07/21 00:29:20 tom Exp $
 # Top-level makefile for SCCS_TOOLS src-directory
 
 TOP	= ../..
@@ -17,7 +17,6 @@ clobber\
 destroy\
 sources\
 lint.out\
-lincnt.out\
 run_test\
 install\
 deinstall::	$(MFILES)
@@ -26,7 +25,7 @@ deinstall::	$(MFILES)
 	cd sccs2rcs;	$(MAKE) $@
 
 clean\
-clobber::			; rm -f $(CLEAN)
+clobber::			; $(RM) $(CLEAN)
 destroy::			; $(DESTROY)
 
 ####### (Details of Productions) ###############################################

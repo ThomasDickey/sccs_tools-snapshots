@@ -1,7 +1,7 @@
-# $Id: Makefile,v 6.1 1994/07/21 00:29:52 tom Exp $
-# Top-level makefile for SCCS_TOOLS get-delta utility
+# $Id: Makefile,v 6.2 1994/07/21 00:27:04 tom Exp $
+# Top-level makefile for SCCS_TOOLS timestamp-fix utility
 
-THIS	= getdelta
+THIS	= fixsccs
 TOP	= ../../..
 include $(TOP)/td_lib/support/td_lib.mk
 
@@ -9,8 +9,7 @@ include $(TOP)/td_lib/support/td_lib.mk
 B	= ../../bin
 
 IT	=\
-	$B/$(THIS)\
-	$B/sccsget
+	$B/$(THIS)
 
 MFILES	=\
 	src/Makefile\
@@ -48,4 +47,3 @@ deinstall:		; $(RM) $(IT)
 $(DIRS):			; mkdir $@
 $(MFILES):			; $(GET) $@
 $B/$(THIS):	bin/$(THIS)	; $(PUT)
-$B/sccsget:	bin/sccsget	; $(PUT)

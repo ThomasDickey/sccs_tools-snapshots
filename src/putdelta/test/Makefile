@@ -1,4 +1,4 @@
-# $Id: Makefile,v 6.0 1993/04/29 08:35:20 ste_cm Rel $
+# $Id: Makefile,v 6.1 1994/07/21 00:33:53 tom Exp $
 # make-file for testing sccs delta+admin package
 
 TOP	= ../../../..
@@ -12,13 +12,12 @@ SOURCES	= $(SCRIPTS)
 
 ####### (Standard Productions) #################################################
 all:	$(SOURCES) $(ALL)
-clean:				; rm -f $(CLEAN)
-clobber:	clean		; rm -f $(ALL)
+clean:				; $(RM) $(CLEAN)
+clobber:	clean		; -$(RM) $(ALL)
 destroy:			; $(DESTROY)
 sources:	$(SOURCES)
 run_test:	$(SOURCES)	; $(RUN_TESTS)
 lint.out:
-lincnt.out:
 
 ####### (Details of Productions) ###############################################
 $(SOURCES):			; $(GET) $@

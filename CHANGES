@@ -1,3 +1,23 @@
+1994-08-11  Thomas E. Dickey  <dickey@clark.net>
+
+	* src/getdelta/src/getdelta.c:
+	added a hack to decode CMVision dates in the comment
+
+1994-07-20  Thomas E. Dickey  <dickey@clark.net>
+
+	* src/sccs2rcs/src/Makefile, src/putdelta/src/Makefile, src/getdelta/src/Makefile, certify/release.txt, certify/Makefile, src/fixsccs/test/Makefile, src/getdelta/test/Makefile, src/putdelta/test/Makefile, src/sccs2rcs/test/Makefile, src/getdelta/Makefile, src/putdelta/Makefile, src/sccs2rcs/Makefile, bin/Makefile, src/Makefile, src/fixsccs/src/Makefile, Makefile, src/fixsccs/Makefile:
+	autoconf-cleanup
+
+	* src/fixsccs/test/run_test.sh, src/fixsccs/test/Makefile: RCS_BASE
+
+	* src/fixsccs/src/Makefile, src/fixsccs/src/fixsccs.c: autoconf-fixes
+
+	* src/fixsccs/Makefile: RCS_BASE
+
+	* certify/release.txt: reason for next release
+
+	* user/Makefile: added sccs2rcs man-page
+
 1994-07-19  Thomas E. Dickey  <dickey@clark.net>
 
 	* src/getdelta/src/getdelta.c: added "-p" option

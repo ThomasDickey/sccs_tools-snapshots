@@ -1,5 +1,5 @@
 #ifndef	lint
-static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/fixsccs/src/RCS/fixsccs.c,v 6.5 1994/06/07 15:05:31 dickey Exp $";
+static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/fixsccs/src/RCS/fixsccs.c,v 6.6 1994/07/21 00:19:21 tom Exp $";
 #endif
 
 /*
@@ -33,11 +33,11 @@ static
 void	FixSCCS(
 	_ARX(char *,	path)
 	_ARX(char *,	archive)
-	_AR1(STAT *,	sp)
+	_AR1(Stat_t *,	sp)
 		)
 	_DCL(char *,	path)
 	_DCL(char *,	archive)
-	_DCL(STAT *,	sp)
+	_DCL(Stat_t *,	sp)
 {
 	auto	time_t	date;
 	auto	char	*vers,

@@ -1,4 +1,4 @@
-# $Id: Makefile,v 6.0 1993/04/29 08:57:21 ste_cm Rel $
+# $Id: Makefile,v 6.1 1994/07/21 00:29:52 tom Exp $
 # Top-level makefile for SCCS_TOOLS put-delta utility
 
 THIS	= putdelta
@@ -29,21 +29,20 @@ clobber\
 destroy\
 run_test\
 sources\
-lincnt.out\
 lint.out::	$(MFILES)
 	cd src;		$(MAKE) $@
 	cd test;	$(MAKE) $@
 
 clean\
-clobber::		; rm -f $(CLEAN)
+clobber::		; $(RM) $(CLEAN)
 
 clobber\
-destroy::		; rm -rf $(DIRS)
+destroy::		; $(RM) -r $(DIRS)
 
 destroy::		; $(DESTROY)
 
 install:	all $(IT)
-deinstall:		; rm -f $(IT)
+deinstall:		; $(RM) $(IT)
 
 ####### (Details of Productions) ###############################################
 $(DIRS):			; mkdir $@

@@ -1,6 +1,19 @@
-$Id: release.txt,v 6.0 1993/05/05 11:03:38 ste_cm Rel $
+$Id: release.txt,v 6.2 1994/07/21 00:40:40 tom Exp $
 
 --------------------------------------------------------------------------------
+
+Baseline 7:	(1994/???/??)
+----------
+Adapted to TD_LIB #13 (i.e., autoconf).
+
+Added environment variable $SCCS_VAULT, which allows users to build sccs
+archives in a parallel tree, without using symbolic links.
+
+Added/modified options:
+	sccsget "-n" option when repeated calls getdelta with "-n" option.
+
+	getdelta "-p" option (like 'get'), to use in applications where the
+	$SCCS_VAULT configuration is needed.
 
 Baseline 6:	(1993/may/05)
 ----------
