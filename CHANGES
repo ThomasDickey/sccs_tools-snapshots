@@ -1,3 +1,11 @@
+1991-06-24  dickey@software.org
+
+	* src/getdelta/src/getdelta.c:
+	simplified logic for unlinking working-file
+
+	* src/getdelta/src/getdelta.c:
+	make working-file writeable if user reserves it.
+
 1991-06-20  dickey@software.org
 
 	* src/putdelta/src/sccsput.c, src/putdelta/src/putdelta.c:
