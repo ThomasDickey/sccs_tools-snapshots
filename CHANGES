@@ -1,3 +1,27 @@
+1988-07-29  dickey@software.org
+
+	* src/getdelta/src/getdelta.c:
+	didn't mask mode properly, so 'chmod()' failed.
+
+	* src/getdelta/src/getdelta.c, src/getdelta/src/sccsget.sh: New file.
+
+	* src/getdelta/src/sccsget.sh: sccs2rcs keywords
+
+1988-07-29  ste_cm@software.org
+
+	* src/getdelta/src/sccsget.sh: BASELINE Mon Jul 10 09:28:43 EDT 1989
+
+1988-07-29  dickey@software.org
+
+	* src/getdelta/src/Makefile, src/putdelta/src/putdelta.c, src/putdelta/src/Makefile, src/putdelta/src/sccsput.sh:
+	New file.
+
+	* src/putdelta/src/sccsput.sh: sccs2rcs keywords
+
+1988-07-29  ste_cm@software.org
+
+	* src/putdelta/src/sccsput.sh: BASELINE Mon Jul 10 09:25:16 EDT 1989
+
 1988-05-05  dickey@software.org
 
 	* user/sccsget.doc, user/sccsput.doc: New file.
