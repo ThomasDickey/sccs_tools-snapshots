@@ -1,5 +1,5 @@
 #ifndef	lint
-static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/src/RCS/sccsput.c,v 3.8 1991/07/19 13:33:38 dickey Exp $";
+static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/src/RCS/sccsput.c,v 3.10 1991/07/22 14:40:52 dickey Exp $";
 #endif
 
 /*
@@ -7,6 +7,7 @@ static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/
  * Author:	T.E.Dickey
  * Created:	08 May 1990 (from sccsput.sh and rcsput.c)
  * Modified:
+ *		22 Jul 1991, cleanup use of 'catarg()'
  *		19 Jul 1991, accept "-r" option (for diff and putdelta)
  *		18 Jul 1991, renamed "-f" option to "-F", added new "-f" to
  *			pass-down to 'putdelta'.  Also, pass-thru "-k" to
@@ -33,6 +34,7 @@ static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/
 #include	"rcsdefs.h"
 #include	"sccsdefs.h"
 extern	FILE	*popen();
+extern	char	*bldcmd();
 extern	char	*dftenv();
 extern	char	*pathcat();
 extern	char	*pathleaf();
@@ -92,10 +94,11 @@ char	*cmd, *name;
 
 	if (!tmpnam(name) || !(ofp = fopen(name,"w")))
 		failed("tmpnam");
-	VERBOSE("%% %s >%s\n", cmd, name);
-
-	/* patch: this does not account for embedded blanks in a command */
-	if (!(ifp = popen(cmd, "r")))
+	if (!quiet) {
+		FORMAT(buffer, "%s > ", cmd);
+		shoarg(stdout, buffer, name);
+	}
+	if (!(ifp = popen(bldcmd(buffer, cmd, sizeof(buffer)), "r")))
 		failed("popen");
 	/* copy the result to a file so we can send it two places */
 	while ((n = fread(buffer, sizeof(char), sizeof(buffer), ifp)) > 0) {
@@ -114,8 +117,8 @@ char	*working;
 char	*archive;
 {
 	auto	char	buffer[BUFSIZ],
-			in_diff[BUFSIZ],
-			out_diff[BUFSIZ];
+			in_diff[MAXPATHLEN],
+			out_diff[MAXPATHLEN];
 	auto	int	changed;
 
 	*buffer = EOS;
@@ -129,7 +132,7 @@ char	*archive;
 
 	*buffer = EOS;
 	catarg(buffer, "diff");
-	catarg(buffer, diff_opts);
+	(void)strcat(buffer, diff_opts);
 	catarg(buffer, in_diff);
 	catarg(buffer, working);
 	changed = pipe2file(buffer, out_diff);
@@ -220,7 +223,7 @@ char	*path;
 char	*name;
 struct	stat	*sp;
 {
-	auto	char	tmp[BUFSIZ],
+	auto	char	tmp[MAXPATHLEN],
 			*s = pathcat(tmp, path, name);
 
 	if (sp == 0 || ok_acc < 0) {

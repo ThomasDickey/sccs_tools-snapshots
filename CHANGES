@@ -1,3 +1,13 @@
+1991-07-22  dickey@software.org
+
+	* src/putdelta/src/sccsput.c:
+	cleanup use of 'catarg()' (was accidentally setting escape
+	on inter-arg blanks)
+
+	* src/putdelta/src/sccsput.c:
+	use 'bldcmd()' to escape spaces and to unescape spaces
+	found by 'catarg()'
+
 1991-07-19  dickey@software.org
 
 	* src/putdelta/src/sccsput.c: added "-r" option
