@@ -1,5 +1,5 @@
 #ifndef	lint
-static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/src/RCS/putdelta.c,v 3.23 1991/07/09 07:15:33 dickey Exp $";
+static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/src/RCS/putdelta.c,v 3.27 1991/07/18 13:17:38 dickey Exp $";
 #endif
 
 /*
@@ -7,6 +7,7 @@ static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/
  * Author:	T.E.Dickey
  * Created:	25 Apr 1986
  * Modified:
+ *		18 Jul 1991, added "-f", "-k" options.
  *		09 Jul 1991, set mtime of s-file so that 'make' will not be
  *			     tempted to undo my hard work.
  *		26 Jun 1991, added 'reftime' hack to account for filesystem
@@ -103,7 +104,9 @@ extern	char	*sys_errlist[];
  *	local data							*
  ************************************************************************/
 static	FILE	*fpT;
-static	int	silent	= FALSE,
+static	int	force	= FALSE,
+		o_keys	= FALSE,	/* need keywords (init only) */
+		silent	= FALSE,
 		no_op	= FALSE,
 		ShowedIt;
 static	char	username[NAMELEN],
@@ -146,10 +149,12 @@ usage ()
  "Usage: putdelta [options] files"
 ,""
 ,"Options"
-,"  -n       (no-op) shows actions, but does not perform them"
+,"  -f       (force) creates a new delta even if no lock was made."
+,"  -k       (keys) if initial, causes \"admin\" to require keywords."
+,"  -n       (no-op) shows actions, but does not perform them."
 ,"  -s       (silent) suppress all but essential messages reporting updates"
 ,"           which were made."
-,"  -y TEXT  describes the delta (otherwise you will be prompted)"
+,"  -y TEXT  describes the delta (otherwise you will be prompted)."
 	};
 	register int	j;
 	for (j = 0; j < sizeof(msg)/sizeof(msg[0]); j++)
@@ -330,7 +335,7 @@ char	*bfr;
  * Inspect the p-file to see if we have a lock on a version.
  * If there are no locks, fake one so that "delta" will see it.
  *
- * patch: This restricts us to making locks only if none exist.
+ * Note: This restricts us to making locks only if none exist.
  */
 static
 TestLock()
@@ -369,6 +374,13 @@ TestLock()
 			}
 		}
 		FCLOSE(fp);
+	}
+
+	/* don't create a lock if user didn't say to force it */
+	if (!force) {
+		TELL("?? no lock on %s by %s\n", g_file, username);
+		Critical(FALSE);
+		return FALSE;
 	}
 
 	/* try to determine the delta to which we should fake a lock */
@@ -623,7 +635,10 @@ char	*name;
 	} else {
 		put_verb = ADMIN_TOOL;
 		FORMAT(temp, "-i%s", g_file);
-		catarg(strcpy(put_opts, admin_opts), temp);
+		(void)strcpy(put_opts, admin_opts);
+		if (o_keys)
+			catarg(put_opts, "-fi");
+		catarg(put_opts, temp);
 		catarg(put_opts, s_file);
 	}
 
@@ -653,8 +668,14 @@ char	*argv[];
 
 	catarg(delta_opts, "-n");
 	fpT = tmpfile();
-	while ((j = getopt(argc, argv, "nsy:")) != EOF)
+	while ((j = getopt(argc, argv, "fknsy:")) != EOF)
 		switch (j) {
+		case 'f':
+			force	= TRUE;
+			break;
+		case 'k':
+			o_keys	= TRUE;
+			break;
 		case 'n':
 			no_op	= TRUE;
 			break;
@@ -671,8 +692,11 @@ char	*argv[];
 			usage ();
 		}
 
-	for (j = optind; j < argc; j++)
-		DoFile (argv[j]);
+	if (optind < argc) {
+		for (j = optind; j < argc; j++)
+			DoFile (argv[j]);
+	} else
+		usage();
 	(void)exit(SUCCESS);
 	/*NOTREACHED*/
 }
