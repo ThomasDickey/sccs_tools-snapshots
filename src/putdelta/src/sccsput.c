@@ -1,5 +1,5 @@
 #ifndef	lint
-static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/src/RCS/sccsput.c,v 3.12 1991/09/13 09:12:31 dickey Exp $";
+static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/src/RCS/sccsput.c,v 6.0 1991/10/24 09:11:44 ste_cm Rel $";
 #endif
 
 /*
@@ -7,6 +7,7 @@ static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/
  * Author:	T.E.Dickey
  * Created:	08 May 1990 (from sccsput.sh and rcsput.c)
  * Modified:
+ *		24 Oct 1991, converted to ANSI
  *		13 Sep 1991, use common 'filesize()'
  *		24 Jul 1991, corrected size of 'comment[]'
  *		22 Jul 1991, cleanup use of 'catarg()'
@@ -32,16 +33,10 @@ static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/
  */
 
 #define	STR_PTYPES
-#include	"ptypes.h"
-#include	"rcsdefs.h"
-#include	"sccsdefs.h"
+#include	<ptypes.h>
+#include	<rcsdefs.h>
+#include	<sccsdefs.h>
 extern	FILE	*popen();
-extern	char	*bldcmd();
-extern	char	*dftenv();
-extern	char	*pathcat();
-extern	char	*pathleaf();
-extern	char	*stralloc();
-extern	off_t	filesize();
 
 #define	isDIR(mode)	((mode & S_IFMT) == S_IFDIR)
 #define	isFILE(mode)	((mode & S_IFMT) == S_IFREG)
@@ -61,9 +56,12 @@ static	int	quiet;
 static	int	found_diffs;	/* true iff we keep logfile */
 
 static
-cat2fp(fp, name)
-FILE	*fp;
-char	*name;
+cat2fp(
+_ARX(FILE *,	fp)
+_AR1(char *,	name)
+	)
+_DCL(FILE *,	fp)
+_DCL(char *,	name)
 {
 	auto	FILE	*ifp;
 	auto	char	t[BUFSIZ];
@@ -78,8 +76,12 @@ char	*name;
 }
 
 static
-pipe2file(cmd, name)
-char	*cmd, *name;
+pipe2file(
+_ARX(char *,	cmd)
+_AR1(char *,	name)
+	)
+_DCL(char *,	cmd)
+_DCL(char *,	name)
 {
 	auto	FILE	*ifp, *ofp;
 	auto	char	buffer[BUFSIZ];
@@ -106,9 +108,12 @@ char	*cmd, *name;
 }
 
 static
-different(working, archive)
-char	*working;
-char	*archive;
+different(
+_ARX(char *,	working)
+_AR1(char *,	archive)
+	)
+_DCL(char *,	working)
+_DCL(char *,	archive)
 {
 	auto	char	buffer[BUFSIZ],
 			in_diff[MAXPATHLEN],
@@ -156,9 +161,12 @@ char	*archive;
 }
 
 static
-checkin(path,name)
-char	*path;
-char	*name;
+checkin(
+_ARX(char *,	path)
+_AR1(char *,	name)
+	)
+_DCL(char *,	path)
+_DCL(char *,	name)
 {
 	auto	char	args[BUFSIZ];
 	auto	char	*working = sccs2name(name,FALSE);
@@ -212,45 +220,45 @@ char	*name;
 
 /*ARGSUSED*/
 static
-scan_tree(path, name, sp, ok_acc, level)
-char	*path;
-char	*name;
-struct	stat	*sp;
+WALK_FUNC(scan_tree)
 {
 	auto	char	tmp[MAXPATHLEN],
 			*s = pathcat(tmp, path, name);
 
-	if (sp == 0 || ok_acc < 0) {
-		ok_acc = -1;
+	if (sp == 0 || readable < 0) {
+		readable = -1;
 		perror(name);
 		if (!Force)
 			exit(FAIL);
 	} else if (isDIR(sp->st_mode)) {
 		abspath(s);		/* get rid of "." and ".." names */
 		if (!a_opt && *pathleaf(s) == '.')
-			ok_acc = -1;
+			readable = -1;
 		else if (sameleaf(s, sccs_dir())
 		    ||	 sameleaf(s, rcs_dir()))
-			ok_acc = -1;
+			readable = -1;
 		else
 			track_wd(path);
 	} else if (isFILE(sp->st_mode)) {
 		track_wd(path);
 		checkin(path,name);
 	} else
-		ok_acc = -1;
+		readable = -1;
 
-	return(ok_acc);
+	return(readable);
 }
 
 static
-do_arg(name)
-char	*name;
+do_arg(
+_AR1(char *,	name))
+_DCL(char *,	name)
 {
 	(void)walktree((char *)0, name, scan_tree, "r", 0);
 }
 
-usage(option)
+usage(
+_AR1(int,	option))
+_DCL(int,	option)
 {
 	static	char	*tbl[] = {
  "Usage: sccsput [options] files_or_directories"
@@ -281,11 +289,9 @@ usage(option)
 	exit(FAIL);
 }
 
-main(argc, argv)
-char	*argv[];
+/*ARGSUSED*/
+_MAIN
 {
-	extern	int	optind;
-	extern	char	*optarg;
 	auto	char	deferred[BUFSIZ],
 			*logname;
 #define	DEFERRED	strcat(strcpy(deferred, "-"), optarg)

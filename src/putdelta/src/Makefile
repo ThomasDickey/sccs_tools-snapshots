@@ -1,4 +1,4 @@
-# $Header: /users/source/archives/sccs_tools.vcs/src/putdelta/src/RCS/Makefile,v 3.1 1991/06/27 07:42:11 dickey Exp $
+# $Id: Makefile,v 5.0 1991/10/24 08:59:22 ste_cm Rel $
 # Make-file for SCCS check-in utilities
 #
 ####### (Environment) ##########################################################
@@ -37,12 +37,14 @@ install:	$B/putdelta\
 		$B/sccsput
 #
 ####### (Details of Productions) ###############################################
+PTYPES_H	= $I/ptypes.h $I/common.h
+
 $B/putdelta:	$(MAIN_O)	; $(CC) -o $@ $(MAIN_O)
-putdelta.o:	$I/ptypes.h\
+putdelta.o:	$(PTYPES_H)\
 		$I/sccsdefs.h
 #
 $B/sccsput:	$(TREE_O)	; $(CC) -o $@ $(TREE_O)
-sccsput.o:	$I/ptypes.h\
+sccsput.o:	$(PTYPES_H)\
 		$I/rcsdefs.h\
 		$I/sccsdefs.h
 #

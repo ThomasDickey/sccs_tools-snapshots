@@ -1,0 +1,123 @@
+.\" $Id: sccsget.man,v 6.0 1991/10/24 08:31:26 ste_cm Rel $
+.de DS
+.RS
+.nf
+.sp
+..
+.de DE
+.fi
+.RE
+.sp .5
+..
+.TH SCCSGET 1
+.SH NAME
+.PP
+\fBsccsget\fR \- SCCS check-out script
+.SH USAGE
+.PP
+\fBsccsget\fI [options] [file-specifications]
+.SH SYNOPSIS
+.PP
+\fBSccsget\fR is a simple interface to \fIsccs\fR
+(\fBs\fRource \fBc\fRode \fBc\fRontrol \fBs\fRystem),
+which is used to extract files from \fIsccs\fR archives.
+.SH DESCRIPTION
+.PP
+\fBSccsget\fR checks out (extracts) files from an \fIsccs\fR
+archive which have been checked in using \fBsccsput\fR.
+\fBSccsput\fR
+checks in files, retaining their modification date as the check-in
+date.
+\fBSccsget\fR extracts a given version of one or more files,
+and sets their modification date to match the check-in date.
+.SH OPTIONS
+.PP
+\fBSccsget\fR is a directory-recursive interface \fRto the \fBgetdelta\fR utility\fR (which invokes \fIsccs\fR's \fBget\fR)
+which does special things with the file modification date.
+Most of
+its options are passed to \fBget\fR, and then interpreted to determine
+the correct modification date:
+.TP
+.BI \-c cutoff
+specifies the \fIsccs\fR cutoff date, in the format
+.DS
+YY[MM[DD[HH[MM[SS]]]]]
+.DE
+.RS
+.PP
+Punctuation in the date is permitted.
+For example,
+.DS
+-c 77/2/2 9:22:25
+-c 770202092225
+.DE
+.PP
+represent the same date.
+.RE
+.TP
+.B \-f
+forces \fBsccsget\fR to remove the current version
+of the file before extracting the specified version.
+Otherwise, \fBsccsget\fR will refuse to overwrite a file which already exists.
+.TP
+.B \-k
+directs get to extract the specified file without
+substituting sccs identification keywords.
+You should use this option
+if you intend to make updates to the file.
+.TP
+.B \-n
+suppresses the \fBget\fR-operation.
+Instead, \fBsccsget\fR echoes an "ok" message for files which would be extracted.
+.TP
+.BI -r SID
+specifies the \fIsccs\fR identification
+string (SID) of the version of an \fIsccs\fR file to be retrieved.
+.TP
+.B \-s
+suppresses most messages written by the \fBget\fR
+utility (i.e., those written to standard output).
+.SH OPERATIONS
+.PP
+To extract files using \fBsccsget\fR, you must provide one or more
+names.
+They may be either file or directory names.
+.PP
+\fBSccsget\fR resolves names until it finds one of the form "sccs/s.
+\fIfile\fR" before invoking \fBget\fR.
+If it finds a directory
+(other than "SCCS"), \fBsccsget\fR will recur on itself to
+extract files at lower levels.
+.SH ENVIRONMENT
+.PP
+\fBSccsget\fR is a Bourne shell script.
+On Apollo DOMAIN/IX, it
+uses System\ 5 features, including \fIgetopt\ (1)\fR.
+Environment
+variables used by \fBsccsget\fR include:
+.TP
+.B SCCS_DIR
+specifies the directory in which \fBgetdelta\fR will find the "s." files.
+If not specified, \fBgetdelta\fR
+assumes "SCCS".
+.SH FILES
+.PP
+Sccsget uses the following files:
+.TP
+.B sccsget
+the Bourne shell script
+.TP
+.B getdelta
+a utility which invokes \fBget\fR,
+and then modifies the file's modification date after check-out so
+that the file's modification date matches the version-date selected
+with the "-\fBc\fR" or "-\fBr\fR" option.
+.SH ANTICIPATED CHANGES
+.PP
+None.
+.SH SEE ALSO
+.PP
+\fRgetdelta, \fRsccsput, ded, get\ (1)
+.SH AUTHOR
+.PP
+Thomas Dickey (Software Productivity Consortium).

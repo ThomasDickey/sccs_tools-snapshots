@@ -1,10 +1,19 @@
-# $Header: /users/source/archives/sccs_tools.vcs/src/sccs2rcs/src/RCS/Makefile,v 3.0 1991/06/05 17:08:25 ste_cm Rel $
+# $Id: Makefile,v 5.0 1991/10/24 09:15:25 ste_cm Rel $
 # Make-file for sccs/RCS conversion utility
 #
 # $Log: Makefile,v $
-# Revision 3.0  1991/06/05 17:08:25  ste_cm
-# BASELINE Tue Jun 18 08:04:39 1991 -- apollo sr10.3
+# Revision 5.0  1991/10/24 09:15:25  ste_cm
+# BASELINE Mon Jul 20 12:41:28 1992 -- CM_TOOLS #11
 #
+#	Revision 4.0  91/10/24  09:15:25  ste_cm
+#	BASELINE Tue Dec 17 11:56:35 1991
+#	
+#	Revision 3.1  91/10/24  09:15:25  dickey
+#	corrected include-dependency
+#	
+#	Revision 3.0  91/06/05  17:08:25  ste_cm
+#	BASELINE Tue Jun 18 08:04:39 1991 -- apollo sr10.3
+#	
 #	Revision 2.1  91/06/05  17:08:25  dickey
 #	mods for baseline
 #	
@@ -55,7 +64,7 @@ sources:	$(SRCS)
 #
 ####### (Details of Productions) ###############################################
 $B/sccs2rcs:	$(MAIN_O)	; $(CC) -o $@ $(MAIN_O)
-sccs2rcs.o:	$I/ptypes.h $I/rcsdefs.h
+sccs2rcs.o:	$I/ptypes.h $I/common.h $I/rcsdefs.h
 #
 ####### (Development) ##########################################################
 $(SRCS):			; $(GET) $@

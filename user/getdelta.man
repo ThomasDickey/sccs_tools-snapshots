@@ -1,0 +1,126 @@
+.\" $Id: getdelta.man,v 6.0 1991/10/24 08:12:54 ste_cm Rel $
+.de DS
+.RS
+.nf
+.sp
+..
+.de DE
+.fi
+.RE
+.sp .5
+..
+.TH GETDELTA 1
+.SH NAME
+.PP
+\fBgetdelta\fR \- SCCS check-out utility
+.SH USAGE
+.PP
+\fBgetdelta\fI [options] [file-specifications]
+.SH SYNOPSIS
+.PP
+\fBGetdelta\fR is a simple interface to \fIsccs\fR (\fBs\fRource
+\fBc\fRode \fBc\fRontrol \fBs\fRystem),
+which is used to
+extract files from \fIsccs\fR archives.
+.SH DESCRIPTION
+.PP
+\fBGetdelta\fR checks out (extracts) files from an \fIsccs\fR
+archive which have been checked in
+using \fBputdelta \fR(or\fBsccsput\fR,
+which invokes it).
+\fBPutdelta\fR checks in files,
+retaining their modification date as the check-in date.
+\fBGetdelta\fR
+extracts a given version of one or more files,
+and sets the modification
+date to match the check-in date.
+.SH OPTIONS
+.PP
+\fBGetdelta\fR is a package (which invokes \fIsccs\fR's \fBget\fR)
+which does special things with the file modification date.
+Most of
+its options are passed to \fBget\fR,
+and then interpreted to determine
+the correct modification date:
+.TP
+.BI \-c cutoff
+specifies the \fIsccs\fR cutoff
+date,
+in the format
+.RS
+.TP
+YY[MM[DD[HH[MM[SS]]]]]
+.TP
+Punctuation in the date is permitted.
+For example,
+.DS
+-c 77/2/2 9:22:25
+-c 770202092225
+.DE
+.TP
+represent the same date.
+.RE
+.TP
+.B \-f
+forces \fBgetdelta\fR to remove the current version
+of the file before extracting the specified version.
+Otherwise,
+\fBgetdelta\fR will refuse to overwrite a file which already exists.
+.TP
+.B \-k
+directs get to extract the specified file without
+substituting sccs identification keywords.
+You should use this option
+if you intend to make updates to the file.
+.TP
+.B \-n
+suppresses the \fBget\fR-operation.
+Instead,
+\fBgetdelta\fR echoes a message showing the name,
+version and date of files
+which would be extracted.
+.TP
+.BI \-r SID
+specifies the \fIsccs\fR identification
+string (SID) of the version of an \fIsccs\fR file to be retrieved.
+.TP
+.B \-s
+suppresses most messages written by the \fBget\fR
+utility (i.e., those written to standard output).
+.SH OPERATIONS
+.PP
+To extract files using \fBgetdelta\fR, you must provide one or
+more names.
+They must be the names either of the working files, or
+of the archive "s." files.
+.SH ENVIRONMENT
+.PP
+\fBGetdelta\fR invokes the \fIsccs\fR utility \fBget\fR,
+which must be in your path.
+Environment variables used by \fBgetdelta\fR
+include:
+.TP
+\fBSCCS_DIR\fR
+specifies the directory in which \fBgetdelta\fR
+will find the "s." files.
+If not specified, \fBgetdelta\fR
+assumes "SCCS".
+.TP
+\fBTZ\fR
+is the timezone, which \fBgetdelta\fR manipulates
+to obtain the file's modification date.
+It assumes that the timezone
+of the check-in date in the "s." file is \fBEST5EDT\fR.
+.SH FILES
+.PP
+\fBGetdelta\fR consists of a single binary file written in C.
+It runs in a UNIX\*R environment.
+.SH ANTICIPATED CHANGES
+.PP
+None.
+.SH SEE ALSO
+.PP
+putdelta, sccsget, sccsput, get\ (1)
+.SH AUTHOR
+.PP
+Thomas Dickey (Software Productivity Consortium).

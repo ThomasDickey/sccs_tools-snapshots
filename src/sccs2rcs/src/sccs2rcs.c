@@ -1,6 +1,6 @@
 #ifndef	lint
 static char *RCSid =
-"$Header: /users/source/archives/sccs_tools.vcs/src/sccs2rcs/src/RCS/sccs2rcs.c,v 3.6 1991/07/24 11:49:53 dickey Exp $";
+"$Header: /users/source/archives/sccs_tools.vcs/src/sccs2rcs/src/RCS/sccs2rcs.c,v 5.0 1991/10/24 09:17:22 ste_cm Rel $";
 #endif
 
 /*
@@ -8,9 +8,18 @@ static char *RCSid =
  * Author: Ken Greer
  *
  * $Log: sccs2rcs.c,v $
- * Revision 3.6  1991/07/24 11:49:53  dickey
- * use name2sccs/sccs2name to simplify/standardize pathname translation
+ * Revision 5.0  1991/10/24 09:17:22  ste_cm
+ * BASELINE Mon Jul 20 12:41:28 1992 -- CM_TOOLS #11
  *
+ * Revision 4.0  91/10/24  09:17:22  ste_cm
+ * BASELINE Tue Dec 17 11:56:35 1991
+ * 
+ * Revision 3.7  91/10/24  09:17:22  dickey
+ * compile against CM_TOOLS #10
+ * 
+ * Revision 3.6  91/07/24  11:49:53  dickey
+ * use name2sccs/sccs2name to simplify/standardize pathname translation
+ * 
  * Revision 3.5  91/07/24  11:39:29  dickey
  * quieted the 'rcs' command also
  * 
@@ -109,8 +118,6 @@ static char *RCSid =
 #include <ctype.h>
 #include <errno.h>
 extern	FILE	*tmpfile();
-extern	char	*bldcmd2();
-extern	char	*rcs_dir();
 
 #define SOH	001		/* SCCS lines start with SOH (Control-A) */
 #define RCS	"rcs"
@@ -178,7 +185,6 @@ char *
 xalloc (size)
 unsigned size;
 {
-    extern char *malloc ();
     char *p;
     if ((p = malloc (size)) == NULL)
 	quit ("Out of Memory.\n");
@@ -520,7 +526,7 @@ char	*filename;
 		return;
 	}
 	comments[0] = EOS;
-	if (!rcsopen(rcsfile = name2rcs(filename,FALSE), -verbose))
+	if (!rcsopen(rcsfile = name2rcs(filename,FALSE), -verbose, TRUE))
 		quit2("Could not find archive %s\n", rcsfile);
 	while (header && (s = rcsread(s))) {
 		s = rcsparse_id(key, s);
@@ -761,11 +767,9 @@ register HEADER *header;
     PRINTF ("------------------------------------------------------------\n");
 }
 
-main (argc, argv)
-char *argv[];
+/*ARGSUSED*/
+_MAIN
 {
-	extern	int	optind;
-	extern	char *	optarg;
 	auto	int	errors = 0;
 	register int	j;
 

@@ -1,3 +1,201 @@
+1991-10-24  dickey@software.org
+
+	* Makefile: corrected install-path macros
+
+1991-10-24  ste_cm@software.org
+
+	* Makefile: BASELINE Tue Dec 17 11:56:35 1991
+
+1991-10-24  dickey@software.org
+
+	* src/sccs2rcs/src/sccs2rcs.c: compile against CM_TOOLS #10
+
+1991-10-24  ste_cm@software.org
+
+	* src/sccs2rcs/src/sccs2rcs.c:
+	BASELINE Mon Jul 20 12:41:28 1992 -- CM_TOOLS #11
+
+	* src/sccs2rcs/src/sccs2rcs.c: BASELINE Tue Dec 17 11:56:35 1991
+
+1991-10-24  dickey@software.org
+
+	* src/sccs2rcs/src/Makefile: corrected include-dependency
+
+1991-10-24  ste_cm@software.org
+
+	* src/sccs2rcs/src/Makefile:
+	BASELINE Mon Jul 20 12:41:28 1992 -- CM_TOOLS #11
+
+	* src/sccs2rcs/src/Makefile: BASELINE Tue Dec 17 11:56:35 1991
+
+1991-10-24  dickey@software.org
+
+	* src/putdelta/src/sccsput.c: converted to ANSI
+
+1991-10-24  ste_cm@software.org
+
+	* src/putdelta/src/sccsput.c:
+	BASELINE Mon Jul 20 12:41:28 1992 -- CM_TOOLS #11
+
+	* src/putdelta/src/sccsput.c: BASELINE Tue Dec 17 11:56:35 1991
+
+	* src/putdelta/src/sccsput.c:
+	BASELINE Wed May  5 11:05:31 1993 -- TD_LIB #12
+
+1991-10-24  dickey@software.org
+
+	* src/putdelta/src/putdelta.c: converted to ANSI
+
+1991-10-24  ste_cm@software.org
+
+	* src/putdelta/src/putdelta.c: BASELINE Tue Dec 17 11:56:35 1991
+
+1991-10-24  dickey@software.org
+
+	* src/putdelta/src/Makefile: corrected include-dependency
+
+1991-10-24  ste_cm@software.org
+
+	* src/putdelta/src/Makefile:
+	BASELINE Mon Jul 20 12:41:28 1992 -- CM_TOOLS #11
+
+	* src/putdelta/src/Makefile: BASELINE Tue Dec 17 11:56:35 1991
+
+1991-10-24  dickey@software.org
+
+	* src/getdelta/src/Makefile: corrected include-dependency
+
+1991-10-24  ste_cm@software.org
+
+	* src/getdelta/src/Makefile:
+	BASELINE Mon Jul 20 12:41:28 1992 -- CM_TOOLS #11
+
+	* src/getdelta/src/Makefile: BASELINE Tue Dec 17 11:56:35 1991
+
+1991-10-24  dickey@software.org
+
+	* src/getdelta/src/sccsget.c: converted to ANSI
+
+1991-10-24  ste_cm@software.org
+
+	* src/getdelta/src/sccsget.c:
+	BASELINE Mon Jul 20 12:41:28 1992 -- CM_TOOLS #11
+
+	* src/getdelta/src/sccsget.c: BASELINE Tue Dec 17 11:56:35 1991
+
+	* src/getdelta/src/sccsget.c:
+	BASELINE Wed May  5 11:05:31 1993 -- TD_LIB #12
+
+1991-10-24  dickey@software.org
+
+	* src/getdelta/src/getdelta.c: converted to ANSI
+
+	* certify/release.txt: adaptation to CM_TOOLS #10
+
+1991-10-24  ste_cm@software.org
+
+	* certify/release.txt: BASELINE Tue Dec 17 11:56:35 1991
+
+1991-10-24  dickey@software.org
+
+	* certify/config.txt: adaptation to CM_TOOLS #10
+
+1991-10-24  ste_cm@software.org
+
+	* certify/config.txt: BASELINE Tue Dec 17 11:56:35 1991
+
+1991-10-24  dickey@software.org
+
+	* user/Makefile: manage nroff-files rather than interleaf
+
+1991-10-24  ste_cm@software.org
+
+	* user/Makefile: BASELINE Mon Jul 20 12:41:28 1992 -- CM_TOOLS #11
+
+	* user/Makefile: BASELINE Tue Dec 17 11:56:35 1991
+
+1991-10-24  dickey@software.org
+
+	* user/sccsput.man: RCS_BASE
+
+1991-10-24  ste_cm@software.org
+
+	* user/sccsput.man: BASELINE Mon Jul 20 12:41:28 1992 -- CM_TOOLS #11
+
+	* user/sccsput.man: BASELINE Tue Dec 17 11:56:35 1991
+
+	* user/sccsput.man: BASELINE Wed May  5 11:05:31 1993 -- TD_LIB #12
+
+1991-10-24  dickey@software.org
+
+	* user/sccsget.man: RCS_BASE
+
+1991-10-24  ste_cm@software.org
+
+	* user/sccsget.man: BASELINE Mon Jul 20 12:41:28 1992 -- CM_TOOLS #11
+
+	* user/sccsget.man: BASELINE Tue Dec 17 11:56:35 1991
+
+	* user/sccsget.man: BASELINE Wed May  5 11:05:31 1993 -- TD_LIB #12
+
+1991-10-24  dickey@software.org
+
+	* user/putdelta.man: RCS_BASE
+
+1991-10-24  ste_cm@software.org
+
+	* user/putdelta.man: BASELINE Mon Jul 20 12:41:28 1992 -- CM_TOOLS #11
+
+	* user/putdelta.man: BASELINE Tue Dec 17 11:56:35 1991
+
+	* user/putdelta.man: BASELINE Wed May  5 11:05:31 1993 -- TD_LIB #12
+
+1991-10-24  dickey@software.org
+
+	* user/getdelta.man: RCS_BASE
+
+1991-10-24  ste_cm@software.org
+
+	* user/getdelta.man: BASELINE Mon Jul 20 12:41:28 1992 -- CM_TOOLS #11
+
+	* user/getdelta.man: BASELINE Tue Dec 17 11:56:35 1991
+
+	* user/getdelta.man: BASELINE Wed May  5 11:05:31 1993 -- TD_LIB #12
+
+1991-10-24  dickey@software.org
+
+	* bin/Makefile: changed INSTALL_PATH to INSTALL_BIN
+
+1991-10-24  ste_cm@software.org
+
+	* bin/Makefile: BASELINE Mon Jul 20 12:41:28 1992 -- CM_TOOLS #11
+
+	* bin/Makefile: BASELINE Tue Dec 17 11:56:35 1991
+
+1991-10-24  dickey@software.org
+
+	* Makefile: revised rules for compat with CM_TOOLS #10
+
+	* README: ident
+
+1991-10-24  ste_cm@software.org
+
+	* README: BASELINE Mon Jul 20 12:41:28 1992 -- CM_TOOLS #11
+
+	* README: BASELINE Tue Dec 17 11:56:35 1991
+
+	* README: BASELINE Wed May  5 11:05:31 1993 -- TD_LIB #12
+
+1991-10-24  dickey@software.org
+
+	* COPYING: new date
+
+1991-10-24  ste_cm@software.org
+
+	* COPYING: BASELINE Mon Jul 20 12:41:28 1992 -- CM_TOOLS #11
+
+	* COPYING: BASELINE Tue Dec 17 11:56:35 1991
+
 1991-09-13  dickey@software.org
 
 	* src/putdelta/src/sccsput.c: broke out 'filesize()'
