@@ -1,3 +1,24 @@
+1991-05-23  dickey@software.org
+
+	* src/getdelta/src/sccsget.c: RCS_BASE
+
+	* src/getdelta/src/Makefile:
+	revised to make 'sccsget' a c-language program rather than script
+
+	* src/getdelta/src/getdelta.c:
+	apollo sr10.3 cpp complains about endif-tags
+
+	* src/putdelta/src/putdelta.c:
+	apollo sr10.3 cpp complains about cpp-tags
+
+	* src/putdelta/src/sccsput.c, src/sccs2rcs/src/sccs2rcs.c:
+	apollo sr10.3 cpp complains about endif-tags
+
+1991-05-23  ste_cm@software.org
+
+	* src/sccs2rcs/src/sccs2rcs.c:
+	BASELINE Tue Jun 18 08:04:39 1991 -- apollo sr10.3
+
 1991-04-01  dickey@software.org
 
 	* Makefile: changed install-path
