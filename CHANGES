@@ -1,3 +1,16 @@
+1994-06-07  dickey@clark.net
+
+	* src/fixsccs/src/fixsccs.c:
+	use a "-q" option rather than the kludgey thing with SCCS_DEBUG
+
+	* src/fixsccs/src/fixsccs.c: fixed the usage-message
+
+	* src/fixsccs/src/fixsccs.c: make the debug-trace simpler to read
+
+	* src/fixsccs/src/fixsccs.c: make this work properly
+
+	* src/fixsccs/src/Makefile, src/fixsccs/src/fixsccs.c: RCS_BASE
+
 1993-09-23  dickey@software.org
 
 	* src/sccs2rcs/src/sccs2rcs.c: gcc warnings

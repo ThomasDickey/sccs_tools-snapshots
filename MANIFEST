@@ -1,4 +1,4 @@
-MANIFEST for sccs_tools, version t19930923
+MANIFEST for sccs_tools, version t19940607
 --------------------------------------------------------------------------------
 MANIFEST                        this file
 COPYING                         copyright notice for CM_TOOLS
@@ -13,6 +13,9 @@ certify/config.txt              configuration-sheet for SCCS_TOOLS
 certify/release.txt             release-notes for SCCS_TOOLS
 src                             subdirectory
 src/Makefile                    top-level makefile for SCCS_TOOLS src-directory
+src/fixsccs/src                 subdirectory
+src/fixsccs/src/Makefile        makefile for fixsccs
+src/fixsccs/src/fixsccs.c       fixes timestamps of s-files for compatibility with sccs_tools vs conventional usage
 src/getdelta                    subdirectory
 src/getdelta/Makefile           makefile for getdelta utility
 src/getdelta/src                subdirectory
