@@ -1,5 +1,5 @@
 #ifndef	lint
-static	char	sccs_id[] = "@(#)putdelta.c	1.3 88/09/02 09:29:56";
+static	char	sccs_id[] = "@(#)putdelta.c	1.4 88/09/06 07:27:59";
 #endif	lint
 
 /*
@@ -7,6 +7,7 @@ static	char	sccs_id[] = "@(#)putdelta.c	1.3 88/09/02 09:29:56";
  * Author:	T.E.Dickey
  * Created:	25 Apr 1986
  * Modified:
+ *		06 Sep 1988, 'admin' doesn't recognize "-s" switch.
  *		02 Sep 1988, use 'sccs_dir()'
  *		28 Jul 1988, renamed from 'sccsbase', rewrote to be a complete
  *			     package for admin/delta.
@@ -113,7 +114,7 @@ static
 usage ()
 {
 	PRINTF ("usage: putdelta [-s -y<comment>] files\n");
-	(void) exit (1);
+	(void)exit(FAIL);
 }
 
 /*
@@ -148,7 +149,7 @@ int	*mode_;
 			return (sb.st_mtime);
 		} else {
 			TELL ("?? \"%s\" is not a file\n", name);
-			exit(1);
+			(void)exit(FAIL);
 			/*NOTREACHED*/
 		}
 	}
@@ -510,7 +511,6 @@ char	*argv[];
 		switch (j) {
 		case 's':
 			silent	= TRUE;
-			catarg(admin_opts, "-s");
 			catarg(delta_opts, "-s");
 			break;
 		case 'y':
@@ -524,7 +524,7 @@ char	*argv[];
 
 	for (j = optind; j < argc; j++)
 		DoFile (argv[j]);
-	exit(0);
+	(void)exit(SUCCESS);
 	/*NOTREACHED*/
 }
 
@@ -532,5 +532,5 @@ failed(s)
 char	*s;
 {
 	perror(s);
-	exit(1);
+	(void)exit(FAIL);
 }
