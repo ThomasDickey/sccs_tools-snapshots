@@ -3,6 +3,8 @@
  * Author:	T.E.Dickey
  * Created:	26 Mar 1986 (as a procedure)
  * Modified:
+ *		07 Feb 2000, don't use variable named 'new', since gcc 2.95.2
+ *			     generates incorrect code for it (sometimes).
  *		27 Jun 1999, correct uninitialized get_opts[] - worked on SunOS.
  *		14 Oct 1995, allow 14-character s-filenames
  *		08 Sep 1995, get CmVision file-mode, if present.
@@ -52,7 +54,7 @@
 #include	<ptypes.h>
 #include	<sccsdefs.h>
 
-MODULE_ID("$Id: getdelta.c,v 6.19 1999/06/27 16:31:52 tom Exp $")
+MODULE_ID("$Id: getdelta.c,v 6.20 2000/02/07 15:43:02 tom Exp $")
 
 /* local definitions */
 #define	NAMELEN		80	/* length of tokens in sccs-header */
@@ -293,8 +295,8 @@ void	PostProcess (
 	FILE	*fp;
 	time_t	date	= 0;
 	int	got	= FALSE,
-		year, mon, mday,
-		hour, min, sec, new, old;
+		year = 0, mon = 0, mday = 0,
+		hour = 0, min = 0, sec = 0, added, deleted;
 	char	version[NAMELEN];
 	char	pgmr[NAMELEN];
 	char	bfr[BUFSIZ];
@@ -309,7 +311,7 @@ void	PostProcess (
 			if (sscanf (s, fmt, version,
 					&year, &mon,  &mday,
 					&hour, &min, &sec,
-					pgmr, &new, &old) > 0) {
+					pgmr, &added, &deleted) > 0) {
 				date = packdate(1900+year, mon, mday, hour, min, sec);
 #ifdef CMV_PATH	/* for CmVision */
 				if ((s = fgets(bfr, sizeof(bfr), fp)) != 0
@@ -571,7 +573,7 @@ void	usage (_AR0)
 ,"  -r SID  (a la \"get\") recognizes SCCS-sid description"
 ,"  -s      make the operation less noisy (passed to \"get\")"
 	};
-	register int	j;
+	register unsigned j;
 	for (j = 0; j < sizeof(msg)/sizeof(msg[0]); j++)
 		YELL "%s\n", msg[j]);
 	(void)exit(EXIT_FAILURE);
