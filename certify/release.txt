@@ -1,4 +1,4 @@
-$Id: release.txt,v 2.2 1990/05/08 14:35:04 dickey Exp $
+$Id: release.txt,v 2.3 1990/06/22 07:41:52 dickey Exp $
 
 --------------------------------------------------------------------------------
 
@@ -8,6 +8,8 @@ Modified sccs2rcs to generate 'Id' keyword rather than 'Header'.
 Tested for apollo SR10.1
 
 Apollo SR10.2 broke 'sccsput' the rest of the way; rewrote into C-language.
+
+Modified sccs directory-name default to "SCCS".
 
 Baseline 2:
 ----------
