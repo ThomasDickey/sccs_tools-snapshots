@@ -1,5 +1,5 @@
 #ifndef	lint
-static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/src/RCS/sccsget.c,v 6.1 1993/09/23 19:47:12 dickey Exp $";
+static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/src/RCS/sccsget.c,v 6.2 1994/07/15 09:19:34 tom Exp $";
 #endif
 
 /*
@@ -86,7 +86,7 @@ int	WALK_FUNC(scan_tree)
 		abspath(s);		/* get rid of "." and ".." names */
 		if (!a_opt && *pathleaf(s) == '.')
 			readable = -1;
-		else if (sameleaf(s, sccs_dir())
+		else if (sameleaf(s, sccs_dir((char *)0,(char *)0))
 		    ||	 sameleaf(s, rcs_dir()))
 			readable = -1;
 		else

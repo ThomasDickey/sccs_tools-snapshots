@@ -1,5 +1,5 @@
 #ifndef	lint
-static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/src/RCS/putdelta.c,v 6.1 1993/09/23 19:55:40 dickey Exp $";
+static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/src/RCS/putdelta.c,v 6.3 1994/07/15 09:58:15 tom Exp $";
 #endif
 
 /*
@@ -7,6 +7,7 @@ static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/
  * Author:	T.E.Dickey
  * Created:	25 Apr 1986
  * Modified:
+ *		15 Jul 1994, use 'sccspath()'
  *		23 Sep 1993, gcc warnings
  *		24 Oct 1991, converted to ANSI
  *		24 Jul 1991, pass-thru "-r" option to 'admin', since this is
@@ -62,14 +63,13 @@ static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/
  */
 
 #define	ACC_PTYPES
+#define	CHR_PTYPES
 #define	STR_PTYPES
+#define	TIM_PTYPES
 #include	<ptypes.h>
 #include	<sccsdefs.h>
 
-#include	<ctype.h>
 #include	<errno.h>
-#include	<time.h>
-extern	char	*sys_errlist[];
 
 /************************************************************************
  *	local definitions						*
@@ -238,10 +238,10 @@ void	Critical(
 static
 void	NeedDirectory(
 	_ARX(char *,	path)
-	_AR1(STAT *,	sb)
+	_AR1(Stat_t *,	sb)
 		)
 	_DCL(char *,	path)
-	_DCL(STAT *,	sb)
+	_DCL(Stat_t *,	sb)
 {
 	if (stat(path, sb) < 0)
 		failed(path);
@@ -266,7 +266,7 @@ time_t	is_a_file(
 	_DCL(char *,	name)
 	_DCL(int *,	mode_)
 {
-	STAT	sb;
+	Stat_t	sb;
 
 	if (stat(name, &sb) >= 0) {
 		if ((sb.st_mode & S_IFMT) == S_IFREG) {
@@ -504,7 +504,7 @@ void	EditFile(
 	if (chmod(x_file, s_mode) < 0
 	 || rename(x_file, s_file) < 0)
 		perror(x_file);
-	SHOW ("** %d lines processed\n", lines);
+	SHOW ("** %ld lines processed\n", lines);
 	(void) fflush (stdout);
 }
 
@@ -584,7 +584,7 @@ void	DoFile(
 	register char	*s;
 	auto	time_t	put_time,
 			ref_time = time(0);
-	auto	STAT	sb;
+	auto	Stat_t	sb;
 	auto	char	temp[BUFSIZ],
 			*put_verb,
 			put_opts[BUFSIZ];
@@ -668,7 +668,7 @@ void	DoFile(
 
 	if (VERBOSE) shoarg(stdout, put_verb, put_opts);
 	if (!no_op) {
-		if (execute(put_verb, put_opts) < 0)
+		if (execute(sccspath(put_verb), put_opts) < 0)
 			failed(put_verb);
 		ProcessFile(put_time, ref_time);
 		if (put_flag && !geteuid()) {

@@ -1,5 +1,5 @@
 #ifndef	lint
-static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/src/RCS/getdelta.c,v 6.1 1993/09/23 19:48:03 dickey Exp $";
+static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/src/RCS/getdelta.c,v 6.3 1994/07/15 09:23:25 tom Exp $";
 #endif
 
 /*
@@ -7,7 +7,9 @@ static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/
  * Author:	T.E.Dickey
  * Created:	26 Mar 1986 (as a procedure)
  * Modified:
- *		23 Sep 1993, gcc warnings
+ *		15 Jul 1994, use 'sccspath()'
+ *		13 Jul 1994, Linux/gcc warnings
+ *		23 Sep 1993, SunOS/gcc warnings
  *		17 Dec 1991, typo in 'catarg()' call for "-r".
  *		18 Nov 1991, use 'catarg()' for building 'get_opts[]'
  *		24 Oct 1991, converted to ANSI
@@ -42,11 +44,11 @@ static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/
 
 #define	ACC_PTYPES
 #define	STR_PTYPES
+#define	TIM_PTYPES
 #include	<ptypes.h>
 #include	<sccsdefs.h>
 
 #include	<ctype.h>
-#include	<time.h>
 
 /* local definitions */
 #define	NAMELEN		80	/* length of tokens in sccs-header */
@@ -226,7 +228,7 @@ int	is_a_file(
 	_DCL(char *,	name)
 	_DCL(int *,	mode_)
 {
-	STAT	sb;
+	Stat_t	sb;
 
 	if (stat(name, &sb) >= 0) {
 		if ((sb.st_mode & S_IFMT) == S_IFREG) {
@@ -339,7 +341,7 @@ void	DoFile (
 		if (!silent) shoarg(stdout, GET_TOOL, get_opts);
 		if (!noop) {
 			newzone(0,0,FALSE);	/* do this in GMT zone */
-			if (execute(GET_TOOL, get_opts) < 0)
+			if (execute(sccspath(GET_TOOL), get_opts) < 0)
 				failed(name);
 		}
 		PostProcess(name, s_file);
