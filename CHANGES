@@ -1,3 +1,35 @@
+1990-06-28  dickey@software.org
+
+	* user/getdelta.doc: changed sccs-directory name to "SCCS"
+
+1990-06-28  ste_cm@software.org
+
+	* user/getdelta.doc: BASELINE Tue Jun 18 08:04:39 1991 -- apollo sr10.3
+
+1990-06-28  dickey@software.org
+
+	* user/putdelta.doc: changed sccs-directory name to "SCCS"
+
+1990-06-28  ste_cm@software.org
+
+	* user/putdelta.doc: BASELINE Tue Jun 18 08:04:39 1991 -- apollo sr10.3
+
+1990-06-28  dickey@software.org
+
+	* user/sccsget.doc: changed sccs-directory name to "SCCS"
+
+1990-06-28  ste_cm@software.org
+
+	* user/sccsget.doc: BASELINE Tue Jun 18 08:04:39 1991 -- apollo sr10.3
+
+1990-06-28  dickey@software.org
+
+	* user/sccsput.doc: changed sccs-directory name to "SCCS"
+
+1990-06-28  ste_cm@software.org
+
+	* user/sccsput.doc: BASELINE Tue Jun 18 08:04:39 1991 -- apollo sr10.3
+
 1990-06-22  dickey@software.org
 
 	* src/sccs2rcs/src/sccs2rcs.c: altered interface to 'name2rcs()'

@@ -91,7 +91,7 @@ V6,
 <Page Header, Frame =
 V6,
 (g9,1,0
- (t14,1,4,5.698608,0.438782,2,7,0,0,,wst:clas12b,September\ 2\,\ 1988)
+ (t14,1,4,5.698608,0.438782,2,7,0,0,,wst:clas12b,June\ 28\,\ 1990)
  (t14,2,4,2.849304,0.438782,1,7,0,0,,wst:clas12b,SCCS\ Check-in\ Script)
  (t14,3,4,0,0.438782,0,7,0,0,,wst:clas12b,sccsput)
  (E15,0,0,5,1,1,0.053333,1,15,0,0,1,0,0,0,0,5,127,7,0,0,7,1,1,1,0.066667,0.06666
@@ -141,7 +141,7 @@ DESCRIPTION
 
 <F35>Sccsput<F0> uses the <F36>sccs<F0> utilities <F35>admin<F0> and <F35>delta
 <F0> to maintain versions of a given source file in a dependent directory 
-named <#7f>sccs".  It is more than an integration of the <F35>admin<F0> 
+named <#7f>SCCS".  It is more than an integration of the <F35>admin<F0> 
 and <F35>delta<F0> utilities, however:
 
 <bullet>
@@ -388,7 +388,7 @@ to clean up temporary files.
 
 <paragraph>
 
-If you do not have write-permission on the <#7f>sccs" directory, but 
+If you do not have write-permission on the <#7f>SCCS" directory, but 
 wish to review changes, use the <#7f>-<F35>n<F0>" option.  The intermediate 
 files are written in the <F35>/tmp<F0> directory.
 
@@ -429,7 +429,7 @@ shown on one screen.
 
 <F56@R>SCCS_DIR<F34@R><Tab>specifies the directory into which the <F36@R>sccs
 <F34@R> <#7f>s." files are stored.  If no specified, <F35@R>sccsput<F34@R> 
-assumes <#7f>sccs".
+assumes <#7f>SCCS".
 
 <header>
 
