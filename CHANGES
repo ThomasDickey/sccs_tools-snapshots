@@ -1,3 +1,57 @@
+1991-06-25  ste_cm@software.org
+
+	* src/putdelta/src/sccsput.c: oops: left "-k" out of getopt-list
+
+1991-06-25  dickey@software.org
+
+	* src/putdelta/src/putdelta.c:
+	'ProcessFile()' must be invoked in set-uid (owner) mode
+
+	* src/getdelta/src/getdelta.c:
+	if this is run in root-setuid, keep the lock-file owned by
+	the real-user rather than root.
+
+	* src/putdelta/src/putdelta.c:
+	allow directory/file ownership to be different
+
+	* src/putdelta/src/putdelta.c:
+	ensure we have read/execute permission on directories.
+
+	* src/putdelta/src/putdelta.c:
+	added call on 'revert()' so I don't use set-uid mode when
+	not necessary.
+
+	* src/putdelta/src/putdelta.c:
+	make the code which forces a lock run in 'for_user2()'.
+
+	* src/putdelta/src/putdelta.c:
+	using 'for_user2()', set proper ownership of directories and
+	files.
+
+	* src/putdelta/src/putdelta.c:
+	oops: had geteuid/getuid getegid/getgid reversed
+
+	* src/putdelta/src/sccsput.c:
+	added "-D" and "-T" options. Unlink log-file on normal
+	completion if no diffs were found and it did not previously
+	exist.
+
+	* src/putdelta/src/putdelta.c:
+	added "-n" option. simplified some code using 'sccs2name()'
+	and 'name2sccs()'. Provide for set-uid mode by fixing the
+	mode and ownership of the SCCS-directory when creating it.
+
+	* src/putdelta/src/putdelta.c: revised 'usage()' message
+
+	* src/getdelta/src/getdelta.c:
+	got rid of redundant mod to mode when "-e" is set.
+	revised 'usage()' to make it easy to use.
+
+	* src/getdelta/src/getdelta.c:
+	added code to test directory-permissions for the archive and
+	working file using 'access()' -- this should work properly
+	in set-uid mode.
+
 1991-06-24  dickey@software.org
 
 	* src/getdelta/src/getdelta.c:

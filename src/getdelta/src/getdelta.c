@@ -1,5 +1,5 @@
 #ifndef	lint
-static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/src/RCS/getdelta.c,v 3.5 1991/06/24 15:11:25 dickey Exp $";
+static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/src/RCS/getdelta.c,v 3.8 1991/06/25 15:25:44 dickey Exp $";
 #endif
 
 /*
@@ -7,7 +7,8 @@ static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/
  * Author:	T.E.Dickey
  * Created:	26 Mar 1986 (as a procedure)
  * Modified:
- *		24 Jun 1991, set writeable-mode if "-e".
+ *		24 Jun 1991, Test directory permissions for archive- and
+ *			     working-file.
  *		20 Jun 1991, pass-thru "-e" option. Use 'shoarg()'.
  *			     Use 'sccs2name()' and 'name2sccs()'.
  *		22 Mar 1989, corrected 'same()' code so we can get correct
@@ -27,16 +28,10 @@ static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/
  * Function:	Extract a specified SCCS-delta of a given file, altering the
  *		modification date to correspond with the delta-date.
  *
- * Options:	r SID	(a la 'get') recognizes SCCS-sid description
- *		c cutoff(a la 'get') recognizes SCCS cutoff-date description,
- *			forces this instead to use the last date before
- *			the cutoff, or the oldest delta-date.
- *		k	passed through to "get"
- *		s	make the operation less noisy (passed to "get")
- *		n	noop: show states we would do
- *		f	force deletion of existing file
+ * Options:	(see 'usage()')
  */
 
+#define	ACC_PTYPES
 #define	STR_PTYPES
 #include	"ptypes.h"
 #include	"sccsdefs.h"
@@ -53,6 +48,7 @@ extern	char	*optarg;
 extern	int	optind;
 
 /* local definitions */
+#define	NAMELEN		80	/* length of tokens in sccs-header */
 #define	YELL	(void) FPRINTF(stderr,
 #define	TELL	if (!silent) PRINTF(
 
@@ -117,7 +113,7 @@ char	*name, *s_file;
 	int	got	= FALSE,
 		year, mon, mday,
 		hour, min, sec, new, old;
-	char	version[20], pgmr[20];
+	char	version[NAMELEN], pgmr[NAMELEN];
 
 	static	char	fmt[] = "\001d D %s %d/%d/%d %d:%d:%d %s %d %d";
 
@@ -153,11 +149,20 @@ char	*name, *s_file;
 		TELL "** could not open \"%s\"\n", s_file);
 
 	if (!noop && got) {
-		if (lockit)
-			s_mode |= S_IWRITE;
 		(void)chmod(name, s_mode);
 		if (setmtime(name, date) < 0)
 			YELL "%s: cannot set time\n", name);
+		else if (lockit && !geteuid()) {
+			char	p_file[BUFSIZ];
+			char	*s = strrchr(strcpy(p_file, s_file), '/');
+			if (s != 0)
+				s++;
+			else
+				s = p_file;
+			*s = 'p';
+			if (chown(p_file, getuid(), getgid()) < 0)
+				failed("chown");
+		}
 	}
 }
 
@@ -186,6 +191,25 @@ int	*mode_;
 }
 
 /*
+ * See if we have permission to write in the directory given by 'name'
+ */
+static
+Permitted(name, read_only)
+char	*name;
+{
+	char	path[BUFSIZ];
+	int	mode	= X_OK | R_OK;
+	char	*mark	= strrchr(pathcat(path, ".", name), '/');
+
+	if (mark != 0)	*mark = EOS;
+	if (!read_only)	mode |= W_OK;
+
+	if (access(path, mode) < 0)
+		failed(path);
+	return TRUE;
+}
+
+/*
  * Process a single file.  If we are given the name of a non-sccs file, compute
  * the name of the corresponding sccs file.  Otherwise, compute the name of the
  * file to be checked-out from the sccs file name.
@@ -194,22 +218,27 @@ DoFile (name, s_file)
 char	*name, *s_file;
 {
 	auto	int	ok	= TRUE;
+	auto	char	*working = sccs2name(name, FALSE);
+	auto	char	*archive = name2sccs(name, FALSE);
 	auto	char	old_wd[BUFSIZ],
 			new_wd[BUFSIZ],
 			buffer[BUFSIZ],
 			*s;
 
+	if (!Permitted(working, FALSE) || !Permitted(archive, !lockit))
+		return;
+
 	/*
 	 * SCCS 'get' extracts only into the current directory.  Perform a
 	 * 'chdir()' to accommodate this if necessary.
 	 */
-	(void)strcpy(buffer, sccs2name(name, FALSE));
+	(void)strcpy(buffer, working);
 	if (s = strrchr(buffer, '/')) {
 		if (!getwd(old_wd))
 			failed("getwd");
 		*s = EOS;
 		name = ++s;
-		(void)pathcat(new_wd, old_wd, buffer);
+		abspath(pathcat(new_wd, old_wd, buffer));
 		abspath(strcpy(s_file, name2sccs(name, FALSE)));
 		if (!silent) {
 			char	temp[BUFSIZ];
@@ -220,7 +249,7 @@ char	*name, *s_file;
 		(void)relpath(s_file, new_wd, s_file);
 	} else {
 		*old_wd = *new_wd = EOS;
-		(void)strcpy(s_file, name2sccs(name, FALSE));
+		(void)strcpy(s_file, archive);
 	}
 
 	/*
@@ -266,7 +295,23 @@ char	*name, *s_file;
 static
 usage ()
 {
-	YELL "usage: getdelta [-rSID] [-cCUTOFF] [-efkns] files\n");
+	static	char	*msg[] = {
+ "Usage: getdelta [options] files"
+,""
+,"Options:"
+,"  -c DATE (a la \"get\") recognizes SCCS cutoff-date description, forces"
+,"          this instead to use the last date before the cutoff, or the oldest"
+,"          delta-date."
+,"  -e      extract for editing (suppress keywords, passed to \"get\")"
+,"  -f      force overwrite of existing file"
+,"  -k      extract without keyword expansion (passed to \"get\")"
+,"  -n      noop: show states we would do"
+,"  -r SID  (a la \"get\") recognizes SCCS-sid description"
+,"  -s      make the operation less noisy (passed to \"get\")"
+	};
+	register int	j;
+	for (j = 0; j < sizeof(msg)/sizeof(msg[0]); j++)
+		YELL "%s\n", msg[j]);
 	(void)exit(FAIL);
 	/*NOTREACHED*/
 }
