@@ -1,20 +1,21 @@
-# $Header: /users/source/archives/sccs_tools.vcs/src/getdelta/src/RCS/Makefile,v 1.4 1988/08/17 09:29:10 dickey Exp $
+# $Header: /users/source/archives/sccs_tools.vcs/src/getdelta/src/RCS/Makefile,v 1.5 1989/03/29 14:13:59 dickey Exp $
 # Make-file for SCCS checkout utilities
 #
 ####### (Environment) ##########################################################
-B	= ../../bin
-I	= ../lib
+B	= ../bin
+I	= ../../../../cm_tools/interface
+L	= ../../../../cm_tools/lib
 GET	= getdelta
 #
 ####### (Command-line Options) #################################################
 INCLUDES= -I$I
 CFLAGS  = $(DEFINES) $(INCLUDES) -O
-LIBS	= ../lib/lib.a
+LIBS	= $L/lib.a
 DATE	= echo '****'`date` >> $@
 LINTOPT	= $(DEFINES) $(INCLUDES) -ltd
 #
 ####### (Standard Lists) #######################################################
-ALL	= getdelta
+ALL	= $B/getdelta $B/sccsget
 CSRC	= getdelta.c
 SCRIPTS	= sccsget.sh
 SRCS	= $(CSRC) $(SCRIPTS)
@@ -32,11 +33,9 @@ install:	$B/getdelta\
 		$B/sccsget
 #
 ####### (Details of Productions) ###############################################
-getdelta:	$(MAIN_O)	; $(CC) -o $@ $(MAIN_O)
-#
+$B/getdelta:	$(MAIN_O)	; $(CC) -o $@ $(MAIN_O)
 getdelta.o:	$I/ptypes.h
 #
-$B/getdelta:	getdelta	; copy -d $@
 $B/sccsget:	sccsget.sh	; copy $? $@
 #
 ####### (Development) ##########################################################

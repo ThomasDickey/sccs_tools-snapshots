@@ -1,16 +1,38 @@
-MANIFEST for sccs_tools, version t19890327
+MANIFEST for sccs_tools, version t19890329
 --------------------------------------------------------------------------------
 MANIFEST                        this file
+COPYING                         copyright notice for CM_TOOLS
+Makefile                        top-level directory for SCCS_TOOLS
+README                          top-level read-me file for SCCS_TOOLS
+bin                             subdirectory
+bin/Makefile                    make-file for SCCS_TOOLS bin-directory (installation)
 certify                         subdirectory
 certify/Makefile                make-file for SCCS_TOOLS certificate directory
+certify/README                  certificate "goodness" documentation
+certify/config.txt              configuration-sheet for SCCS_TOOLS
+certify/release.txt             release-notes for SCCS_TOOLS
+src                             subdirectory
+src/Makefile                    top-level makefile for SCCS_TOOLS src-directory
+src/getdelta                    subdirectory
+src/getdelta/Makefile           makefile for getdelta utility
 src/getdelta/src                subdirectory
 src/getdelta/src/Makefile       
 src/getdelta/src/getdelta.c     
 src/getdelta/src/sccsget.sh     
+src/getdelta/test               subdirectory
+src/getdelta/test/Makefile      make-file for testing 'getdelta'
+src/getdelta/test/run_test.sh   test-script for 'getdelta'
+src/putdelta                    subdirectory
+src/putdelta/Makefile           makefile for 'putdelta' utility
 src/putdelta/src                subdirectory
 src/putdelta/src/Makefile       
 src/putdelta/src/putdelta.c     
 src/putdelta/src/sccsput.sh     
+src/putdelta/test               subdirectory
+src/putdelta/test/Makefile      make-file for testing 'putdelta'
+src/putdelta/test/run_test.sh   test-script for 'putdelta'
+src/sccs2rcs                    subdirectory
+src/sccs2rcs/Makefile           make-file for 'sccs2rcs' utility
 src/sccs2rcs/src                subdirectory
 src/sccs2rcs/src/Makefile       make-file for sccs/RCS conversion utility
 src/sccs2rcs/src/sccs2rcs.c     RCS "sccstorcs" utility.
@@ -22,6 +44,7 @@ src/sccs2rcs/test/s.testfile1.c test-file for sccs/RCS conversion
 src/sccs2rcs/test/s.testfile2.c test-file for sccs/RCS conversion
 src/sccs2rcs/test/s.testfile3.c test-file for sccs/RCS conversion
 user                            subdirectory
+user/Makefile                   make-file for SCCS_TOOLS user documentation (man-pages)
 user/getdelta.doc               
 user/putdelta.doc               
 user/sccsget.doc                

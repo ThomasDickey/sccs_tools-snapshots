@@ -1,3 +1,69 @@
+1989-03-29  dickey@software.org
+
+	* user/Makefile, bin/Makefile, certify/config.txt, certify/release.txt:
+	New file.
+
+1989-03-29  ste_cm@software.org
+
+	* certify/release.txt: BASELINE Mon Jul 10 09:16:36 EDT 1989
+
+1989-03-29  dickey@software.org
+
+	* certify/README: New file.
+
+1989-03-29  ste_cm@software.org
+
+	* certify/README: BASELINE Mon Jul 10 09:16:36 EDT 1989
+
+1989-03-29  dickey@software.org
+
+	* COPYING: New file.
+
+1989-03-29  ste_cm@software.org
+
+	* COPYING: BASELINE Tue Jun 18 08:04:39 1991 -- apollo sr10.3
+
+	* COPYING: BASELINE Wed Jul  5 11:39:44 EDT 1989
+
+1989-03-29  dickey@software.org
+
+	* README: New file.
+
+1989-03-29  ste_cm@software.org
+
+	* README: BASELINE Tue Jun 18 08:04:39 1991 -- apollo sr10.3
+
+	* README: BASELINE Wed Jul  5 11:39:44 EDT 1989
+
+1989-03-29  dickey@software.org
+
+	* src/getdelta/test/run_test.sh: New file.
+
+1989-03-29  ste_cm@software.org
+
+	* src/getdelta/test/run_test.sh: BASELINE Mon Jul 10 09:27:34 EDT 1989
+
+1989-03-29  dickey@software.org
+
+	* src/getdelta/src/Makefile: revised to standard CM-format
+
+	* src/putdelta/test/Makefile, src/getdelta/test/Makefile, src/putdelta/test/run_test.sh:
+	New file.
+
+1989-03-29  ste_cm@software.org
+
+	* src/putdelta/test/run_test.sh: BASELINE Mon Jul 10 09:24:06 EDT 1989
+
+1989-03-29  dickey@software.org
+
+	* src/putdelta/src/Makefile: revised to standard CM-format
+
+	* src/sccs2rcs/src/Makefile:
+	use (parallel) module CM_TOOLS for library-location
+
+	* src/sccs2rcs/Makefile, src/putdelta/Makefile, src/getdelta/Makefile, src/Makefile, Makefile:
+	New file.
+
 1989-03-27  dickey@software.org
 
 	* certify/Makefile: New file.
