@@ -1,4 +1,4 @@
-MANIFEST for sccs_tools, version t19891016
+MANIFEST for sccs_tools, version t19900508
 --------------------------------------------------------------------------------
 MANIFEST                        this file
 COPYING                         copyright notice for CM_TOOLS
@@ -27,6 +27,7 @@ src/putdelta/Makefile           makefile for 'putdelta' utility
 src/putdelta/src                subdirectory
 src/putdelta/src/Makefile       
 src/putdelta/src/putdelta.c     
+src/putdelta/src/sccsput.c      tree-recursive utility which invokes putdelta
 src/putdelta/src/sccsput.sh     
 src/putdelta/test               subdirectory
 src/putdelta/test/Makefile      make-file for testing 'putdelta'

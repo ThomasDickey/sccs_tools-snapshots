@@ -1,5 +1,5 @@
 #ifndef	lint
-static	char	Id[] = "$Id: putdelta.c,v 2.1 1989/10/16 16:56:17 dickey Exp $";
+static	char	Id[] = "$Id: putdelta.c,v 2.2 1990/05/08 14:10:01 dickey Exp $";
 #endif	lint
 
 /*
@@ -7,9 +7,12 @@ static	char	Id[] = "$Id: putdelta.c,v 2.1 1989/10/16 16:56:17 dickey Exp $";
  * Author:	T.E.Dickey
  * Created:	25 Apr 1986
  * $Log: putdelta.c,v $
- * Revision 2.1  1989/10/16 16:56:17  dickey
- * show error if we cannot execute subprocess
+ * Revision 2.2  1990/05/08 14:10:01  dickey
+ * lint
  *
+ *		Revision 2.1  89/10/16  16:56:50  dickey
+ *		show error if we cannot execute subprocess
+ *		
  *		Revision 2.0  88/09/13  09:00:19  ste_cm
  *		BASELINE Mon Jul 10 09:25:16 EDT 1989
  *		
@@ -56,7 +59,9 @@ static	char	Id[] = "$Id: putdelta.c,v 2.1 1989/10/16 16:56:17 dickey Exp $";
  *		y note	specifies delta-comment
  */
 
+#define	STR_PTYPES
 #include	"ptypes.h"
+#include	"sccsdefs.h"
 
 #include	<ctype.h>
 #include	<time.h>
@@ -65,11 +70,6 @@ extern	struct	tm *localtime();
 extern	FILE	*tmpfile();
 extern	long	packdate();
 extern	char	*getuser();
-extern	char	*sccs_dir();
-extern	char	*strcat();
-extern	char	*strcpy();
-extern	char	*strncpy();
-extern	char	*strrchr();
 extern	int	localzone;
 
 extern	char	*optarg;
@@ -178,7 +178,7 @@ char	*name;
 
 	if (!s) s = name;
 	else	s++;
-	if (!strncmp(s, "s.", 2))
+	if (!strncmp(s, SCCS_PREFIX, 2))
 		return (s+2);
 	return (0);
 }
@@ -426,7 +426,7 @@ MakeDirectory()
 		*s;
 
 	if (s = strrchr(s_file, '/')) {
-		(strncpy(path, s_file, s - s_file))[s - s_file] = '\0';
+		(strncpy(path, s_file, (size_t)(s - s_file)))[s - s_file] = EOS;
 
 		if (stat(path, &sb) >= 0)
 			return ((sb.st_mode & S_IFMT) == S_IFDIR);
@@ -462,7 +462,8 @@ char	*name;
 		(void)strcpy(s_file, name);
 		(void)strcpy(g_file, name = s);
 	} else {
-		FORMAT(s_file, "%s/s.%s", sccs_dir(), strcpy(g_file, name));
+		FORMAT(s_file, "%s/%s%s",
+			sccs_dir(), SCCS_PREFIX, strcpy(g_file, name));
 	}
 
 	/* The file must exist; otherwise we give up! */

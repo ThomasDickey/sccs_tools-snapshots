@@ -1,4 +1,4 @@
-$Id: release.txt,v 2.1 1989/10/10 15:56:09 dickey Exp $
+$Id: release.txt,v 2.2 1990/05/08 14:35:04 dickey Exp $
 
 --------------------------------------------------------------------------------
 
@@ -6,6 +6,8 @@ Baseline 3:
 ----------
 Modified sccs2rcs to generate 'Id' keyword rather than 'Header'.
 Tested for apollo SR10.1
+
+Apollo SR10.2 broke 'sccsput' the rest of the way; rewrote into C-language.
 
 Baseline 2:
 ----------

@@ -1,3 +1,13 @@
+1990-05-08  dickey@software.org
+
+	* certify/release.txt: rewrote 'sccsput'
+
+	* src/putdelta/src/sccsput.c: RCS_BASE
+
+	* src/putdelta/src/Makefile: rewrote script 'sccsput.sh' to 'sccsput.c'
+
+	* src/putdelta/src/putdelta.c: lint
+
 1989-10-16  dickey@software.org
 
 	* src/putdelta/src/putdelta.c:
