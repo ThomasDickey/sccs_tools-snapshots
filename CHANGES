@@ -1,3 +1,13 @@
+1988-08-17  dickey@software.org
+
+	* src/putdelta/src/Makefile: sccs2rcs keywords
+
+	* src/putdelta/src/Makefile: use 'copy' in install.
+
+	* src/getdelta/src/Makefile: sccs2rcs keywords
+
+	* src/getdelta/src/Makefile: use 'copy' in install.
+
 1988-08-09  dickey@software.org
 
 	* src/getdelta/src/getdelta.c:

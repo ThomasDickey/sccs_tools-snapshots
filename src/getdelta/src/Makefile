@@ -1,4 +1,4 @@
-# @(#)Makefile	1.2 88/08/03 16:14:27
+# $Header: /users/source/archives/sccs_tools.vcs/src/getdelta/src/RCS/Makefile,v 1.4 1988/08/17 09:29:10 dickey Exp $
 # Make-file for SCCS checkout utilities
 #
 ####### (Environment) ##########################################################
@@ -36,8 +36,8 @@ getdelta:	$(MAIN_O)	; $(CC) -o $@ $(MAIN_O)
 #
 getdelta.o:	$I/ptypes.h
 #
-$B/getdelta:	getdelta	; rm -f $@; cp $? $@; chmod +x $@
-$B/sccsget:	sccsget.sh	; rm -f $@; cp $? $@; chmod +x $@
+$B/getdelta:	getdelta	; copy -d $@
+$B/sccsget:	sccsget.sh	; copy $? $@
 #
 ####### (Development) ##########################################################
 $(SRCS):			; $(GET) -s sccs/s.$@
