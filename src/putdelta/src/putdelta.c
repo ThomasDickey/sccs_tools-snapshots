@@ -3,6 +3,7 @@
  * Author:	T.E.Dickey
  * Created:	25 Apr 1986
  * Modified:
+ *		21 Apr 2002, don't add 1900 to year for packdate().
  *		12 Apr 2000, Y2K fix for rev_date.
  *		03 Sep 1996, added '-b' option
  *		15 Jul 1994, use 'sccspath()'
@@ -70,7 +71,7 @@
 
 #include	<errno.h>
 
-MODULE_ID("$Id: putdelta.c,v 6.11 2001/12/11 15:03:33 tom Exp $")
+MODULE_ID("$Id: putdelta.c,v 6.12 2002/04/21 15:43:52 tom Exp $")
 
 /************************************************************************
  *	local definitions						*
@@ -454,7 +455,7 @@ int	EditDelta(
 			year += 100;
 
 		newzone(TIMEZONE,0,FALSE);/* interpret in EST/EDT */
-		delta = packdate (1900+year, mon, mday, hour, min, sec);
+		delta = packdate (year, mon, mday, hour, min, sec);
 		oldzone();
 
 		TELL("** old: %s", ctime(&delta));

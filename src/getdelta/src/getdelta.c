@@ -3,6 +3,7 @@
  * Author:	T.E.Dickey
  * Created:	26 Mar 1986 (as a procedure)
  * Modified:
+ *		21 Apr 2002, don't add 1900 to year for packdate().
  *		30 Jun 2000, if -f option is given, do not exit with error-code.
  *		27 Jun 2000, Y2K fix. 
  *		07 Apr 2000, if only a cutoff date is given, set retrieved file
@@ -58,7 +59,7 @@
 #include	<ptypes.h>
 #include	<sccsdefs.h>
 
-MODULE_ID("$Id: getdelta.c,v 6.24 2000/07/03 20:34:52 tom Exp $")
+MODULE_ID("$Id: getdelta.c,v 6.25 2002/04/21 15:43:52 tom Exp $")
 
 /* local definitions */
 #define	NAMELEN		80	/* length of tokens in sccs-header */
@@ -327,7 +328,7 @@ void	PostProcess (
 					pgmr, &added, &deleted) == 10) {
 				if (year < 38)
 					year += 100;
-				date = packdate(1900+year, mon, mday, hour, min, sec);
+				date = packdate(year, mon, mday, hour, min, sec);
 #ifdef CMV_PATH	/* for CmVision */
 				if ((s = fgets(bfr, sizeof(bfr), fp)) != 0
 				 && (*s++ == CTL_A)
