@@ -1,3 +1,10 @@
+1989-03-20  dickey@software.org
+
+	* src/sccs2rcs/src/sccs2rcs.c:
+	rewrote, making this smart enough to preserve checkin-dates, and to work
+	with the conventional RCS and sccs directory convention.  Renamed to avoid
+	confusion with the dumb version.
+
 1989-03-15  dickey@software.org
 
 	* user/getdelta.doc, user/putdelta.doc, user/sccsget.doc, user/sccsput.doc:
