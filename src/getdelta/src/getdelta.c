@@ -1,5 +1,5 @@
 #ifndef	lint
-static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/src/RCS/getdelta.c,v 3.10 1991/06/27 09:30:38 ste_cm Exp $";
+static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/src/RCS/getdelta.c,v 3.11 1991/06/28 16:58:07 ste_cm Exp $";
 #endif
 
 /*
@@ -280,9 +280,11 @@ char	*name, *s_file;
 	 */
 	if (ok) {
 		if (!silent) shoarg(stdout, GET_TOOL, get_opts);
-		newzone(0,0,FALSE);	/* do this in GMT zone */
-		if (execute(GET_TOOL, get_opts) < 0)
-			failed(name);
+		if (!noop) {
+			newzone(0,0,FALSE);	/* do this in GMT zone */
+			if (execute(GET_TOOL, get_opts) < 0)
+				failed(name);
+		}
 		PostProcess(name, s_file);
 	}
 

@@ -1,3 +1,8 @@
+1991-06-28  ste_cm@software.org
+
+	* src/getdelta/src/getdelta.c:
+	somehow I forgot the main part of no-op: "get" invocation!
+
 1991-06-27  ste_cm@software.org
 
 	* src/getdelta/src/getdelta.c: added "-b" option
