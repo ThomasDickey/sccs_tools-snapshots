@@ -1,3 +1,9 @@
+1996-09-03  Thomas E. Dickey  <dickey@clark.net>
+
+	* src/putdelta/src/putdelta.c: add -b option
+
+	* src/putdelta/src/putdelta.c: use MODULE_ID
+
 1996-08-08  Thomas E. Dickey  <dickey@clark.net>
 
 	* src/getdelta/src/getdelta.c:

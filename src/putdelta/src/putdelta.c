@@ -1,12 +1,9 @@
-#ifndef	lint
-static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/src/RCS/putdelta.c,v 6.5 1995/05/13 23:18:56 tom Exp $";
-#endif
-
 /*
  * Title:	putdelta.c (create new or initial sccs delta)
  * Author:	T.E.Dickey
  * Created:	25 Apr 1986
  * Modified:
+ *		03 Sep 1996, added '-b' option
  *		15 Jul 1994, use 'sccspath()'
  *		23 Sep 1993, gcc warnings
  *		24 Oct 1991, converted to ANSI
@@ -71,6 +68,8 @@ static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/
 #include	<sccsdefs.h>
 
 #include	<errno.h>
+
+MODULE_ID("$Id: putdelta.c,v 6.7 1996/09/03 15:38:50 tom Exp $")
 
 /************************************************************************
  *	local definitions						*
@@ -145,6 +144,7 @@ void	usage (_AR0)
  "Usage: putdelta [options] files"
 ,""
 ,"Options"
+,"  -b       (binary) sets flags to ensure SCCS treats the file as binary"
 ,"  -f       (force) creates a new delta even if no lock was made."
 ,"  -k       (keys) if initial, causes \"admin\" to require keywords."
 ,"  -n       (no-op) shows actions, but does not perform them."
@@ -693,8 +693,11 @@ _MAIN
 
 	catarg(delta_opts, "-n");
 	fpT = tmpfile();
-	while ((j = getopt(argc, argv, "fknr:sy:")) != EOF)
+	while ((j = getopt(argc, argv, "bfknr:sy:")) != EOF)
 		switch (j) {
+		case 'b':
+			catarg(admin_opts, "-b");
+			break;
 		case 'f':
 			force	= TRUE;
 			break;
