@@ -1,10 +1,10 @@
-$Id: release.txt,v 5.1 1992/10/19 11:35:08 dickey Exp $
+$Id: release.txt,v 5.2 1993/04/29 12:46:39 dickey Exp $
 
 --------------------------------------------------------------------------------
 
 Baseline 6
 ----------
-Adapted to CM_LIBRARY #12.
+Adapted to TD_LIB #12.
 
 Baseline 5:	(1992/jul/17)
 ----------

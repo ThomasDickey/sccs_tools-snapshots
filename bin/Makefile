@@ -1,7 +1,7 @@
-# $Id: Makefile,v 5.2 1992/10/19 11:48:46 dickey Exp $
+# $Id: Makefile,v 6.0 1993/04/29 08:35:21 ste_cm Rel $
 
 TOP	= ../..
-include $(TOP)/cm_library/support/cm_library.mk
+include $(TOP)/td_lib/support/td_lib.mk
 
 ####### (Standard Lists) #######################################################
 B	= $(INSTALL_BIN)
@@ -18,7 +18,7 @@ all:	$(SOURCES) $(ALL)	; @echo '** use "make install"'
 clean:				; rm -f $(CLEAN)
 clobber:	clean		; rm -f [a-z]*
 destroy:			; $(DESTROY)
-run_tests:
+run_test:
 sources:
 install:	$(IT)
 deinstall:			; rm -f $(IT)

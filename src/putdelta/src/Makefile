@@ -1,8 +1,8 @@
-# $Id: Makefile,v 5.1 1992/10/19 10:51:45 dickey Exp $
+# $Id: Makefile,v 6.0 1993/04/29 08:35:20 ste_cm Rel $
 # Make-file for SCCS check-in utilities
 
 TOP	= ../../../..
-include $(TOP)/cm_library/support/cm_library.mk
+include $(TOP)/td_lib/support/td_lib.mk
 
 ####### (Standard Lists) #######################################################
 DEFINES	= -DADMIN_TOOL=\"`which admin`\" -DDELTA_TOOL=\"`which delta`\"
@@ -18,7 +18,7 @@ install:	$(SOURCES) $(ALL)
 clean:				; rm -f $(CLEAN)
 clobber:	clean		; rm -f $(ALL)
 destroy:			; $(DESTROY)
-run_tests:
+run_test:
 sources:	$(SOURCES)
 
 ####### (Details of Productions) ###############################################

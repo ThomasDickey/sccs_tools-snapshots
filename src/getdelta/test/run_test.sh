@@ -1,7 +1,8 @@
 #!/bin/sh
-# $Id: run_test.sh,v 5.0 1991/05/24 09:15:27 ste_cm Rel $'
+# $Id: run_test.sh,v 6.0 1993/04/29 09:25:06 ste_cm Rel $'
 # test-script for 'getdelta'
 #
+echo '** '`date`
 SCCS=${SCCS_DIR-SCCS}
 PATH=`cd ../bin;pwd`:$PATH;	export PATH
 
@@ -36,7 +37,10 @@ cat <<eof/
 **	Test differences between the first-archived version and the original
 **	file:
 eof/
-diff $W Makefile
+if ( cmp -s $W Makefile )
+then	diff $W Makefile
+else	echo '** (no difference found)'
+fi
 done
 
 rm -rf $SCCS $W

@@ -1,17 +1,17 @@
-# $Id: Makefile,v 5.2 1992/10/19 11:48:14 dickey Exp $
+# $Id: Makefile,v 5.3 1993/04/29 08:52:34 dickey Exp $
 # Top-level make-file for SCCS_TOOLS
 
 TOP	= ..
-include $(TOP)/cm_library/support/cm_library.mk
+include $(TOP)/td_lib/support/td_lib.mk
 
 ####### (Standard Lists) #######################################################
 SOURCES	=\
-	COPYRIGHT\
+	COPYING\
 	README
 
 MFILES	=\
 	bin/Makefile\
-	certificate/Makefile\
+	certify/Makefile\
 	src/Makefile\
 	user/Makefile
 
@@ -33,12 +33,12 @@ clean\
 clobber\
 destroy\
 sources::	$(MFILES)
-	cd certificate;	$(MAKE) $@
+	cd certify;	$(MAKE) $@
 	cd src;		$(MAKE) $@
 	cd user;	$(MAKE) $@
 	cd bin;		$(MAKE) $@
 
-run_tests\
+run_test\
 lint.out\
 lincnt.out:	$(MFILES)
 	cd src;		$(MAKE) $@

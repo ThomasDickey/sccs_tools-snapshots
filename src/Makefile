@@ -1,8 +1,8 @@
-# $Id: Makefile,v 5.1 1992/10/19 10:41:29 dickey Exp $
+# $Id: Makefile,v 6.0 1993/04/29 08:35:21 ste_cm Rel $
 # Top-level makefile for SCCS_TOOLS src-directory
 
 TOP	= ../..
-include $(TOP)/cm_library/support/cm_library.mk
+include $(TOP)/td_lib/support/td_lib.mk
 
 ####### (Standard Lists) #######################################################
 MFILES	=\
@@ -18,7 +18,7 @@ destroy\
 sources\
 lint.out\
 lincnt.out\
-run_tests\
+run_test\
 install\
 deinstall::	$(MFILES)
 	cd getdelta;	$(MAKE) $@

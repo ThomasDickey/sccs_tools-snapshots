@@ -1,3 +1,121 @@
+1993-04-29  dickey@software.org
+
+	* certify/config.txt, certify/release.txt: shorten-filenames
+
+1993-04-29  ste_cm@software.org
+
+	* certify/config.txt: BASELINE Wed May  5 11:05:31 1993 -- TD_LIB #12
+
+1993-04-29  dickey@software.org
+
+	* src/sccs2rcs/test/do_test.sh: tidy up listing format
+
+1993-04-29  ste_cm@software.org
+
+	* src/sccs2rcs/test/do_test.sh:
+	BASELINE Wed May  5 11:05:31 1993 -- TD_LIB #12
+
+1993-04-29  dickey@software.org
+
+	* src/sccs2rcs/src/sccs2rcs.c: missed an option
+
+1993-04-29  ste_cm@software.org
+
+	* src/sccs2rcs/src/sccs2rcs.c:
+	BASELINE Wed May  5 11:05:31 1993 -- TD_LIB #12
+
+1993-04-29  dickey@software.org
+
+	* src/sccs2rcs/src/sccs2rcs.c: provided "-q" option for CI-tool
+
+	* src/sccs2rcs/test/run_test.sh:
+	make normal testing less verbose (I only want to know about errors)
+
+1993-04-29  ste_cm@software.org
+
+	* src/sccs2rcs/test/run_test.sh:
+	BASELINE Wed May  5 11:05:31 1993 -- TD_LIB #12
+
+1993-04-29  dickey@software.org
+
+	* src/sccs2rcs/test/do_test.sh:
+	reserve run_test.out for normal logging; added run_test.log for the
+	extra junk
+
+	* src/sccs2rcs/test/Makefile: use standard run_test rule
+
+1993-04-29  ste_cm@software.org
+
+	* src/sccs2rcs/test/Makefile:
+	BASELINE Wed May  5 11:05:31 1993 -- TD_LIB #12
+
+1993-04-29  dickey@software.org
+
+	* src/getdelta/test/run_test.sh:
+	make the log easier to read by showing the date, and a message if no diffs
+	were found
+
+1993-04-29  ste_cm@software.org
+
+	* src/getdelta/test/run_test.sh:
+	BASELINE Wed May  5 11:05:31 1993 -- TD_LIB #12
+
+1993-04-29  dickey@software.org
+
+	* src/sccs2rcs/test/run_test.sh, src/sccs2rcs/src/sccs2rcs.c, src/sccs2rcs/Makefile:
+	shorten-filenames
+
+1993-04-29  ste_cm@software.org
+
+	* src/sccs2rcs/Makefile:
+	BASELINE Wed May  5 11:05:31 1993 -- TD_LIB #12
+
+1993-04-29  dickey@software.org
+
+	* src/putdelta/Makefile: shorten-filenames
+
+1993-04-29  ste_cm@software.org
+
+	* src/putdelta/Makefile:
+	BASELINE Wed May  5 11:05:31 1993 -- TD_LIB #12
+
+1993-04-29  dickey@software.org
+
+	* src/getdelta/Makefile: shorten-filenames
+
+1993-04-29  ste_cm@software.org
+
+	* src/getdelta/Makefile:
+	BASELINE Wed May  5 11:05:31 1993 -- TD_LIB #12
+
+1993-04-29  dickey@software.org
+
+	* Makefile, certify/Makefile: shorten-filenames
+
+1993-04-29  ste_cm@software.org
+
+	* certify/Makefile: BASELINE Wed May  5 11:05:31 1993 -- TD_LIB #12
+
+1993-04-29  dickey@software.org
+
+	* src/sccs2rcs/test/Makefile, bin/Makefile, src/Makefile, src/getdelta/src/Makefile, src/getdelta/test/Makefile:
+	shorten-filenames
+
+1993-04-29  ste_cm@software.org
+
+	* bin/Makefile, src/Makefile, src/getdelta/src/Makefile, src/getdelta/test/Makefile:
+	BASELINE Wed May  5 11:05:31 1993 -- TD_LIB #12
+
+1993-04-29  dickey@software.org
+
+	* src/putdelta/src/Makefile, src/putdelta/test/Makefile, src/sccs2rcs/src/Makefile, user/Makefile:
+	shorten-filenames
+
+1993-04-29  ste_cm@software.org
+
+	* src/putdelta/src/Makefile, src/putdelta/test/Makefile, src/sccs2rcs/src/Makefile, user/Makefile:
+	BASELINE Wed May  5 11:05:31 1993 -- TD_LIB #12
+
 1992-10-19  dickey@software.org
 
 	* COPYING: new verbiage

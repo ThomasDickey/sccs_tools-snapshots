@@ -1,12 +1,12 @@
-# $Id: Makefile,v 5.1 1992/10/19 10:52:27 dickey Exp $
+# $Id: Makefile,v 6.0 1993/04/29 08:35:20 ste_cm Rel $
 # make-file for testing sccs delta+admin package
 
 TOP	= ../../../..
-include $(TOP)/cm_library/support/cm_library.mk
+include $(TOP)/td_lib/support/td_lib.mk
 
 ####### (Standard Lists) #######################################################
 SCRIPTS	=\
-	run_tests.sh
+	run_test.sh
 
 SOURCES	= $(SCRIPTS)
 
@@ -16,7 +16,7 @@ clean:				; rm -f $(CLEAN)
 clobber:	clean		; rm -f $(ALL)
 destroy:			; $(DESTROY)
 sources:	$(SOURCES)
-run_tests:	$(SOURCES)	; $(RUN_TESTS)
+run_test:	$(SOURCES)	; $(RUN_TESTS)
 lint.out:
 lincnt.out:
 
