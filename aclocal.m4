@@ -1,4 +1,4 @@
-dnl $Id: aclocal.m4,v 6.3 2001/01/09 22:09:53 tom Exp $
+dnl $Id: aclocal.m4,v 6.4 2002/04/21 15:50:13 tom Exp $
 dnl Macros for CM_TOOLS configure script.
 dnl ---------------------------------------------------------------------------
 dnl ---------------------------------------------------------------------------
@@ -62,7 +62,7 @@ test -n "$system_name" && AC_DEFINE_UNQUOTED(SYSTEM_NAME,"$system_name")
 AC_CACHE_VAL(cf_cv_system_name,[cf_cv_system_name="$system_name"])
 
 test -z "$system_name" && system_name="$cf_cv_system_name"
-test -n "$cf_cv_system_name" && AC_MSG_RESULT("Configuring for $cf_cv_system_name")
+test -n "$cf_cv_system_name" && AC_MSG_RESULT(Configuring for $cf_cv_system_name)
 
 if test ".$system_name" != ".$cf_cv_system_name" ; then
 	AC_MSG_RESULT(Cached system name ($system_name) does not agree with actual ($cf_cv_system_name))
@@ -216,6 +216,10 @@ dnl Construct a search-list for a nonstandard header-file
 AC_DEFUN([CF_HEADER_PATH],
 [$1=""
 
+test "$prefix" != /usr/local && \
+test -d /usr/local && \
+$1="[$]$1 /usr/local/include /usr/local/include/$2 /usr/local/$2/include"
+
 test "$includedir" != NONE && \
 test -d "$includedir" && \
 $1="[$]$1 $includedir $includedir/$2"
@@ -227,10 +231,6 @@ $1="[$]$1 $oldincludedir $oldincludedir/$2"
 test "$prefix" != NONE && \
 test -d "$prefix" && \
 $1="[$]$1 $prefix/include $prefix/include/$2 $prefix/$2/include"
-
-test "$prefix" != /usr/local && \
-test -d /usr/local && \
-$1="[$]$1 /usr/local/include /usr/local/include/$2 /usr/local/$2/include"
 
 test "$prefix" != /usr && \
 $1="[$]$1 /usr/include /usr/include/$2 /usr/$2/include"
@@ -246,6 +246,10 @@ dnl Construct a search-list for a nonstandard library-file
 AC_DEFUN([CF_LIBRARY_PATH],
 [$1=""
 
+test "$prefix" != /usr/local && \
+test -d /usr/local && \
+$1="[$]$1 /usr/local/lib /usr/local/lib/$2 /usr/local/$2/lib"
+
 test "$libdir" != NONE && \
 test -d $libdir && \
 $1="[$]$1 $libdir $libdir/$2"
@@ -258,10 +262,6 @@ test "$prefix" != NONE && \
 test "$prefix" != "$exec_prefix" && \
 test -d $prefix && \
 $1="[$]$1 $prefix/lib $prefix/lib/$2 $prefix/$2/lib"
-
-test "$prefix" != /usr/local && \
-test -d /usr/local && \
-$1="[$]$1 /usr/local/lib /usr/local/lib/$2 /usr/local/$2/lib"
 
 test "$prefix" != /usr && \
 $1="[$]$1 /usr/lib /usr/lib/$2 /usr/$2/lib"
@@ -282,7 +282,7 @@ AC_DEFUN([CF_LIB_PREFIX],
 [
 	case $cf_cv_system_name in
 	OS/2*)	LIB_PREFIX=''     ;;
-	os2)	LIB_PREFIX=''     ;;
+	os2*)	LIB_PREFIX=''     ;;
 	*)	LIB_PREFIX='lib'  ;;
 	esac
 ifelse($1,,,[$1=$LIB_PREFIX])
@@ -315,6 +315,7 @@ all :
 	@echo 'cf_make_include=\$(RESULT)'
 CF_EOF
 	cf_make_include=""
+	CDPATH=; export CDPATH
 	eval `(cd $cf_dir && ${MAKE-make}) 2>&AC_FD_CC | grep cf_make_include=OK`
 	if test -n "$cf_make_include"; then
 		make_include_left="$cf_include"
@@ -348,7 +349,7 @@ dnl Provide a value for the $PATH and similar separator
 AC_DEFUN([CF_PATHSEP],
 [
 	case $cf_cv_system_name in
-	os2)	PATHSEP=';'  ;;
+	os2*)	PATHSEP=';'  ;;
 	*)	PATHSEP=':'  ;;
 	esac
 ifelse($1,,,[$1=$PATHSEP])
@@ -432,15 +433,14 @@ cygwin*)
     ;;
 esac
 AC_SUBST(PROG_EXT)
+test -n "$PROG_EXT" && AC_DEFINE_UNQUOTED(PROG_EXT,"$PROG_EXT")
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl Make an uppercase version of a variable
 dnl $1=uppercase($2)
 AC_DEFUN([CF_UPPER],
 [
-changequote(,)dnl
 $1=`echo "$2" | sed y%abcdefghijklmnopqrstuvwxyz./-%ABCDEFGHIJKLMNOPQRSTUVWXYZ___%`
-changequote([,])dnl
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl Use AC_VERBOSE w/o the warnings

@@ -1,3 +1,12 @@
+2002-04-21  Thomas E. Dickey  <dickey@invisible-island.net>
+
+	* configure: RCS_BASE
+
+	* aclocal.m4: various fixes from my-autoconf
+
+	* src/getdelta/src/getdelta.c, src/putdelta/src/putdelta.c:
+	don't add 1900 to year for packdate(), since mktime() does not work
+
 2001-12-11  Thomas E. Dickey  <dickey@invisible-island.net>
 
 	* src/sccs2rcs/src/sccs2rcs.c, src/putdelta/src/sccsput.c, src/putdelta/src/putdelta.c, src/getdelta/src/sccsget.c:
