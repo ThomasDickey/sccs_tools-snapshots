@@ -3,6 +3,7 @@
  * Author:	T.E.Dickey
  * Created:	26 Mar 1986 (as a procedure)
  * Modified:
+ *		27 Jun 1999, correct uninitialized get_opts[] - worked on SunOS.
  *		14 Oct 1995, allow 14-character s-filenames
  *		08 Sep 1995, get CmVision file-mode, if present.
  *		07 Sep 1995, added processing for CmVision binary-files.
@@ -51,7 +52,7 @@
 #include	<ptypes.h>
 #include	<sccsdefs.h>
 
-MODULE_ID("$Id: getdelta.c,v 6.17 1996/08/08 15:29:24 tom Exp $")
+MODULE_ID("$Id: getdelta.c,v 6.19 1999/06/27 16:31:52 tom Exp $")
 
 /* local definitions */
 #define	NAMELEN		80	/* length of tokens in sccs-header */
@@ -590,6 +591,7 @@ _MAIN
 
 	oldzone();
 
+	get_opts[0] = EOS;
 	*r_opt = EOS;
 	while ((j = getopt(argc, argv, "bc:efknpr:s")) != EOF) {
 		switch (j) {
