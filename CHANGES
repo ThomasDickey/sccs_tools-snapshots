@@ -1,3 +1,15 @@
+1995-10-14  Thomas E. Dickey  <dickey@clark.net>
+
+	* src/putdelta/src/sccsput.c:
+	mods to allow for 14-character names (untested)
+
+	* src/getdelta/src/getdelta.c: 14-character names are ugly: ifdef
+
+	* src/getdelta/src/getdelta.c: moved 'fleaf14()' into td_lib
+
+	* src/getdelta/src/getdelta.c:
+	mods to accommodate CmVision's use of 14-character s-file names
+
 1995-09-08  Thomas E. Dickey  <dickey@clark.net>
 
 	* src/getdelta/src/getdelta.c:
