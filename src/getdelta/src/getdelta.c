@@ -1,5 +1,5 @@
-#ifndef	lint
-static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/src/RCS/getdelta.c,v 6.10 1995/09/07 21:44:02 tom Exp $";
+#ifndef	NO_IDENT
+static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/src/RCS/getdelta.c,v 6.11 1995/09/08 14:16:36 tom Exp $";
 #endif
 
 /*
@@ -7,6 +7,7 @@ static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/
  * Author:	T.E.Dickey
  * Created:	26 Mar 1986 (as a procedure)
  * Modified:
+ *		08 Sep 1995, get CmVision file-mode, if present.
  *		07 Sep 1995, added processing for CmVision binary-files.
  *		16 Mar 1995, allow -r, -s options to repeat (use last).
  *		19 Jul 1994, added "-p" option.
@@ -64,22 +65,23 @@ static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/
 
 #define	CTL_A	'\001'
 
+#define	S_MODE(s) ((s & 0555) | writable)
+
 /************************************************************************
  *	local data							*
  ************************************************************************/
 
 static	time_t	opt_c	= 0;
+static	mode_t	s_mode,			/* protection of s-file */
+		writable = 0;		/* nonzero to make g-file writable */
 
-static	int	writeable = 0,		/* nonzero to make g-file writeable */
-		s_mode,			/* protection of s-file */
-		silent	= FALSE,	/* "-s" option */
+static	int	silent	= FALSE,	/* "-s" option */
 		force	= FALSE,	/* "-f" option */
 		lockit	= FALSE,	/* "-e" option */
 		noop	= FALSE,	/* "-n" option */
 		piped	= FALSE;	/* "-p" option */
 
-static	char	*sid	= NULL,
-		get_opts[BUFSIZ];
+static	char	*sid	= NULL;
 
 /************************************************************************
  *	local procedures						*
@@ -146,6 +148,7 @@ _DCL(char *,	version)
 
 #ifdef CMV_PATH
 static	int	file_is_binary;
+static	int	file_is_SCCS;
 static	char	cmv_binary[] = "\\\\\\\\";
 
 /*
@@ -159,10 +162,22 @@ void	CheckForBinary(
 	_DCL(char *,	s_file)
 {
 	FILE	*fp;
+	int	first	= TRUE;
+
 	file_is_binary = FALSE;
+	file_is_SCCS   = TRUE;
 	if ((fp = fopen (s_file, "r")) != NULL) {
 		char	buf[BUFSIZ];
 		while (fgets(buf, sizeof(buf), fp) != 0) {
+			if (first) {
+				if (buf[0] != CTL_A
+				 || buf[1] != 'h') {
+					file_is_binary = TRUE;
+					file_is_SCCS   = FALSE;
+					break;
+				}
+				first = FALSE;
+			}
 			if (buf[0] == CTL_A
 			 && buf[1] == 'I') {
 				if (fgets(buf, sizeof(buf), fp)
@@ -226,6 +241,8 @@ void	DeHexify(
 					break;
 			}
 			fputc(c, ofp);
+			if (ferror(ofp))
+				failed(temp);
 		}
 	}
 	fclose(ifp);
@@ -256,30 +273,33 @@ void	PostProcess (
 	char	version[NAMELEN];
 	char	pgmr[NAMELEN];
 	char	bfr[BUFSIZ];
+	char	*s;
 
-	static	char	fmt[] = "\001d D %s %d/%d/%d %d:%d:%d %s %d %d";
+	static	char	fmt[] = "d D %s %d/%d/%d %d:%d:%d %s %d %d";
 
 	if ((fp = fopen (s_file, "r")) != NULL) {
 		newzone(5,0,FALSE);	/* interpret in EST/EDT zone */
-		while (fgets(bfr, sizeof(bfr), fp) && *bfr == CTL_A) {
-			if (sscanf (bfr, fmt, version,
+		while ((s = fgets(bfr, sizeof(bfr), fp)) != 0
+		  &&   (*s++ == CTL_A)) {
+			if (sscanf (s, fmt, version,
 					&year, &mon,  &mday,
 					&hour, &min, &sec,
 					pgmr, &new, &old) > 0) {
 				date = packdate(1900+year, mon, mday, hour, min, sec);
 #ifdef CMV_PATH	/* for CmVision */
-				if (fgets(bfr, sizeof(bfr), fp)
-				 && *bfr == CTL_A) {
-					if (!strncmp(bfr, "\001c ", 3)) {
-						char	*s;
-						time_t	when;
-						if ((s = strstr(bfr, "\\\001O")) != 0) {
-							while (strncmp(s, ":M", 2) && *s)
-								s++;
-							if (sscanf(s, ":M%ld:", &when))
-								date = when;
-						}
-					}
+				if ((s = fgets(bfr, sizeof(bfr), fp)) != 0
+				 && (*s++ == CTL_A)
+				 && !strncmp(s, "c ", 2)
+				 && (s = strstr(s, "\\\001O")) != 0) {
+					char	*base = s;
+					long	num;
+
+					if ((s = strstr(base, ":P")) != 0
+					 && sscanf(s, ":P%lo:", &num))
+						s_mode = S_MODE(num);
+					if ((s = strstr(base, ":M")) != 0
+					 && sscanf(s, ":M%ld:", &num))
+						date = num;
 				}
 #endif
 				if (opt_c) {
@@ -319,8 +339,7 @@ void	PostProcess (
 			YELL "%s: cannot set time\n", name);
 		else if (lockit && !geteuid()) {
 			char	p_file[MAXPATHLEN];
-			char	*s = strrchr(strcpy(p_file, s_file), '/');
-			if (s != 0)
+			if ((s = strrchr(strcpy(p_file, s_file), '/')) != 0)
 				s++;
 			else
 				s = p_file;
@@ -337,17 +356,17 @@ void	PostProcess (
 static
 int	is_a_file(
 	_ARX(char *,	name)
-	_AR1(int *,	mode_)
+	_AR1(mode_t *,	mode_)
 		)
 	_DCL(char *,	name)
-	_DCL(int *,	mode_)
+	_DCL(mode_t *,	mode_)
 {
 	Stat_t	sb;
 
 	if (stat(name, &sb) >= 0) {
 		if ((sb.st_mode & S_IFMT) == S_IFREG) {
 			if (mode_)
-				*mode_ = (sb.st_mode & 0555) | writeable;
+				*mode_ = S_MODE(sb.st_mode);
 			return (TRUE);
 		} else {
 			YELL "?? \"%s\" is not a file\n", name);
@@ -389,10 +408,10 @@ int	Permitted(
 static
 void	DoFile (
 	_ARX(char *,	name)
-	_AR1(char *,	arguments)
+	_AR1(char *,	options)
 		)
 	_DCL(char *,	name)
-	_DCL(char *,	arguments)
+	_DCL(char *,	options)
 {
 	auto	int	ok	= TRUE;
 	auto	char	*working = sccs2name(name, FALSE);
@@ -401,6 +420,7 @@ void	DoFile (
 			new_wd[MAXPATHLEN],
 			s_file[MAXPATHLEN],
 			buffer[MAXPATHLEN],
+			*arguments = options + strlen(options),
 			*s;
 
 	if ((!piped && !Permitted(working, FALSE))
@@ -436,7 +456,21 @@ void	DoFile (
 	 * Check to see if we think that we can extract the file
 	 */
 	if (is_a_file(s_file,&s_mode)) {
-		if (is_a_file(name,(int *)0)) {
+#ifdef CMV_PATH
+		CheckForBinary(s_file);
+		/*
+		 * If it doesn't look like an s-file, it's probably a binary
+		 * file. In that case, the date and mode information is stored
+		 * in one of the r-files, and it's a lot more work to get it.
+		 */
+		if (!file_is_SCCS) {
+			YELL "? file is not stored in SCCS-form: %s\n", name);
+			exit(EXIT_FAILURE);
+		}
+		if (file_is_binary && !writable)
+			catarg(arguments, "-k");
+#endif
+		if (is_a_file(name,(mode_t *)0)) {
 			if (piped) {
 				;
 			} else if (force) {
@@ -456,22 +490,17 @@ void	DoFile (
 	 * Process the file if we found no errors
 	 */
 	if (ok) {
-		*arguments = EOS;
-#ifdef CMV_PATH
-		CheckForBinary(s_file);
-		if (file_is_binary)
-			catarg(arguments, "-k");
-#endif
 		(void)strcat(arguments, s_file);
 		if (!silent)
-			shoarg(stdout, GET_TOOL, get_opts);
+			shoarg(stdout, GET_TOOL, options);
 		if (!noop) {
 			newzone(0,0,FALSE);	/* do this in GMT zone */
-			if (execute(sccspath(GET_TOOL), get_opts) < 0)
+			if (execute(sccspath(GET_TOOL), options) < 0)
 				failed(name);
 		}
 		if (!piped)
 			PostProcess(name, s_file);
+		*arguments = EOS;
 	}
 
 	/*
@@ -520,7 +549,7 @@ _MAIN
 	char	temp[BUFSIZ];
 	char	r_opt[BUFSIZ];
 	register int	j, k;
-	char	*get_arg;
+	char	get_opts[BUFSIZ + MAXPATHLEN];
 
 	oldzone();
 
@@ -562,7 +591,7 @@ _MAIN
 		case 'k':
 			FORMAT(temp, "-%c", j);
 			catarg(get_opts, temp);
-			writeable = S_IWRITE;
+			writable = S_IWRITE;
 			break;
 
 		/* options belonging to this program only */
@@ -578,10 +607,9 @@ _MAIN
 	if (silent)
 		catarg(get_opts, "-s");
 
-	get_arg = get_opts + strlen(get_opts);
 	if (optind < argc) {
 		for (j = optind; j < argc; j++)
-			DoFile (argv[j], get_arg);
+			DoFile (argv[j], get_opts);
 	} else
 		usage();
 	(void)exit(EXIT_SUCCESS);
