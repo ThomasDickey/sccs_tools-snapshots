@@ -1,3 +1,11 @@
+1992-07-20  dickey@software.org
+
+	* Makefile: -x option of 'checkout' is obsolete
+
+1992-07-20  ste_cm@software.org
+
+	* Makefile: BASELINE Mon Jul 20 13:03:58 1992
+
 1992-07-17  dickey@software.org
 
 	* certify/config.txt: mods for CM_TOOLS #11
