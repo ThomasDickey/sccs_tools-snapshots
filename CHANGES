@@ -1,3 +1,8 @@
+1988-08-30  dickey@software.org
+
+	* src/getdelta/src/getdelta.c:
+	The 'get' "-r" option cannot have a blank before the SID-value (apollo)
+
 1988-08-17  dickey@software.org
 
 	* src/putdelta/src/Makefile: sccs2rcs keywords

@@ -1,5 +1,5 @@
 #ifndef	lint
-static	char	sccs_id[] = "@(#)getdelta.c	1.5 88/08/09 12:19:50";
+static	char	sccs_id[] = "@(#)getdelta.c	1.6 88/08/30 16:33:54";
 #endif	lint
 
 /*
@@ -275,7 +275,7 @@ char	*argv[];
 		case 'r':
 			sid = optarg;
 			TELL "sid: %s\n", sid);
-			FORMAT(s, "-r %s ", sid);
+			FORMAT(s, "-r%s ", sid);
 			break;
 		case 'c':
 			FORMAT(s, "-c %s ", optarg);
