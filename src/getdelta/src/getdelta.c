@@ -1,5 +1,5 @@
 #ifndef	lint
-static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/src/RCS/getdelta.c,v 4.0 1991/12/17 12:44:05 ste_cm Rel $";
+static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/src/RCS/getdelta.c,v 6.0 1992/07/17 09:34:02 ste_cm Rel $";
 #endif
 
 /*
@@ -215,14 +215,14 @@ _DCL(char *,	s_file)
  * See if the specified file exists.  If so, verify that it is indeed a file.
  */
 static
-isFILE(
+is_a_file(
 _ARX(char *,	name)
 _AR1(int *,	mode_)
 	)
 _DCL(char *,	name)
 _DCL(int *,	mode_)
 {
-	struct	stat	sb;
+	STAT	sb;
 
 	if (stat(name, &sb) >= 0) {
 		if ((sb.st_mode & S_IFMT) == S_IFREG) {
@@ -312,8 +312,8 @@ _DCL(char *,	s_file)
 	/*
 	 * Check to see if we think that we can extract the file
 	 */
-	if (isFILE(s_file,&s_mode)) {
-		if (isFILE(name,(int *)0)) {
+	if (is_a_file(s_file,&s_mode)) {
+		if (is_a_file(name,(int *)0)) {
 			if (force) {
 				if (!noop && (unlink(name) < 0))
 					failed(name);
