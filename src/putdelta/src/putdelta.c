@@ -1,5 +1,5 @@
 #ifndef	lint
-static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/src/RCS/putdelta.c,v 3.28 1991/07/19 09:22:31 dickey Exp $";
+static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/src/RCS/putdelta.c,v 3.29 1991/07/24 15:46:00 dickey Exp $";
 #endif
 
 /*
@@ -7,6 +7,8 @@ static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/
  * Author:	T.E.Dickey
  * Created:	25 Apr 1986
  * Modified:
+ *		24 Jul 1991, pass-thru "-r" option to 'admin', since this is
+ *			     how we specify initial version.
  *		19 Jul 1991, allow "-r" option in case of branches
  *		18 Jul 1991, added "-f", "-k" options.
  *		09 Jul 1991, set mtime of s-file so that 'make' will not be
@@ -685,6 +687,7 @@ char	*argv[];
 		case 'r':
 			FORMAT(tmp, "-r%s", sid = optarg);
 			catarg(delta_opts, tmp);
+			catarg(admin_opts, tmp);
 			break;
 		case 's':
 			silent	= TRUE;

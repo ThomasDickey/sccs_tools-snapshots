@@ -1,6 +1,6 @@
 #ifndef	lint
 static char *RCSid =
-"$Header: /users/source/archives/sccs_tools.vcs/src/sccs2rcs/src/RCS/sccs2rcs.c,v 3.0 1991/05/23 09:09:16 ste_cm Rel $";
+"$Header: /users/source/archives/sccs_tools.vcs/src/sccs2rcs/src/RCS/sccs2rcs.c,v 3.6 1991/07/24 11:49:53 dickey Exp $";
 #endif
 
 /*
@@ -8,9 +8,30 @@ static char *RCSid =
  * Author: Ken Greer
  *
  * $Log: sccs2rcs.c,v $
- * Revision 3.0  1991/05/23 09:09:16  ste_cm
- * BASELINE Tue Jun 18 08:04:39 1991 -- apollo sr10.3
+ * Revision 3.6  1991/07/24 11:49:53  dickey
+ * use name2sccs/sccs2name to simplify/standardize pathname translation
  *
+ * Revision 3.5  91/07/24  11:39:29  dickey
+ * quieted the 'rcs' command also
+ * 
+ * Revision 3.4  91/07/24  11:24:47  dickey
+ * corrected logic (introduced in last version) when invoking 'ci' to add
+ * a new delta. tuned verbosity.
+ * 
+ * Revision 3.3  91/07/24  09:24:49  dickey
+ * use catarg/shoarg/bldcmd2/execute to simplify the process of escaping
+ * spaces.
+ * 
+ * Revision 3.2  91/07/24  08:29:59  dickey
+ * test for exceptions to error-failure after 'mkdir()'
+ * 
+ * Revision 3.1  91/07/24  08:20:12  dickey
+ * lint (apollo sr10.3); also corrected code that passes quiet-option to CI
+ * and CO (GET was ok)
+ * 
+ * Revision 3.0  91/05/23  09:09:16  ste_cm
+ * BASELINE Tue Jun 18 08:04:39 1991 -- apollo sr10.3
+ * 
  * Revision 2.4  91/05/23  09:09:16  dickey
  * apollo sr10.3 cpp complains about endif-tags
  * 
@@ -84,8 +105,11 @@ static char *RCSid =
 #define	STR_PTYPES
 #include "ptypes.h"
 #include "rcsdefs.h"
+#include "sccsdefs.h"
 #include <ctype.h>
+#include <errno.h>
 extern	FILE	*tmpfile();
+extern	char	*bldcmd2();
 extern	char	*rcs_dir();
 
 #define SOH	001		/* SCCS lines start with SOH (Control-A) */
@@ -93,7 +117,6 @@ extern	char	*rcs_dir();
 #define GET	"getdelta -f"
 #define CI	"checkin -f"
 #define CO	"checkout"
-#define	_Q(s)	(quiet ? "-s" : "")
 #define	WHOAMI	"sccs2rcs"
 
 #define prefix(a, b)	(strncmp(a, b, strlen(a)) == 0)
@@ -162,6 +185,12 @@ unsigned size;
     return (p);
 }
 
+#ifdef	lint
+#define	XALLOC(cast)	((cast *)0)
+#else
+#define	XALLOC(cast)	(cast *)xalloc(sizeof(cast))
+#endif
+
 /*
  * Allocate space for string and copy str to it.
  */
@@ -198,7 +227,7 @@ char *line;
 
     if (sscanf (line, "%*s %*s %s", rev) < 1)
 	quit("delta format");
-    delta = (DELTA *) xalloc (sizeof (DELTA));
+    delta = XALLOC(DELTA);
     delta -> revision = string (rev);
     delta -> commentary = NULL;
     return (delta);
@@ -215,7 +244,7 @@ char *old_str, *str;
 	return (string (str));
 
     len = strlen (old_str) + strlen (str);
-    newstring = (char *) xalloc ((unsigned) (len + 1));
+    newstring = xalloc ((unsigned) (len + 1));
     (void)strcat (strcpy (newstring, old_str), str);
     free (old_str);
     return (newstring);
@@ -242,7 +271,7 @@ FILE *fd;
 	if (line[0] == SOH && line[1] == 'U')	/* End of userlist */
 	    break;
 	trimtail (line);
-	newuser = (USERLIST *) xalloc (sizeof (USERLIST));
+	newuser = XALLOC(USERLIST);
 	newuser -> user = string (line);
 	newuser -> next = userlist;
 	userlist = newuser;
@@ -267,24 +296,10 @@ FILE *fd;
 	switch (line[1])
 	{
 	    case 'd': 		       /* New delta */
-#ifdef	PURDUE_EE
-		if (line[3] == 'R')
-		    while (fgets (line, sizeof line, fd))
-			if (line[0] == SOH && line[1] == 'd' && line[3] != 'R')
-			    break;
-#endif
 		delta = new_delta (line);
-#ifdef	PURDUE_EE
-		if (!head || strcmp(delta -> revision, head -> revision)) {
-#endif
-		    delta -> next = head;
-		    head = delta;
-#ifdef	PURDUE_EE
-		}
-#endif
-#ifndef	PURDUE_EE
+		delta->next = head;
+		head = delta;
 		break;
-#endif
 	    case 'c': 		       /* Commentary */
 		delta -> commentary = concat (delta -> commentary, &line[3]);
 		break;
@@ -303,12 +318,39 @@ FILE *fd;
 }
 
 static
-invoke(command)
-char	*command;
+invoke(command, args)
+char	*command, *args;
 {
 	if (trace || verbose)
-		printf ("%% %s\n", command);
-	return (trace ? 0 : system (command));
+		shoarg (stdout, command, args);
+	return (trace ? 0 : execute (command, args));
+}
+
+
+/*
+ * Build an initiate a command via a pipe
+ */
+static
+FILE *
+to_pipe(command, args)
+char	*command, *args;
+{
+	extern FILE *popen();
+	char	temp[BUFSIZ];
+
+	if (trace || verbose)
+		shoarg (stdout, command, args);
+	return trace
+		? 0
+		: popen(bldcmd2(temp, command, args, sizeof(temp)), "w");
+}
+
+static
+RCSarg(command)
+char	*command;
+{
+	*command = EOS;
+	if (quiet) catarg(command, "-q");
 }
 
 /*
@@ -332,21 +374,10 @@ char *sccsfile;
 {
     HEADER *header;
     FILE *fd;
-    workfile = 0;
-    if (strncmp (sname (sccsfile), "s.", 2) != 0)	/* An SCCS file? */
-    {
-	static	char	temp[BUFSIZ];
 
-	FORMAT(temp, "sccs/s.%s", sccsfile);
-	if (fexists(sccsfile))
-		workfile = sccsfile;
-	if (fexists(temp))
-		sccsfile = temp;
-	else {
-		WARN "%s: not an SCCS file.\n", sccsfile);
-		return (NULL);
-	}
-    }
+    if (!fexists(workfile = sccs2name(sccsfile, FALSE)))
+	workfile = 0;
+    sccsfile = name2sccs(sccsfile, FALSE);
     if ((fd = fopen (sccsfile, "r")) == NULL)
     {
 	WARN "%s: cannot open.\n", sccsfile);
@@ -354,7 +385,7 @@ char *sccsfile;
     }
     header = collect_header (fd);
     FCLOSE (fd);
-    if (trace)
+    if (trace || verbose > 1)
 	print_header (sccsfile, header);
     build_new_rcs_file (header, sccsfile);
     return (header);
@@ -368,76 +399,87 @@ char *rcsfile;
     int count;
     if (userlist == NULL)
 	return (0);
-    FORMAT (command, "%s -a", RCS);
+    RCSarg(command);
+    (void)strcat (command, "-a");
     for (count = 0; userlist; userlist = userlist -> next, count++)
     {
 	if (count > 0)
 	    (void)strcat (command, ",");
 	(void)strcat (command, userlist -> user);
     }
-    (void) strcat (strcat (command, " "), rcsfile);
-    return (invoke(command));
+    (void)strcat(command, " ");
+    catarg(command, rcsfile);
+    return (invoke(RCS, command));
 }
 
 initialize_rcsfile (description, rcsfile)
 char *description, *rcsfile;
 {
     char command[BUFSIZ];
-    extern FILE *popen();
     FILE *pd;
 
-    mkdir(rcs_dir(), 0755);		/* forces common naming convention */
-    FORMAT (command, "%s -i -U ", RCS);
-    if (comment_opt)
-	FORMAT(command + strlen(command), "-c'%s' ", comment_opt);
-    (void)strcat(command, rcsfile);
-    if (trace || verbose)
-	printf ("%% %s\n", command);
-    if (trace)
-    {
-	printf ("Description:\n%s\n", null(description));
-	return (0);
+    if (mkdir(rcs_dir(), 0755) < 0) {	/* forces common naming convention */
+	if (errno != EEXIST)
+	    failed("mkdir");
     }
-    if ((pd = popen (command, "w")) == NULL)
+
+    RCSarg(command);
+    catarg(command, "-i");
+    catarg(command, "-U");
+
+    if (comment_opt) {
+	char temp[BUFSIZ];
+	FORMAT(temp, "-c%s", comment_opt);
+	catarg(command, temp);
+    }
+    catarg(command, rcsfile);
+    if (pd = to_pipe(RCS, command)) {
+	FPRINTF (pd, "%s", description ? description : "\n");
+	return (pclose (pd));
+    } else if (trace) {
+	PRINTF ("Description:\n%s\n", null(description));
+	return (0);
+    } else
 	return (-1);
-    fprintf (pd, "%s", description ? description : "\n");
-    return (pclose (pd));
 }
 
 install_deltas (delta, sccsfile, rcsfile)
 register DELTA *delta;
 char *sccsfile, *rcsfile;
 {
+    FILE *pd;
     char command[BUFSIZ];
+    char version[BUFSIZ];
+
     for (; delta; delta = delta -> next)
     {
+	FORMAT(version, "-r%s", delta->revision);
+	if (trace || verbose > 1)
+	    PRINTF("# installing delta %s\n", version);
+
 	/*
 	 * Get the SCCS file.
 	 */
 
-	FORMAT (command, "%s %s -r%s %s",
-	    GET, _Q(s), delta -> revision, sccsfile);
-	if (invoke(command) < 0)
+	*command = EOS;
+	if (quiet)	catarg(command, "-s");
+	catarg(command, version);
+	catarg(command, sccsfile);
+	if (invoke(GET, command) < 0)
 		return (-1);
 
-	FORMAT (command, "%s %s -r%s %s",
-		CI, _Q(q), delta -> revision, rcsfile);
-	if (trace || verbose)
-	    printf("%% %s\n", command);
-	if (trace)
-	    printf("Commentary:\n%s\n", null(delta -> commentary));
-	else
-	{
-	    extern FILE *popen ();
-	    FILE *pd;
-	    int x;
-	    if ((pd = popen (command, "w")) == NULL)
+	RCSarg(command);
+	catarg(command, version);
+	catarg(command, rcsfile);
+
+	if (pd = to_pipe(CI, command)) {
+	    FPRINTF (pd, delta->commentary);
+	    if (pclose (pd) < 0)
 		return (-1);
-	    if (delta -> commentary)
-		fprintf (pd, delta -> commentary);
-	    if ((x = pclose (pd)) != 0)
-		return (x);
-	}
+	} else if (trace) {
+	    PRINTF("Commentary:\n%s\n", null(delta->commentary));
+	} else
+	    return (-1);
     }
     return (0);
 }
@@ -446,8 +488,10 @@ finalize_rcsfile (rcsfile)
 char *rcsfile;
 {
     char command[BUFSIZ];
-    FORMAT (command, "%s -L %s", RCS, rcsfile);
-    return (invoke (command));
+    RCSarg(command);
+    catarg(command, "-L");
+    catarg(command, rcsfile);
+    return (invoke (RCS, command));
 }
 
 /*
@@ -502,7 +546,7 @@ char	*s;
 {
 	auto	 char	tmp[BUFSIZ];
 	register char	*t;
-	register int	len;
+	register size_t	len;
 	auto	 int	changes = FALSE;
 
 	while (t = strchr(s, '@')) {
@@ -510,7 +554,7 @@ char	*s;
 		&&  t[len] != '"') {
 			s = t;
 			len = strlen(t = strcpy(tmp, t + len)) - 1;
-			while (	(len >= 0)
+			while (	(len != 0)
 			&&	(ispunct(t[len]) || isspace(t[len]) ) )
 					len--;
 			len++;
@@ -622,6 +666,7 @@ edit_keywords(filename)
 char	*filename;
 {
 	auto	char	bfr[BUFSIZ];
+	auto	char	tmp[BUFSIZ];
 	auto	FILE	*fpT,
 			*fpS;
 	auto	struct	stat	sb;
@@ -630,8 +675,10 @@ char	*filename;
 
 	edit_lines = 0;
 	find_comment(filename);
-	FORMAT(bfr, "%s %s %s", CO, _Q(q), filename);
-	if (invoke(bfr) < 0)
+
+	RCSarg(bfr);
+	catarg(bfr, filename);
+	if (invoke(CO, bfr) < 0)
 		return;
 	if (stat(filename, &sb) < 0)
 		failed(filename);
@@ -654,11 +701,13 @@ char	*filename;
 			if (setmtime(filename, sb.st_mtime) < 0)
 				failed("(setmtime)");
 		if (verbose) {
-			FORMAT(bfr, "%s %s", "rcsdiff", filename);
-			(void)invoke(bfr);
+			(void)invoke("rcsdiff", filename);
 		}
-		FORMAT(bfr, "%s -m%s\\ keywords %s", CI, WHOAMI, filename);
-		(void)invoke(bfr);
+		*bfr = EOS;
+		FORMAT(tmp, "-m%s keywords", WHOAMI);
+		catarg(bfr, tmp);
+		catarg(bfr, filename);
+		(void)invoke(CI, bfr);
 	}
 	FCLOSE(fpT);
 }
@@ -692,24 +741,24 @@ register HEADER *header;
     register DELTA *d;
     register USERLIST *u;
 
-    printf ("\n%s:\n", sccsfile);
-    printf ("------------------------------------------------------------\n");
+    PRINTF ("\n%s:\n", sccsfile);
+    PRINTF ("------------------------------------------------------------\n");
     if (header -> description)
-	printf ("Descriptive text:\n%s", header -> description);
+	PRINTF ("Descriptive text:\n%s", header -> description);
 
     if (header -> userlist)
     {
-	printf ("\nUser access list:\n");
+	PRINTF ("\nUser access list:\n");
 	for (u = header -> userlist; u; u = u -> next)
-	    printf ("%s\n", u -> user);
+	    PRINTF ("%s\n", u -> user);
     }
 
     for (d = header -> deltas; d; d = d -> next)
     {
-	printf ("\nRelease: %s\n", d -> revision);
-	printf ("Commentary:\n%s", d -> commentary);
+	PRINTF ("\nRelease: %s\n", d -> revision);
+	PRINTF ("Commentary:\n%s", d -> commentary);
     }
-    printf ("------------------------------------------------------------\n");
+    PRINTF ("------------------------------------------------------------\n");
 }
 
 main (argc, argv)
@@ -733,8 +782,8 @@ char *argv[];
 			break;
 		case 'v':
 			if (verbose)
-				quiet = TRUE;
-			verbose = TRUE;
+				quiet = FALSE;
+			verbose++;
 			break;
 		case 't': 
 			trace = TRUE;
@@ -753,8 +802,9 @@ char *argv[];
 		if (read_sccs (sccsfile) != NULL) {
 			if (workfile) {	/* restore original working file */
 				auto	char	command[BUFSIZ];
-				FORMAT(command, "%s %s %s", CO,_Q(q),workfile);
-				(void)invoke(command);
+				RCSarg(command);
+				catarg(command, workfile);
+				(void)invoke(CO, command);
 			}
 		} else
 			errors++;
