@@ -1,3 +1,8 @@
+2002-04-30  Thomas E. Dickey  <dickey@invisible-island.net>
+
+	* src/getdelta/src/getdelta.c:
+	jedmics/config/make_dll.w95 used ":0" for "2000", so I tweaked to workaround
+
 2002-04-21  Thomas E. Dickey  <dickey@invisible-island.net>
 
 	* configure: RCS_BASE

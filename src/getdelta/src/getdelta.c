@@ -3,6 +3,8 @@
  * Author:	T.E.Dickey
  * Created:	26 Mar 1986 (as a procedure)
  * Modified:
+ *		30 Apr 2002, use sccsyear() to isolate against buggy data from
+ *			     SunOS 4.x
  *		21 Apr 2002, don't add 1900 to year for packdate().
  *		30 Jun 2000, if -f option is given, do not exit with error-code.
  *		27 Jun 2000, Y2K fix. 
@@ -59,7 +61,7 @@
 #include	<ptypes.h>
 #include	<sccsdefs.h>
 
-MODULE_ID("$Id: getdelta.c,v 6.25 2002/04/21 15:43:52 tom Exp $")
+MODULE_ID("$Id: getdelta.c,v 6.26 2002/04/30 11:03:26 tom Exp $")
 
 /* local definitions */
 #define	NAMELEN		80	/* length of tokens in sccs-header */
@@ -310,24 +312,21 @@ void	PostProcess (
 	time_t	date	= 0;
 	int	got	= FALSE,
 		year = 0, mon = 0, mday = 0,
-		hour = 0, min = 0, sec = 0, added, deleted;
+		hour = 0, min = 0, sec = 0;
 	char	version[NAMELEN];
-	char	pgmr[NAMELEN];
 	char	bfr[BUFSIZ];
+	char	bfr2[BUFSIZ];
 	char	*s;
-
-	static	char	fmt[] = "d D %s %d/%d/%d %d:%d:%d %s %d %d";
 
 	if ((fp = fopen (s_file, "r")) != NULL) {
 		newzone(5,0,FALSE);	/* interpret in EST/EDT zone */
 		while ((s = fgets(bfr, sizeof(bfr), fp)) != 0
 		  &&   (*s++ == CTL_A)) {
-			if (sscanf (s, fmt, version,
-					&year, &mon,  &mday,
-					&hour, &min, &sec,
-					pgmr, &added, &deleted) == 10) {
-				if (year < 38)
-					year += 100;
+			if (sscanf(s, "d D %s %[^/]/%d/%d %d:%d:%d ",
+					version,
+					bfr2, &mon, &mday,
+					&hour, &min, &sec) == 7
+				 && ((year = sccsyear(bfr2)) > 0)) {
 				date = packdate(year, mon, mday, hour, min, sec);
 #ifdef CMV_PATH	/* for CmVision */
 				if ((s = fgets(bfr, sizeof(bfr), fp)) != 0
