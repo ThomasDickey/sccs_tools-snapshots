@@ -1,3 +1,171 @@
+1989-07-10  dickey@software.org
+
+	* user/Makefile: corrected 'destroy' rule
+
+1989-07-10  ste_cm@software.org
+
+	* user/Makefile: BASELINE Mon Jul 10 09:31:07 EDT 1989
+
+	* user/Makefile: BASELINE Tue Jun 18 08:04:39 1991 -- apollo sr10.3
+
+1989-07-10  dickey@software.org
+
+	* src/sccs2rcs/test/Makefile: corrected 'destroy' rule
+
+1989-07-10  ste_cm@software.org
+
+	* src/sccs2rcs/test/Makefile: BASELINE Mon Jul 10 09:19:20 EDT 1989
+
+1989-07-10  dickey@software.org
+
+	* src/sccs2rcs/src/Makefile: corrected 'destroy', 'source' rules
+
+1989-07-10  ste_cm@software.org
+
+	* src/sccs2rcs/src/Makefile: BASELINE Mon Jul 10 09:22:04 EDT 1989
+
+1989-07-10  dickey@software.org
+
+	* src/sccs2rcs/Makefile: corrected 'destroy' rule
+
+1989-07-10  ste_cm@software.org
+
+	* src/sccs2rcs/Makefile: BASELINE Mon Jul 10 09:23:25 EDT 1989
+
+	* src/sccs2rcs/Makefile:
+	BASELINE Mon Jul 20 12:41:28 1992 -- CM_TOOLS #11
+
+	* src/sccs2rcs/Makefile: BASELINE Tue Dec 17 11:56:35 1991
+
+	* src/sccs2rcs/Makefile:
+	BASELINE Tue Jun 18 08:04:39 1991 -- apollo sr10.3
+
+1989-07-10  dickey@software.org
+
+	* src/putdelta/test/Makefile: corrected 'destroy' rule
+
+1989-07-10  ste_cm@software.org
+
+	* src/putdelta/test/Makefile: BASELINE Mon Jul 10 09:24:06 EDT 1989
+
+	* src/putdelta/test/Makefile:
+	BASELINE Mon Jul 20 12:41:28 1992 -- CM_TOOLS #11
+
+	* src/putdelta/test/Makefile: BASELINE Tue Dec 17 11:56:35 1991
+
+	* src/putdelta/test/Makefile:
+	BASELINE Tue Jun 18 08:04:39 1991 -- apollo sr10.3
+
+1989-07-10  dickey@software.org
+
+	* src/putdelta/src/Makefile: corrected 'destroy' rule
+
+1989-07-10  ste_cm@software.org
+
+	* src/putdelta/src/Makefile: BASELINE Mon Jul 10 09:25:16 EDT 1989
+
+1989-07-10  dickey@software.org
+
+	* src/putdelta/Makefile: corrected 'destroy' rule
+
+1989-07-10  ste_cm@software.org
+
+	* src/putdelta/Makefile: BASELINE Mon Jul 10 09:26:46 EDT 1989
+
+	* src/putdelta/Makefile:
+	BASELINE Mon Jul 20 12:41:28 1992 -- CM_TOOLS #11
+
+	* src/putdelta/Makefile: BASELINE Tue Dec 17 11:56:35 1991
+
+	* src/putdelta/Makefile:
+	BASELINE Tue Jun 18 08:04:39 1991 -- apollo sr10.3
+
+1989-07-10  dickey@software.org
+
+	* src/getdelta/test/Makefile: corrected 'destroy' rule
+
+1989-07-10  ste_cm@software.org
+
+	* src/getdelta/test/Makefile: BASELINE Mon Jul 10 09:27:34 EDT 1989
+
+	* src/getdelta/test/Makefile:
+	BASELINE Mon Jul 20 12:41:28 1992 -- CM_TOOLS #11
+
+	* src/getdelta/test/Makefile: BASELINE Tue Dec 17 11:56:35 1991
+
+	* src/getdelta/test/Makefile:
+	BASELINE Tue Jun 18 08:04:39 1991 -- apollo sr10.3
+
+1989-07-10  dickey@software.org
+
+	* src/getdelta/src/Makefile: corrected 'destroy', 'sources' rules
+
+1989-07-10  ste_cm@software.org
+
+	* src/getdelta/src/Makefile: BASELINE Mon Jul 10 09:28:43 EDT 1989
+
+1989-07-10  dickey@software.org
+
+	* src/getdelta/Makefile: corrected 'destroy' rule
+
+1989-07-10  ste_cm@software.org
+
+	* src/getdelta/Makefile: BASELINE Mon Jul 10 09:30:12 EDT 1989
+
+	* src/getdelta/Makefile:
+	BASELINE Mon Jul 20 12:41:28 1992 -- CM_TOOLS #11
+
+	* src/getdelta/Makefile: BASELINE Tue Dec 17 11:56:35 1991
+
+	* src/getdelta/Makefile:
+	BASELINE Tue Jun 18 08:04:39 1991 -- apollo sr10.3
+
+1989-07-10  dickey@software.org
+
+	* certify/Makefile: corrected 'destroy' rule
+
+1989-07-10  ste_cm@software.org
+
+	* certify/Makefile: BASELINE Mon Jul 10 09:16:36 EDT 1989
+
+	* certify/Makefile: BASELINE Mon Jul 20 12:41:28 1992 -- CM_TOOLS #11
+
+	* certify/Makefile: BASELINE Tue Dec 17 11:56:35 1991
+
+	* certify/Makefile: BASELINE Tue Jun 18 08:04:39 1991 -- apollo sr10.3
+
+1989-07-10  dickey@software.org
+
+	* bin/Makefile: corrected 'destroy' rule
+
+1989-07-10  ste_cm@software.org
+
+	* bin/Makefile: BASELINE Mon Jul 10 09:15:53 EDT 1989
+
+	* bin/Makefile: BASELINE Tue Jun 18 08:04:39 1991 -- apollo sr10.3
+
+1989-07-10  dickey@software.org
+
+	* Makefile: corrected 'destroy' rule
+
+1989-07-10  ste_cm@software.org
+
+	* Makefile: BASELINE Mon Jul 10 09:14:49 EDT 1989
+
+1989-07-10  dickey@software.org
+
+	* src/Makefile: corrected FIRST, destroy rules
+
+1989-07-10  ste_cm@software.org
+
+	* src/Makefile: BASELINE Mon Jul 10 09:18:37 EDT 1989
+
+	* src/Makefile: BASELINE Mon Jul 20 12:41:28 1992 -- CM_TOOLS #11
+
+	* src/Makefile: BASELINE Tue Dec 17 11:56:35 1991
+
+	* src/Makefile: BASELINE Tue Jun 18 08:04:39 1991 -- apollo sr10.3
+
 1989-06-12  dickey@software.org
 
 	* certify/config.txt: added note about dependency on CM_TOOLS

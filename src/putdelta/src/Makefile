@@ -1,4 +1,4 @@
-# $Header: /users/source/archives/sccs_tools.vcs/src/putdelta/src/RCS/Makefile,v 1.5 1989/03/29 13:31:34 dickey Exp $
+# $Header: /users/source/archives/sccs_tools.vcs/src/putdelta/src/RCS/Makefile,v 2.0 1989/07/10 08:38:01 ste_cm Rel $
 # Make-file for SCCS check-in utilities
 #
 ####### (Environment) ##########################################################
@@ -26,7 +26,8 @@ all:		$(ALL)
 #
 clean:				; rm -f *.o *.out
 clobber:	clean		; rm -f $(ALL)
-destroy:			; rm -f *
+destroy:
+	sh -c 'for i in *;do case $$i in RCS);; *) rm -f $$i;;esac;done'
 sources:	$(SRCS)
 #
 install:	$B/putdelta\
