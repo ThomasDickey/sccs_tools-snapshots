@@ -1,23 +1,14 @@
 #ifndef	lint
-static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/src/RCS/sccsget.c,v 3.0 1991/05/24 08:13:12 ste_cm Rel $";
+static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/src/RCS/sccsget.c,v 3.3 1991/06/20 15:54:15 dickey Exp $";
 #endif
 
 /*
  * Title:	sccsget.c (sccs get-tree)
  * Author:	T.E.Dickey
  * Created:	23 May 1991 (from sccsget.sh and rcsget.c)
- * $Log: sccsget.c,v $
- * Revision 3.0  1991/05/24 08:13:12  ste_cm
- * BASELINE Tue Jun 18 08:04:39 1991 -- apollo sr10.3
- *
- *		Revision 2.2  91/05/24  08:13:12  dickey
- *		lint (apollo sr10.3)
+ * Modified:
+ *		20 Jun 1991, pass-thru "-e" option, use 'shoarg()'
  *		
- *		Revision 2.1  91/05/23  13:11:49  dickey
- *		RCS_BASE
- *		
- *		
- *
  * Function:	Use SCCS-get to checkout one or more files from the sccs-
  *		directory which is located in the current working directory.
  *		Then, use 'sccsdate' to set the modification date of the
@@ -61,13 +52,20 @@ char	*name;
 	auto	char	args[BUFSIZ];
 	auto	char	*working = sccs2name(name,FALSE);
 
-	(void)strcat(strcpy(args, get_opts), working);
-
-	VERBOSE("%% %s %s\n", verb, args);
+	catarg(strcpy(args, get_opts), working);
+	if (!quiet) shoarg(stdout, verb, args);
 	if (!no_op) {
 		if (execute(verb, args) < 0)
 			failed(working);
 	}
+}
+
+static
+fexists(name)
+char	*name;
+{
+	struct	stat	sb;
+	return (stat(name, &sb) >= 0) && isFILE(sb.st_mode);
 }
 
 /*ARGSUSED*/
@@ -81,10 +79,14 @@ struct	stat	*sp;
 			*s = pathcat(tmp, path, name);
 
 	if (sp == 0 || ok_acc < 0) {
-		ok_acc = -1;
-		perror(name);
-		if (!force)
-			exit(FAIL);
+		if (!fexists(name2sccs(name,FALSE))) {
+			ok_acc = -1;
+			perror(name);
+			if (!force)
+				exit(FAIL);
+		}
+		track_wd(path);
+		checkout(name);
 	} else if (isDIR(sp->st_mode)) {
 		abspath(s);		/* get rid of "." and ".." names */
 		if (!a_opt && *pathleaf(s) == '.')
@@ -133,16 +135,17 @@ char	*argv[];
 	register int	j;
 
 	track_wd((char *)0);
-	while ((j = getopt(argc, argv, "ac:nfkr:s")) != EOF) {
+	while ((j = getopt(argc, argv, "ac:efknr:s")) != EOF) {
 		char	tmp[BUFSIZ];
 		FORMAT(tmp, "-%c", j);
 #define	OPT	strcat(tmp, optarg)
 		switch (j) {
 		case 'a':			 a_opt	= TRUE;	break;
 		case 'c': catarg(get_opts, OPT);		break;
+		case 'f':			 force	= TRUE;
+		case 'e':
 		case 'k': catarg(get_opts, tmp);		break;
 		case 'n':			 no_op	= TRUE;	break;
-		case 'f': catarg(get_opts, tmp); force	= TRUE;	break;
 		case 'r': catarg(get_opts, OPT);		break;
 		case 's': catarg(get_opts, tmp); quiet	= TRUE;	break;
 		default:  usage();

@@ -1,27 +1,17 @@
 #ifndef	lint
-static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/src/RCS/getdelta.c,v 3.0 1991/05/24 07:58:35 ste_cm Rel $";
+static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/src/RCS/getdelta.c,v 3.3 1991/06/20 17:18:45 dickey Exp $";
 #endif
 
 /*
  * Title:	getdelta.c (get an sccs-delta)
  * Author:	T.E.Dickey
  * Created:	26 Mar 1986 (as a procedure)
- * $Log: getdelta.c,v $
- * Revision 3.0  1991/05/24 07:58:35  ste_cm
- * BASELINE Tue Jun 18 08:04:39 1991 -- apollo sr10.3
- *
- *		Revision 2.2  91/05/24  07:58:35  dickey
- *		lint (apollo sr10.3)
- *		
- *		Revision 2.1  91/05/23  09:27:31  dickey
- *		apollo sr10.3 cpp complains about endif-tags
- *		
- *		Revision 1.9  89/03/22  09:24:38  dickey
- *		sccs2rcs keywords
- *		
+ * Modified:
+ *		20 Jun 1991, pass-thru "-e" option. Use 'shoarg()'.
+ *			     Use 'sccs2name()' and 'name2sccs()'.
  *		22 Mar 1989, corrected 'same()' code so we can get correct
  *			     date from branches.
- *		02 Sep 1988, use 'sccs_dir()', dropped "-d" option and GET_PATH.
+ *		02 Sep 1988, dropped "-d" option and GET_PATH.
  *		09 Aug 1988, corrected overlapping "-s", "-k" options.
  *		29 Jul 1988, renamed from 'sccsbase'.  Preserve executable-mode
  *			     of extracted file (see 'putdelta').
@@ -48,21 +38,21 @@ static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/
 
 #define	STR_PTYPES
 #include	"ptypes.h"
+#include	"sccsdefs.h"
 
 #include	<ctype.h>
 #include	<time.h>
 extern	long	packdate();
 extern	char	*ctime();
-extern	char	*sccs_dir();
-extern	char	*strcpy();
-extern	char	*strrchr();
+extern	char	*pathcat();
+extern	char	*relpath();
 extern	time_t	cutoff();
 
 extern	char	*optarg;
 extern	int	optind;
 
 /* local definitions */
-#define	YELL	(void) fprintf(stderr,
+#define	YELL	(void) FPRINTF(stderr,
 #define	TELL	if (!silent) PRINTF(
 
 /************************************************************************
@@ -191,22 +181,6 @@ int	*mode_;
 }
 
 /*
- * See if the name corresponds to an sccs "s." file
- */
-static
-char	*
-isSCCS(name)
-char	*name;
-{
-register char *s = strrchr(name, '/');
-	if (!s) s = name;
-	else	s++;
-	if (!strncmp(s, "s.", 2))
-		return (s+2);
-	return (0);
-}
-
-/*
  * Process a single file.  If we are given the name of a non-sccs file, compute
  * the name of the corresponding sccs file.  Otherwise, compute the name of the
  * file to be checked-out from the sccs file name.
@@ -214,47 +188,85 @@ register char *s = strrchr(name, '/');
 DoFile (name, s_file)
 char	*name, *s_file;
 {
-char	*s;
+	auto	int	ok	= TRUE;
+	auto	char	old_wd[BUFSIZ],
+			new_wd[BUFSIZ],
+			buffer[BUFSIZ],
+			*s;
 
-	if (s = isSCCS(name)) {
-		(void)strcpy(s_file, name);
-		name = s;
+	/*
+	 * SCCS 'get' extracts only into the current directory.  Perform a
+	 * 'chdir()' to accommodate this if necessary.
+	 */
+	(void)strcpy(buffer, sccs2name(name, FALSE));
+	if (s = strrchr(buffer, '/')) {
+		if (!getwd(old_wd))
+			failed("getwd");
+		*s = EOS;
+		name = ++s;
+		(void)pathcat(new_wd, old_wd, buffer);
+		abspath(strcpy(s_file, name2sccs(name, FALSE)));
+		if (!silent) {
+			char	temp[BUFSIZ];
+			shoarg(stdout, "cd", relpath(temp, old_wd, new_wd));
+		}
+		if (chdir(new_wd) < 0)
+			failed(new_wd);
+		(void)relpath(s_file, new_wd, s_file);
 	} else {
-		FORMAT(s_file, "%s/s.%s", sccs_dir(), name);
+		*old_wd = *new_wd = EOS;
+		(void)strcpy(s_file, name2sccs(name, FALSE));
 	}
 
+	/*
+	 * Check to see if we think that we can extract the file
+	 */
 	if (isFILE(s_file,&s_mode) > 0) {
 		if (noop) {
 			if (isFILE(name,(int *)0) && !force) {
 				YELL "?? \"%s\" already exists\n", name);
-				return;
+				ok = FALSE;
 			}
-		} else {
-			if (isFILE(name,(int *)0)) {
-				if (force) {
-					if (unlink(name) < 0)
-						failed(name);
-				} else {
-					YELL "?? \"%s\" already exists\n", name);
-					return;
-				}
-			}
-			TELL "get %s\n", get_opts);
-			newzone(0,0,FALSE);	/* execute in GMT zone */
-			if (execute("get", get_opts) < 0) {
-				failed(name);
+		} else if (isFILE(name,(int *)0)) {
+			if (force) {
+				if (unlink(name) < 0)
+					failed(name);
+			} else {
+				YELL "?? \"%s\" already exists\n", name);
+				ok = FALSE;
 			}
 		}
-		PostProcess(name, s_file);
 	} else {
 		YELL "?? \"%s\" not found\n", s_file);
+		ok = FALSE;
+	}
+
+	/*
+	 * Process the file if we found no errors
+	 */
+	if (ok) {
+		if (!silent) shoarg(stdout, "get", get_opts);
+		newzone(0,0,FALSE);	/* execute in GMT zone */
+		if (execute("get", get_opts) < 0)
+			failed(name);
+		PostProcess(name, s_file);
+	}
+
+	/*
+	 * Restore the working-directory if we had to alter it.
+	 */
+	if (*old_wd != EOS) {
+		if (!silent)
+			shoarg(stdout, "cd", relpath(old_wd, new_wd, old_wd));
+		if (chdir(old_wd) < 0)
+			failed("chdir");
 	}
 }
 
 static
 usage ()
 {
-	YELL "usage: getdelta [-rSID] [-cCUTOFF] [-kns] files\n");
+	YELL "usage: getdelta [-rSID] [-cCUTOFF] [-efkns] files\n");
 	(void)exit(FAIL);
 	/*NOTREACHED*/
 }
@@ -279,7 +291,7 @@ char	*argv[];
 	oldzone();
 	s = get_opts;
 
-	while ((j = getopt(argc, argv, "r:c:sknf")) != EOF) {
+	while ((j = getopt(argc, argv, "c:efknr:s")) != EOF) {
 		switch (j) {
 		/* options interpreted & pass through to "get" */
 		case 'r':
@@ -301,6 +313,7 @@ char	*argv[];
 			silent	= TRUE;
 			FORMAT(s, "-%c ", j);
 			break;
+		case 'e':
 		case 'k':
 			FORMAT(s, "-%c ", j);
 			writeable = S_IWRITE;

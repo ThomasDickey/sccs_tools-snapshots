@@ -1,32 +1,17 @@
 #ifndef	lint
-static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/src/RCS/sccsput.c,v 3.0 1991/06/07 08:24:57 ste_cm Rel $";
+static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/src/RCS/sccsput.c,v 3.1 1991/06/20 17:36:23 dickey Exp $";
 #endif
 
 /*
  * Title:	sccsput.c (sccs put-tree)
  * Author:	T.E.Dickey
  * Created:	08 May 1990 (from sccsput.sh and rcsput.c)
- * $Log: sccsput.c,v $
- * Revision 3.0  1991/06/07 08:24:57  ste_cm
- * BASELINE Tue Jun 18 08:04:39 1991 -- apollo sr10.3
- *
- *		Revision 2.5  91/06/07  08:24:57  dickey
- *		use 'getopt()'; cleanup option processing, including those
- *		that we pass-thru to 'putdelta'
+ * Modified:
+ *		20 Jun 1991, use 'shoarg()'.
+ *		07 Jun 1991, use 'getopt()'; cleanup option processing,
+ *			including those that we pass-thru to 'putdelta'
+ *			corrected pathname of "-l" value
  *		
- *		Revision 2.4  91/06/07  07:58:52  dickey
- *		corrected pathname of "-l" value
- *		
- *		Revision 2.3  91/05/24  08:51:12  dickey
- *		lint (apollo sr10.3)
- *		
- *		Revision 2.2  91/05/23  09:25:57  dickey
- *		apollo sr10.3 cpp complains about endif-tags
- *		
- *		Revision 2.1  90/05/08  14:31:46  dickey
- *		RCS_BASE
- *		
- *
  * Function:	Use 'putdelta' to archive one or more files from the
  *		SCCS-directory which is located in the current working
  *		directory, and then, to set the delta date of the  checked-in
@@ -191,7 +176,7 @@ char	*name;
 			first	? "Initial SCCS insertion of"
 				: "Applying SCCS delta to",
 			name);
-		VERBOSE("%% %s %s\n", verb, args);
+		if (!quiet) shoarg(stdout, verb, args);
 		if (execute(verb, args) < 0)
 			failed(working);
 	} else {
@@ -275,7 +260,6 @@ char	*argv[];
 	extern	char	*optarg;
 
 	register int	j;
-	register char	*s;
 
 	track_wd((char *)0);
 	pager = dftenv("more -l", "PAGER");

@@ -1,3 +1,22 @@
+1991-06-20  dickey@software.org
+
+	* src/putdelta/src/sccsput.c, src/putdelta/src/putdelta.c:
+	use 'shoarg()'
+
+	* src/getdelta/src/getdelta.c:
+	modified to work with 'sccs2name()' and 'name2sccs()' so that
+	we can handle some extended-paths (e.g., "getdelta xx/aa").
+
+	* src/getdelta/src/sccsget.c:
+	fixed so that if user asks to get a file not currently
+	extracted, we check for the archive.
+
+	* src/getdelta/src/sccsget.c, src/getdelta/src/getdelta.c:
+	use 'shoarg()'
+
+	* src/getdelta/src/getdelta.c, src/getdelta/src/sccsget.c:
+	pass-thru "-e" option
+
 1991-06-07  dickey@software.org
 
 	* certify/README: update for apollo sr10.3

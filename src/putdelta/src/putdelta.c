@@ -1,33 +1,13 @@
 #ifndef	lint
-static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/src/RCS/putdelta.c,v 3.0 1991/05/24 08:26:48 ste_cm Rel $";
+static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/src/RCS/putdelta.c,v 3.1 1991/06/20 17:33:53 dickey Exp $";
 #endif
 
 /*
  * Title:	putdelta.c (create new or initial sccs delta)
  * Author:	T.E.Dickey
  * Created:	25 Apr 1986
- * $Log: putdelta.c,v $
- * Revision 3.0  1991/05/24 08:26:48  ste_cm
- * BASELINE Tue Jun 18 08:04:39 1991 -- apollo sr10.3
- *
- *		Revision 2.4  91/05/24  08:26:48  dickey
- *		lint (apollo sr10.3)
- *		
- *		Revision 2.3  91/05/23  09:25:28  dickey
- *		apollo sr10.3 cpp complains about cpp-tags
- *		
- *		Revision 2.2  90/05/08  14:33:42  dickey
- *		lint
- *		
- *		Revision 2.1  89/10/16  16:56:50  dickey
- *		show error if we cannot execute subprocess
- *		
- *		Revision 2.0  88/09/13  09:00:19  ste_cm
- *		BASELINE Mon Jul 10 09:25:16 EDT 1989
- *		
- *		Revision 1.6  88/09/13  09:00:19  dickey
- *		sccs2rcs keywords
- *		
+ * Modified:
+ *		20 Jun 1991, use 'shoarg()'
  *		13 Sep 1988, use 'catchall()'
  *		06 Sep 1988, 'admin' doesn't recognize "-s" switch.
  *		02 Sep 1988, use 'sccs_dir()'
@@ -502,8 +482,7 @@ char	*name;
 		if (!MakeDirectory())
 			return;
 	}
-	TELL("** %s %s\n", put_verb, put_opts);
-
+	if (!silent) shoarg(stdout, put_verb, put_opts);
 	if (execute(put_verb, put_opts) < 0) {
 		perror(put_verb);
 		return;
@@ -545,11 +524,4 @@ char	*argv[];
 		DoFile (argv[j]);
 	(void)exit(SUCCESS);
 	/*NOTREACHED*/
-}
-
-failed(s)
-char	*s;
-{
-	perror(s);
-	(void)exit(FAIL);
 }
