@@ -70,7 +70,7 @@
 
 #include	<errno.h>
 
-MODULE_ID("$Id: putdelta.c,v 6.9 2000/06/30 14:14:12 tom Exp $")
+MODULE_ID("$Id: putdelta.c,v 6.10 2000/07/03 20:02:10 tom Exp $")
 
 /************************************************************************
  *	local definitions						*
@@ -698,7 +698,7 @@ _MAIN
 
 	catarg(delta_opts, "-n");
 	fpT = tmpfile();
-	while ((j = getopt(argc, argv, "bfknr:sy:")) != EOF)
+	while ((j = getopt(argc, argv, "bfknr:sYy:")) != EOF)
 		switch (j) {
 		case 'b':
 			catarg(admin_opts, "-b");
@@ -720,6 +720,10 @@ _MAIN
 		case 's':
 			silent	= TRUE;
 			catarg(delta_opts, "-s");
+			break;
+		case 'Y':
+			catarg(admin_opts, "-y");
+			catarg(delta_opts, "-y");
 			break;
 		case 'y':
 			FORMAT(tmp, "-y%s", optarg);
