@@ -1,10 +1,13 @@
-# $Id: Makefile,v 2.2 1991/04/01 08:23:59 dickey Exp $
+# $Id: Makefile,v 2.3 1991/06/04 16:57:19 dickey Exp $
 # Top-level make-file for SCCS_TOOLS
 #
 # $Log: Makefile,v $
-# Revision 2.2  1991/04/01 08:23:59  dickey
-# changed install-path
+# Revision 2.3  1991/06/04 16:57:19  dickey
+# standardized install-path
 #
+#	Revision 2.2  91/04/01  08:23:59  dickey
+#	changed install-path
+#	
 #	Revision 2.1  89/10/05  10:37:55  dickey
 #	added lint.out, lincnt.out rules
 #	
@@ -13,7 +16,8 @@
 #	
 
 ####### (Development) ##########################################################
-INSTALL_PATH = /local/impact/bin
+INSTALL_BIN = ~ste_cm/bin/`arch`
+INSTALL_DOC = /ste_site/ste/doc		# where we install catman-stuff
 GET	= checkout
 THIS	= Makefile
 MAKE	= make $(MFLAGS) -k$(MAKEFLAGS)	GET=$(GET)
@@ -50,7 +54,7 @@ deinstall:	$(FIRST)
 	cd certificate;	$(MAKE) $@
 	cd src;		$(MAKE) $@
 	cd user;	$(MAKE) $@
-	cd bin;		$(MAKE) $@ INSTALL_PATH=$(INSTALL_PATH)
+	cd bin;		$(MAKE) $@ INSTALL_PATH=$(INSTALL_BIN)
 
 lint.out\
 lincnt.out:	$(MFILES)
@@ -77,4 +81,4 @@ user/Makefile:			; cd user;		$(GET) Makefile
 # Note that we exploit the use of lower-case makefile for this purpose.
 bin/makefile:	bin/Makefile	$(THIS)
 	rm -f $@
-	sed -e s+INSTALL_PATH=.*+INSTALL_PATH=$(INSTALL_PATH)+ bin/Makefile >$@
+	sed -e s+INSTALL_PATH=.*+INSTALL_PATH=$(INSTALL_BIN)+ bin/Makefile >$@
