@@ -1,9 +1,12 @@
-MANIFEST for sccs_tools, version t19960903
+MANIFEST for sccs_tools, version t19970913
 --------------------------------------------------------------------------------
 MANIFEST                        this file
 COPYING                         copyright notice for CM_TOOLS
 Makefile                        top-level directory for SCCS_TOOLS
 README                          top-level read-me file for SCCS_TOOLS
+aclocal.m4                      autoconf macros
+install-sh                      BSD-style install script
+mkdirs.sh                       script to make directory hierarchy
 certify                         subdirectory
 certify/Makefile                make-file for SCCS_TOOLS certificate directory
 certify/README                  certificate "goodness" documentation
