@@ -1,6 +1,6 @@
 #ifndef	lint
 static char *RCSid =
-"$Header: /users/source/archives/sccs_tools.vcs/src/sccs2rcs/src/RCS/sccs2rcs.c,v 2.0 1989/04/28 14:48:28 ste_cm Rel $";
+"$Id: sccs2rcs.c,v 2.1 1989/10/05 10:52:54 dickey Exp $";
 #endif	lint
 
 /*
@@ -8,9 +8,12 @@ static char *RCSid =
  * Author: Ken Greer
  *
  * $Log: sccs2rcs.c,v $
- * Revision 2.0  1989/04/28 14:48:28  ste_cm
- * BASELINE Mon Jul 10 09:22:04 EDT 1989
+ * Revision 2.1  1989/10/05 10:52:54  dickey
+ * changed ident-keyword to 'Id' from 'Header'
  *
+ * Revision 2.0  89/04/28  14:48:28  ste_cm
+ * BASELINE Mon Jul 10 09:22:04 EDT 1989
+ * 
  * Revision 1.11  89/04/28  14:48:28  dickey
  * "toupper" is more portable than "_toupper"
  * 
@@ -510,7 +513,7 @@ char	*s;
 			if (len > 0) {
 				*s++ = '$';
 				/* break up literal because of rcs */
-				(void)strcpy(s, "Header$");
+				(void)strcpy(s, "Id$");
 				s += strlen(s);
 				(void)strcpy(s, tmp+len);
 				changes = TRUE;

@@ -1,4 +1,4 @@
-: '$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/src/RCS/sccsput.sh,v 2.0 1988/07/29 09:14:10 ste_cm Rel $'
+: '$Id: sccsput.sh,v 2.1 1989/10/05 10:47:57 dickey Exp $'
 # Check-in one or more modules to SCCS (T.E.Dickey)
 # 
 # Notes:
@@ -45,7 +45,7 @@ fi
 TRACE=
 SCCS=${SCCS_DIR-sccs}
 #
-if [ -n "$NOTE" ]
+if test -n "$NOTE"
 then
 	echo $NOTE
 fi
@@ -60,7 +60,7 @@ WD=`pwd`
 #
 # Process options
 set -$TRACE `getopt l:bcfns $*`
-if [ $? != 0 ]
+if test $? != 0
 then
 	echo 'usage: checkin [-l LOGFILE] [-bcfns] files'
 	exit 1
@@ -72,7 +72,8 @@ for i in $*
 do	i=$1
 	shift
 	case $i in
-	-l)	D=`dirname $1`
+	-l)	D=`echo $1 | sed -e 's@[^/]*$'@@`
+		D=`cd ${D}.;pwd`
 		F=`basename $1`
 		cd $D
 		LOG=`pwd`/$F
@@ -94,22 +95,23 @@ for i in $*
 do
 	ACT=
 	cd $WD
-	D=`dirname $i`
+	D=`echo $i | sed -e 's@[^/]*$'@@`
+	D=`cd ${D}.;pwd`
 	F=`basename $i`
-	if [ -n "$LOG" ]
+	if test -n "$LOG"
 	then	echo '*** '$WD/$i >>$LOG
 	fi
 	cd $D
 	D=`pwd`
 	i=$F
-	if [ -f $i ]
+	if test -f $i
 	then
-		if [ ! -d $SCCS -a -z "$NOP" ]
+		if test ! -d $SCCS -a -z "$NOP"
 		then	mkdir $SCCS
 		fi
-	elif [ -d $i ]
+	elif test -d $i
 	then
-		if [ $i != $SCCS ]
+		if test $i != $SCCS
 		then	echo '*** recurring to '$i
 			cd $i
 			$0 $OPTS *
@@ -120,7 +122,7 @@ do
 		continue
 	fi
 	j=$SCCS/s.$i
-	if [ -f $j ]
+	if test -f $j
 	then
 		echo '*** Checking differences for "'$i'"'
 		cd /tmp
@@ -131,11 +133,11 @@ do
 			echo '*** no differences found ***'
 		else
 			diff $BLANKS /tmp/$i $i >/tmp/diff$$
-			if [ -z "$SILENT" ]
+			if test -z "$SILENT"
 			then
 				${PAGER-'more'} /tmp/diff$$
 			fi
-			if [ -n "$LOG" ]
+			if test -n "$LOG"
 			then
 				echo appending to logfile
 				cat /tmp/diff$$ >>$LOG
@@ -144,9 +146,9 @@ do
 			ACT="D"
 		fi
 		rm -f /tmp/$i
-	elif [ -f $i ]
+	elif test -f $i
 	then
-		if [ -n "$FORCE" ]
+		if test -n "$FORCE"
 		then	ACT="I"
 		elif (file $i | fgrep -v packed | grep text$)
 		then	ACT="I"
@@ -154,15 +156,15 @@ do
 		fi
 	fi
 #
-	if [ -z "$NOP" -a -n "$ACT" ]
+	if test -z "$NOP" -a -n "$ACT"
 	then
-		if [ -n "$NOTE" ]
+		if test -n "$NOTE"
 		then	putdelta "$NOTE" $i
 		else	putdelta $i
 		fi
-	elif [ -n "$ACT" ]
+	elif test -n "$ACT"
 	then
-		if [ "$ACT" = "I" ]
+		if test "$ACT" = "I"
 		then	echo '--- This would be initial for "'$i'"'
 		else	echo '--- Delta would be applied to "'$i'"'
 		fi
