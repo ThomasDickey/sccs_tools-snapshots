@@ -1,3 +1,9 @@
+1995-03-16  Thomas E. Dickey  <dickey@clark.net>
+
+	* src/getdelta/src/getdelta.c:
+	allow -r, -s options to repeat (filter out repeats; otherwise 'get' will
+	balk)
+
 1995-01-28  Thomas E. Dickey  <dickey@clark.net>
 
 	* src/getdelta/src/getdelta.c: updated ifdef for 'cmv'
