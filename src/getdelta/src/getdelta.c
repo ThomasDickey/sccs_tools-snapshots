@@ -1,5 +1,5 @@
 #ifndef	lint
-static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/src/RCS/getdelta.c,v 6.3 1994/07/15 09:23:25 tom Exp $";
+static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/src/RCS/getdelta.c,v 6.4 1994/07/18 19:38:24 tom Exp $";
 #endif
 
 /*
@@ -104,9 +104,10 @@ _DCL(char *,	version)
 	int	code	= 0;
 	register size_t	len = strlen (sid),
 			cmp = strlen (version);
-	if (len == cmp)
+
+	if (len == cmp) {
 		code = ! strcmp(sid,version);
-	else if (len < cmp && version[len] == '.') {
+	} else if ((len < cmp) && version[len] == '.') {
 		if ((Dots(sid) + 1) == Dots(version))
 			code = ! strncmp(sid,version,len);
 	}
@@ -133,14 +134,7 @@ _DCL(char *,	version)
 				dot++;
 		return (dot == 1);
 	} else if (!(code = same(version))) {
-		char	temp[BUFSIZ];
-		register char *s, *d;
-		for (s = sid, d = temp;
-			*s != EOS && *s != '.';
-				*d++ = *s++);
-		for (s = version; *s != EOS && *s != '.'; s++);
-		(void)strcpy(d,s);
-		code = same(temp);
+		code = !vercmp(version, sid, 1);
 	}
 	return (code);
 }
@@ -179,8 +173,9 @@ void	PostProcess (
 					else if ((got = !sid) != 0)
 						break;
 				}
-				if ((got = bump(version)) != 0)
+				if ((got = bump(version)) != 0) {
 					break;
+				}
 			}
 		}
 		(void)fclose (fp);
