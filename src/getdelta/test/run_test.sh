@@ -1,20 +1,16 @@
-: '$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/test/RCS/run_test.sh,v 2.0 1989/03/29 14:18:22 ste_cm Rel $'
+#!/bin/sh
+# $Id: run_test.sh,v 5.0 1991/05/24 09:15:27 ste_cm Rel $'
 # test-script for 'getdelta'
 #
-# $Log: run_test.sh,v $
-# Revision 2.0  1989/03/29 14:18:22  ste_cm
-# BASELINE Mon Jul 10 09:27:34 EDT 1989
-#
-# Revision 1.1  89/03/29  14:18:22  dickey
-# Initial revision
-# 
+SCCS=${SCCS_DIR-SCCS}
+PATH=`cd ../bin;pwd`:$PATH;	export PATH
 
 W=dummy
-S=sccs/s.$W
-P=sccs/p.$W
+S=$SCCS/s.$W
+P=$SCCS/p.$W
 
-rm -rf sccs $W
-mkdir sccs
+rm -rf $SCCS $W
+mkdir $SCCS
 
 cat <<eof/
 **
@@ -28,16 +24,19 @@ get -s -e $S
 sed -e s/#/##/ Makefile >$W
 delta -s -n -ycomments $S
 
+for tool in getdelta sccsget
+do
 cat <<eof/
 **
-**	Retrieve the original file:
+**	Retrieve the original file with $tool:
 eof/
-../bin/getdelta -fr1.1 $W
+$tool -fr1.1 $W
 cat <<eof/
 **
 **	Test differences between the first-archived version and the original
 **	file:
 eof/
 diff $W Makefile
+done
 
-rm -rf sccs $W
+rm -rf $SCCS $W

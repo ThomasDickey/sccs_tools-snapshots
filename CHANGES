@@ -1,3 +1,55 @@
+1991-05-24  dickey@software.org
+
+	* src/putdelta/test/run_test.sh: make this test both tools
+
+1991-05-24  ste_cm@software.org
+
+	* src/putdelta/test/run_test.sh:
+	BASELINE Tue Jun 18 08:04:39 1991 -- apollo sr10.3
+
+1991-05-24  dickey@software.org
+
+	* src/getdelta/test/run_test.sh:
+	make this test both 'getdelta' and 'sccsget'
+
+1991-05-24  ste_cm@software.org
+
+	* src/getdelta/test/run_test.sh:
+	BASELINE Mon Jul 20 12:41:28 1992 -- CM_TOOLS #11
+
+	* src/getdelta/test/run_test.sh: BASELINE Tue Dec 17 11:56:35 1991
+
+	* src/getdelta/test/run_test.sh:
+	BASELINE Tue Jun 18 08:04:39 1991 -- apollo sr10.3
+
+1991-05-24  dickey@software.org
+
+	* src/putdelta/src/sccsput.c, src/putdelta/src/putdelta.c:
+	lint (apollo sr10.3)
+
+1991-05-24  ste_cm@software.org
+
+	* src/putdelta/src/putdelta.c:
+	BASELINE Tue Jun 18 08:04:39 1991 -- apollo sr10.3
+
+1991-05-24  dickey@software.org
+
+	* src/getdelta/src/sccsget.c: lint (apollo sr10.3)
+
+1991-05-24  ste_cm@software.org
+
+	* src/getdelta/src/sccsget.c:
+	BASELINE Tue Jun 18 08:04:39 1991 -- apollo sr10.3
+
+1991-05-24  dickey@software.org
+
+	* src/getdelta/src/getdelta.c: lint (apollo sr10.3)
+
+1991-05-24  ste_cm@software.org
+
+	* src/getdelta/src/getdelta.c:
+	BASELINE Tue Jun 18 08:04:39 1991 -- apollo sr10.3
+
 1991-05-23  dickey@software.org
 
 	* src/getdelta/src/sccsget.c: RCS_BASE

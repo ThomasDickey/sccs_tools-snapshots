@@ -1,5 +1,5 @@
 #ifndef	lint
-static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/src/RCS/putdelta.c,v 2.3 1991/05/23 09:11:18 dickey Exp $";
+static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/src/RCS/putdelta.c,v 3.0 1991/05/24 08:26:48 ste_cm Rel $";
 #endif
 
 /*
@@ -7,9 +7,15 @@ static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/
  * Author:	T.E.Dickey
  * Created:	25 Apr 1986
  * $Log: putdelta.c,v $
- * Revision 2.3  1991/05/23 09:11:18  dickey
- * apollo sr10.3 cpp complains about cpp-tags
+ * Revision 3.0  1991/05/24 08:26:48  ste_cm
+ * BASELINE Tue Jun 18 08:04:39 1991 -- apollo sr10.3
  *
+ *		Revision 2.4  91/05/24  08:26:48  dickey
+ *		lint (apollo sr10.3)
+ *		
+ *		Revision 2.3  91/05/23  09:25:28  dickey
+ *		apollo sr10.3 cpp complains about cpp-tags
+ *		
  *		Revision 2.2  90/05/08  14:33:42  dickey
  *		lint
  *		
@@ -62,6 +68,7 @@ static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/
  *		y note	specifies delta-comment
  */
 
+#define	SIG_PTYPES
 #define	STR_PTYPES
 #include	"ptypes.h"
 #include	"sccsdefs.h"
