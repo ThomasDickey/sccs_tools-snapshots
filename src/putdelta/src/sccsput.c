@@ -1,5 +1,5 @@
 #ifndef	lint
-static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/src/RCS/sccsput.c,v 3.10 1991/07/22 14:40:52 dickey Exp $";
+static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/src/RCS/sccsput.c,v 3.11 1991/07/24 15:46:20 dickey Exp $";
 #endif
 
 /*
@@ -7,6 +7,7 @@ static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/
  * Author:	T.E.Dickey
  * Created:	08 May 1990 (from sccsput.sh and rcsput.c)
  * Modified:
+ *		24 Jul 1991, corrected size of 'comment[]'
  *		22 Jul 1991, cleanup use of 'catarg()'
  *		19 Jul 1991, accept "-r" option (for diff and putdelta)
  *		18 Jul 1991, renamed "-f" option to "-F", added new "-f" to
@@ -319,7 +320,7 @@ char	*argv[];
 				break;
 		case 's':	quiet = TRUE;			break;
 		case 'y':	FORMAT(comment, "-y%.*s",
-					sizeof(comment-3), optarg);
+					sizeof(comment)-3, optarg);
 				break;
 		case 'D':	catarg(diff_opts, DEFERRED);	break;
 		case 'F':	Force = TRUE;			break;

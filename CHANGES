@@ -1,3 +1,58 @@
+1991-07-24  dickey@software.org
+
+	* src/putdelta/src/sccsput.c:
+	oops: had wrong expression for size of 'comment[]', caused
+	it to truncate comments.
+
+	* src/putdelta/src/putdelta.c:
+	pass the "-r" option down to 'admin' in case the user wants
+	to specify the initial version
+
+	* src/sccs2rcs/test/do_test.sh:
+	modified PATH variable so that it uses the local copies of 'sccs2rcs' and
+	'getdelta' first, to handle interdependencies/bugs
+
+1991-07-24  ste_cm@software.org
+
+	* src/sccs2rcs/test/do_test.sh:
+	BASELINE Mon Jul 20 12:41:28 1992 -- CM_TOOLS #11
+
+	* src/sccs2rcs/test/do_test.sh: BASELINE Tue Dec 17 11:56:35 1991
+
+1991-07-24  dickey@software.org
+
+	* src/sccs2rcs/src/sccs2rcs.c:
+	use name2sccs/sccs2name to simplify/standardize pathname translation
+
+	* src/sccs2rcs/src/sccs2rcs.c: quieted the 'rcs' command also
+
+	* src/sccs2rcs/src/sccs2rcs.c:
+	corrected logic (introduced in last version) when invoking 'ci' to add
+	a new delta. tuned verbosity.
+
+	* src/sccs2rcs/test/run_test.sh:
+	chopped out log-comments (gets tedious)
+
+1991-07-24  ste_cm@software.org
+
+	* src/sccs2rcs/test/run_test.sh:
+	BASELINE Mon Jul 20 12:41:28 1992 -- CM_TOOLS #11
+
+	* src/sccs2rcs/test/run_test.sh: BASELINE Tue Dec 17 11:56:35 1991
+
+1991-07-24  dickey@software.org
+
+	* src/sccs2rcs/src/sccs2rcs.c:
+	use catarg/shoarg/bldcmd2/execute to simplify the process of escaping
+	spaces.
+
+	* src/sccs2rcs/src/sccs2rcs.c:
+	test for exceptions to error-failure after 'mkdir()'
+
+	* src/sccs2rcs/src/sccs2rcs.c:
+	lint (apollo sr10.3); also corrected code that passes quiet-option to CI
+	and CO (GET was ok)
+
 1991-07-22  dickey@software.org
 
 	* src/putdelta/src/sccsput.c:
