@@ -1,7 +1,3 @@
-#ifndef	lint
-static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/src/RCS/sccsput.c,v 6.5 1995/10/14 16:16:46 tom Exp $";
-#endif
-
 /*
  * Title:	sccsput.c (sccs put-tree)
  * Author:	T.E.Dickey
@@ -41,6 +37,8 @@ static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/
 #include	<rcsdefs.h>
 #include	<sccsdefs.h>
 
+MODULE_ID("$Id: sccsput.c,v 6.7 1998/04/22 16:05:31 tom Exp $")
+
 #define	DEBUG		if (debug) PRINTF
 #define	VERBOSE		if (!quiet) PRINTF
 
@@ -55,7 +53,7 @@ static	int	Force, force;
 static	int	e_opt;
 static	char	*k_opt	= "";
 static	char	*r_opt	= "";
-static	char	*logname = NULL;
+static	char	*LogName = NULL;
 static	int	debug;
 static	int	quiet;
 static	int	found_diffs;	/* true iff we keep logfile */
@@ -68,7 +66,7 @@ void	ExitProgram (
 	if (log_fp != 0) {
 		FCLOSE(log_fp);
 		if (!found_diffs)
-			(void)unlink(logname);
+			(void)unlink(LogName);
 	}
 	exit(code);
 }
@@ -377,7 +375,7 @@ _MAIN
 		case 'f':	force = TRUE;			break;
 		case 'h':	catarg(diff_opts, "-h");	break;
 		case 'k':	k_opt = "-k";			break;
-		case 'l':	found_diffs = filesize(logname = optarg) > 0;
+		case 'l':	found_diffs = filesize(LogName = optarg) > 0;
 				if (!(log_fp = fopen(optarg, "a+")))
 					usage(0);
 				break;
