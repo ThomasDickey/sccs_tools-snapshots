@@ -1,6 +1,6 @@
 #ifndef	lint
 static char *RCSid =
-"$Id: sccs2rcs.c,v 2.2 1989/10/10 10:03:12 dickey Exp $";
+"$Id: sccs2rcs.c,v 2.3 1990/06/22 07:45:30 dickey Exp $";
 #endif	lint
 
 /*
@@ -8,10 +8,13 @@ static char *RCSid =
  * Author: Ken Greer
  *
  * $Log: sccs2rcs.c,v $
- * Revision 2.2  1989/10/10 10:03:12  dickey
+ * Revision 2.3  1990/06/22 07:45:30  dickey
+ * altered interface to 'name2rcs()'
+ *
+ * Revision 2.2  89/10/10  15:26:37  dickey
  * use RCS_DIR environment variable ('rcs_dir()' function) where needed to
  * make this work better with CM_TOOLS
- *
+ * 
  * Revision 2.1  89/10/05  10:53:38  dickey
  * changed ident-keyword to 'Id' from 'Header'
  * 
@@ -467,7 +470,7 @@ char	*filename;
 		return;
 	}
 	comments[0] = EOS;
-	if (!rcsopen(rcsfile = name2rcs(filename), -verbose))
+	if (!rcsopen(rcsfile = name2rcs(filename,FALSE), -verbose))
 		quit2("Could not find archive %s\n", rcsfile);
 	while (header && (s = rcsread(s))) {
 		s = rcsparse_id(key, s);

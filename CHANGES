@@ -1,3 +1,9 @@
+1990-06-22  dickey@software.org
+
+	* src/sccs2rcs/src/sccs2rcs.c: altered interface to 'name2rcs()'
+
+	* certify/release.txt: added note about 'sccs_dir.c'
+
 1990-05-08  dickey@software.org
 
 	* certify/release.txt: rewrote 'sccsput'
