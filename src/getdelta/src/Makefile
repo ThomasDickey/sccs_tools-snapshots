@@ -1,4 +1,4 @@
-# $Header: /users/source/archives/sccs_tools.vcs/src/getdelta/src/RCS/Makefile,v 1.5 1989/03/29 14:13:59 dickey Exp $
+# $Header: /users/source/archives/sccs_tools.vcs/src/getdelta/src/RCS/Makefile,v 2.0 1989/07/10 08:30:12 ste_cm Rel $
 # Make-file for SCCS checkout utilities
 #
 ####### (Environment) ##########################################################
@@ -26,7 +26,8 @@ all:		$(ALL)
 #
 clean:				; rm -f *.o *.out
 clobber:	clean		; rm -f $(ALL)
-destroy:			; rm -f *
+destroy:
+	sh -c 'for i in *;do case $$i in RCS);; *) rm -f $$i;;esac;done'
 sources:	$(SRCS)
 #
 install:	$B/getdelta\
@@ -39,6 +40,6 @@ getdelta.o:	$I/ptypes.h
 $B/sccsget:	sccsget.sh	; copy $? $@
 #
 ####### (Development) ##########################################################
-$(SRCS):			; $(GET) -s sccs/s.$@
+$(SRCS):			; $(GET) $@
 lint.out:	$(CSRC)		; $(DATE); tdlint $(LINTOPT) $? >>$@
 lincnt.out:	$(CSRC)		; $(DATE); lincnt $(CSRC) >>$@

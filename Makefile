@@ -1,10 +1,16 @@
-# $Header: /users/source/archives/sccs_tools.vcs/RCS/Makefile,v 1.1 1989/03/29 13:09:17 dickey Exp $
+# $Header: /users/source/archives/sccs_tools.vcs/RCS/Makefile,v 2.0 1989/07/10 08:19:31 ste_cm Rel $
 # Top-level make-file for SCCS_TOOLS
 #
 # $Log: Makefile,v $
-# Revision 1.1  1989/03/29 13:09:17  dickey
-# Initial revision
+# Revision 2.0  1989/07/10 08:19:31  ste_cm
+# BASELINE Mon Jul 10 09:14:49 EDT 1989
 #
+#	Revision 1.2  89/07/10  08:19:31  dickey
+#	corrected 'destroy' rule
+#	
+#	Revision 1.1  89/03/29  13:09:17  dickey
+#	Initial revision
+#	
 
 ####### (Development) ##########################################################
 INSTALL_PATH = /ste_site/ste/bin
@@ -51,7 +57,7 @@ destroy:	$(MFILES)
 	cd src;		$(MAKE) $@
 	cd user;	$(MAKE) $@
 	cd bin;		$(MAKE) $@
-	rm -f *
+	sh -c 'for i in *;do case $$i in RCS);; *) rm -f $$i;;esac;done'
 
 ####### (Details of Productions) ###############################################
 .first:		$(FIRST)
