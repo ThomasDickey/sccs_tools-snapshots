@@ -1,5 +1,5 @@
 #ifndef	lint
-static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/src/RCS/getdelta.c,v 3.8 1991/06/25 15:25:44 dickey Exp $";
+static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/src/RCS/getdelta.c,v 3.10 1991/06/27 09:30:38 ste_cm Exp $";
 #endif
 
 /*
@@ -7,6 +7,7 @@ static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/
  * Author:	T.E.Dickey
  * Created:	26 Mar 1986 (as a procedure)
  * Modified:
+ *		27 Jun 1991, added "-b" option.
  *		24 Jun 1991, Test directory permissions for archive- and
  *			     working-file.
  *		20 Jun 1991, pass-thru "-e" option. Use 'shoarg()'.
@@ -51,6 +52,10 @@ extern	int	optind;
 #define	NAMELEN		80	/* length of tokens in sccs-header */
 #define	YELL	(void) FPRINTF(stderr,
 #define	TELL	if (!silent) PRINTF(
+
+#ifndef	GET_TOOL
+#define	GET_TOOL	"get"
+#endif
 
 /************************************************************************
  *	local data							*
@@ -274,9 +279,9 @@ char	*name, *s_file;
 	 * Process the file if we found no errors
 	 */
 	if (ok) {
-		if (!silent) shoarg(stdout, "get", get_opts);
-		newzone(0,0,FALSE);	/* execute in GMT zone */
-		if (execute("get", get_opts) < 0)
+		if (!silent) shoarg(stdout, GET_TOOL, get_opts);
+		newzone(0,0,FALSE);	/* do this in GMT zone */
+		if (execute(GET_TOOL, get_opts) < 0)
 			failed(name);
 		PostProcess(name, s_file);
 	}
@@ -299,6 +304,7 @@ usage ()
  "Usage: getdelta [options] files"
 ,""
 ,"Options:"
+,"  -b      branch (passed to \"get\")"
 ,"  -c DATE (a la \"get\") recognizes SCCS cutoff-date description, forces"
 ,"          this instead to use the last date before the cutoff, or the oldest"
 ,"          delta-date."
@@ -358,6 +364,7 @@ char	*argv[];
 			silent	= TRUE;
 			FORMAT(s, "-%c ", j);
 			break;
+		case 'b':
 		case 'e':
 			lockit	= TRUE;
 		case 'k':

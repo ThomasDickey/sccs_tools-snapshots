@@ -1,4 +1,4 @@
-# $Header: /users/source/archives/sccs_tools.vcs/src/putdelta/src/RCS/Makefile,v 3.0 1991/06/05 17:06:09 ste_cm Rel $
+# $Header: /users/source/archives/sccs_tools.vcs/src/putdelta/src/RCS/Makefile,v 3.1 1991/06/27 07:42:11 dickey Exp $
 # Make-file for SCCS check-in utilities
 #
 ####### (Environment) ##########################################################
@@ -8,7 +8,7 @@ L	= ../../../../cm_tools/lib
 GET	= checkout
 #
 ####### (Command-line Options) #################################################
-DEFINES	=
+DEFINES	= -DADMIN_TOOL=\"`which admin`\" -DDELTA_TOOL=\"`which delta`\"
 INCLUDES= -I$I
 CPP_OPTS= $(DEFINES) $(INCLUDES)
 LIBS	= $L/lib.a
