@@ -1,3 +1,38 @@
+1991-07-18  dickey@software.org
+
+	* src/putdelta/src/sccsput.c: corrected description of "-k" option
+
+	* src/putdelta/src/sccsput.c: tuned verbosity
+
+	* src/putdelta/src/putdelta.c: if no filenames are given, show usage
+
+	* src/putdelta/src/sccsput.c: pass-thru "-k" option to 'putdelta'
+
+	* src/putdelta/src/putdelta.c: added "-k" option.
+
+	* src/putdelta/src/putdelta.c:
+	supplied code to clear critical region if user does not
+	specify "-f" to force a lock.
+
+	* src/putdelta/src/sccsput.c:
+	renamed "-f" to "-F", added new "-f" to pass-thru to 'getdelta'
+
+	* src/putdelta/test/run_test.sh: added "-f" option to putdelta
+
+1991-07-18  ste_cm@software.org
+
+	* src/putdelta/test/run_test.sh:
+	BASELINE Mon Jul 20 12:41:28 1992 -- CM_TOOLS #11
+
+	* src/putdelta/test/run_test.sh: BASELINE Tue Dec 17 11:56:35 1991
+
+	* src/putdelta/test/run_test.sh:
+	BASELINE Wed May  5 11:05:31 1993 -- TD_LIB #12
+
+1991-07-18  dickey@software.org
+
+	* src/putdelta/src/putdelta.c: added "-f" option
+
 1991-07-09  dickey@software.org
 
 	* src/putdelta/test/run_test.sh: show delta-history as well as s-file

@@ -1,5 +1,5 @@
 #ifndef	lint
-static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/src/RCS/sccsput.c,v 3.3 1991/06/25 15:55:29 ste_cm Exp $";
+static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/src/RCS/sccsput.c,v 3.7 1991/07/18 14:05:03 dickey Exp $";
 #endif
 
 /*
@@ -7,6 +7,9 @@ static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/
  * Author:	T.E.Dickey
  * Created:	08 May 1990 (from sccsput.sh and rcsput.c)
  * Modified:
+ *		18 Jul 1991, renamed "-f" option to "-F", added new "-f" to
+ *			pass-down to 'putdelta'.  Also, pass-thru "-k" to
+ *			'putdelta'.
  *		25 Jun 1991, added "-D", "-T" options.  Automatically unlink
  *			log-file if it is empty (may retain prior file if one
  *			exists).
@@ -44,7 +47,7 @@ static	FILE	*log_fp;
 static	int	a_opt;		/* all-directory scan */
 static	int	no_op;		/* no-op mode */
 static	char	*pager;		/* nonzero if we don't cat diffs */
-static	int	force;
+static	int	Force, force;
 static	char	*k_opt	= "";
 static	int	quiet;
 static	int	found_diffs;	/* true iff we keep logfile */
@@ -84,9 +87,9 @@ char	*cmd, *name;
 	auto	int	empty	= TRUE;
 	auto	size_t	n;
 
-	VERBOSE("%% %s\n", cmd);
 	if (!tmpnam(name) || !(ofp = fopen(name,"w")))
 		failed("tmpnam");
+	VERBOSE("%% %s >%s\n", cmd, name);
 
 	if (!(ifp = popen(cmd, "r")))
 		failed("popen");
@@ -127,13 +130,13 @@ char	*archive;
 			}
 		}
 		if (log_fp != 0) {
-			PRINTF("appending to logfile");
+			VERBOSE("... appending to logfile");
 			cat2fp(log_fp, out_diff);
 			if (!found_diffs && filesize(out_diff) > 0)
 				found_diffs = TRUE;
 		}
 	} else {
-		PRINTF("*** no differences found ***\n");
+		VERBOSE("*** no differences found ***\n");
 	}
 
 	(void)unlink(in_diff);
@@ -152,7 +155,7 @@ char	*name;
 	auto	int	first;
 
 	if (first = (filesize(archive) < 0)) {
-		if (!force && !istextfile(working)) {
+		if (!Force && !istextfile(working)) {
 			PRINTF("*** \"%s\" does not seem to be a text file\n",
 				working);
 			return;
@@ -166,7 +169,7 @@ char	*name;
 		if (*vers == '?')
 			first = TRUE;	/* no revisions present */
 		else {
-			if (!force && !different(working, archive))
+			if (!Force && !different(working, archive))
 				return;
 			first = FALSE;
 		}
@@ -174,6 +177,8 @@ char	*name;
 
 	*args = EOS;
 	if (quiet)	catarg(args, "-s");
+	if (force)	catarg(args, "-f");
+	if (*k_opt)	catarg(args, k_opt);
 	if (*comment)	catarg(args, comment);
 	catarg(args, working);
 
@@ -206,7 +211,7 @@ struct	stat	*sp;
 	if (sp == 0 || ok_acc < 0) {
 		ok_acc = -1;
 		perror(name);
-		if (!force)
+		if (!Force)
 			exit(FAIL);
 	} else if (isDIR(sp->st_mode)) {
 		abspath(s);		/* get rid of "." and ".." names */
@@ -242,14 +247,16 @@ usage(option)
 ,"  -a       process all directories, including those beginning with \".\""
 ,"  -b       (passed to \"diff\")"
 ,"  -c       send differences to terminal without $PAGER filtering"
-,"  -f       force (initial) insertion even if file appears to be non-text"
+,"  -f       force (passed to putdelta)"
 ,"  -h       (passed to \"diff\")"
-,"  -k       expand keywords from archive before differences"
+,"  -k       suppress keyword expansion from archive before differences"
+,"           (also passed to putdelta; implies file has unexpanded keywords)"
 ,"  -l file  write all differences to log-file"
 ,"  -n       compute differences only, don't try to archive"
 ,"  -s       silent (passed to putdelta)"
 ,"  -y text  comment (passed to putdelta)"
 ,"  -D opts  special options to pass to \"diff\""
+,"  -F       force (initial) insertion even if file appears to be non-text"
 ,"  -T tool  specify a checkin-tool other than \"putdelta\""
 ,""
 	};
@@ -272,9 +279,10 @@ char	*argv[];
 
 	register int	j;
 
+	revert("not a setuid-program");	/* ensure this is not misused */
 	track_wd((char *)0);
 	pager = dftenv("more -l", "PAGER");
-	while ((j = getopt(argc, argv, "abcfhkl:nsy:D:T:")) != EOF) {
+	while ((j = getopt(argc, argv, "abcfhkl:nsy:D:FT:")) != EOF) {
 		switch (j) {
 		case 'a':	a_opt = TRUE;			break;
 		case 'b':	catarg(diff_opts, "-b");	break;
@@ -292,6 +300,7 @@ char	*argv[];
 					sizeof(comment-3), optarg);
 				break;
 		case 'D':	catarg(diff_opts, DEFERRED);	break;
+		case 'F':	Force = TRUE;			break;
 		case 'T':	verb = optarg;			break;
 		default:	usage(j);
 		}

@@ -1,5 +1,5 @@
 #!/bin/sh
-# $Id: run_test.sh,v 3.1 1991/07/09 07:24:17 dickey Exp $
+# $Id: run_test.sh,v 6.0 1991/07/18 07:40:07 ste_cm Rel $
 # test-script for see that 'putdelta' is working.
 #
 SCCS=${SCCS_DIR-SCCS}
@@ -14,7 +14,7 @@ cat <<eof/
 eof/
 rm -rf $SCCS dummy
 copy Makefile dummy
-if ( $tool -s dummy )
+if ( $tool -fs dummy )
 then
 	N=`ls -l dummy Makefile |\
 		fgrep -v otal |\
