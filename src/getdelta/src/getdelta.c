@@ -1,5 +1,5 @@
 #ifndef	lint
-static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/src/RCS/getdelta.c,v 3.16 1991/07/19 10:18:05 dickey Exp $";
+static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/src/RCS/getdelta.c,v 3.17 1991/10/24 08:51:05 dickey Exp $";
 #endif
 
 /*
@@ -7,6 +7,7 @@ static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/
  * Author:	T.E.Dickey
  * Created:	26 Mar 1986 (as a procedure)
  * Modified:
+ *		24 Oct 1991, converted to ANSI
  *		19 Jul 1991, corrected logic, allowing arguments of the form
  *			     "SCCS/s.file". Modified version-compare logic to
  *			     allow versions to 'bump' to higher level, rather
@@ -38,20 +39,11 @@ static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/
 
 #define	ACC_PTYPES
 #define	STR_PTYPES
-#include	"ptypes.h"
-#include	"sccsdefs.h"
+#include	<ptypes.h>
+#include	<sccsdefs.h>
 
 #include	<ctype.h>
 #include	<time.h>
-extern	long	packdate();
-extern	char	*ctime();
-extern	char	*pathcat();
-extern	char	*relpath();
-extern	char	*stralloc();
-extern	time_t	cutoff();
-
-extern	char	*optarg;
-extern	int	optind;
 
 /* local definitions */
 #define	NAMELEN		80	/* length of tokens in sccs-header */
@@ -84,8 +76,9 @@ static	char	*sid	= NULL,
  ************************************************************************/
 
 static
-Dots(s)
-char	*s;
+Dots(
+_AR1(char *,	s))
+_DCL(char *,	s)
 {
 	int	count = 0;
 	while (*s)
@@ -99,8 +92,9 @@ char	*s;
  */
 static
 int
-same (version)
-char	*version;
+same (
+_AR1(char *,	version))
+_DCL(char *,	version)
 {
 	int	code	= 0;
 	register size_t	len = strlen (sid),
@@ -120,8 +114,9 @@ char	*version;
  */
 static
 int
-bump (version)
-char	*version;
+bump (
+_AR1(char *,	version))
+_DCL(char *,	version)
 {
 	int	code;
 
@@ -149,8 +144,12 @@ char	*version;
  * Process a single file:
  */
 static
-PostProcess (name, s_file)
-char	*name, *s_file;
+PostProcess (
+_ARX(char *,	name)
+_AR1(char *,	s_file)
+	)
+_DCL(char *,	name)
+_DCL(char *,	s_file)
 {
 	FILE	*fp;
 	time_t	date	= 0;
@@ -214,9 +213,12 @@ char	*name, *s_file;
  * See if the specified file exists.  If so, verify that it is indeed a file.
  */
 static
-isFILE(name, mode_)
-char	*name;
-int	*mode_;
+isFILE(
+_ARX(char *,	name)
+_AR1(int *,	mode_)
+	)
+_DCL(char *,	name)
+_DCL(int *,	mode_)
 {
 	struct	stat	sb;
 
@@ -238,8 +240,12 @@ int	*mode_;
  * See if we have permission to write in the directory given by 'name'
  */
 static
-Permitted(name, read_only)
-char	*name;
+Permitted(
+_ARX(char *,	name)
+_AR1(int,	read_only)
+	)
+_DCL(char *,	name)
+_DCL(int,	read_only)
 {
 	char	path[BUFSIZ];
 	int	mode	= X_OK | R_OK;
@@ -258,8 +264,12 @@ char	*name;
  * the name of the corresponding sccs file.  Otherwise, compute the name of the
  * file to be checked-out from the sccs file name.
  */
-DoFile (name, s_file)
-char	*name, *s_file;
+DoFile (
+_ARX(char *,	name)
+_AR1(char *,	s_file)
+	)
+_DCL(char *,	name)
+_DCL(char *,	s_file)
 {
 	auto	int	ok	= TRUE;
 	auto	char	*working = sccs2name(name, FALSE);
@@ -340,7 +350,7 @@ char	*name, *s_file;
 }
 
 static
-usage ()
+usage (_AR0)
 {
 	static	char	*msg[] = {
  "Usage: getdelta [options] files"
@@ -367,16 +377,8 @@ usage ()
 /************************************************************************
  *	public entrypoints						*
  ************************************************************************/
-failed(s)
-char	*s;
-{
-	perror(s);
-	(void)exit(FAIL);
-	/*NOTREACHED*/
-}
-
-main (argc, argv)
-char	*argv[];
+/*ARGSUSED*/
+_MAIN
 {
 	register int	j, k;
 	register char	*s;

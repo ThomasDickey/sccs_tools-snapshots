@@ -1,4 +1,4 @@
-# $Header: /users/source/archives/sccs_tools.vcs/src/getdelta/src/RCS/Makefile,v 3.1 1991/06/27 08:06:12 dickey Exp $
+# $Id: Makefile,v 5.0 1991/10/24 08:56:19 ste_cm Rel $
 # Make-file for SCCS check-in utilities
 #
 ####### (Environment) ##########################################################
@@ -37,12 +37,14 @@ install:	$B/getdelta\
 		$B/sccsget
 #
 ####### (Details of Productions) ###############################################
+PTYPES_H	= $I/ptypes.h $I/common.h
+
 $B/getdelta:	$(MAIN_O)	; $(CC) -o $@ $(MAIN_O)
-getdelta.o:	$I/ptypes.h\
+getdelta.o:	$(PTYPES_H)\
 		$I/sccsdefs.h
 #
 $B/sccsget:	$(TREE_O)	; $(CC) -o $@ $(TREE_O)
-sccsget.o:	$I/ptypes.h\
+sccsget.o:	$(PTYPES_H)\
 		$I/rcsdefs.h\
 		$I/sccsdefs.h
 #

@@ -1,4 +1,4 @@
-$Id: release.txt,v 3.1 1991/06/27 08:11:24 dickey Exp $
+$Id: release.txt,v 4.0 1991/10/24 08:46:55 ste_cm Rel $
 
 --------------------------------------------------------------------------------
 
@@ -8,6 +8,8 @@ Revised 'getdelta' and 'putdelta' to operate properly as set-uid programs.
 
 Modified 'getdelta' to allow it to extract into a file not in the current
 directory (by temporarily changing working directories).
+
+Adapted to CM_TOOLS #10
 
 Baseline 3:
 ----------
