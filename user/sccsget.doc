@@ -74,7 +74,7 @@ V6,
 <Page Header, Frame =
 V6,
 (g9,1,0
- (t14,1,4,5.698608,0.438782,2,7,0,0,,wst:clas12b,August\ 4\,\ 1988)
+ (t14,1,4,5.698608,0.438782,2,7,0,0,,wst:clas12b,June\ 28\,\ 1990)
  (t14,2,4,2.849304,0.438782,1,7,0,0,,wst:clas12b,SCCS\ Check-out\ Script)
  (t14,3,4,0,0.438782,0,7,0,0,,wst:clas12b,sccsget)
  (E15,0,0,5,1,1,0.053333,1,15,0,0,1,0,0,0,0,5,127,7,0,0,7,1,1,1,0.066667,0.06666
@@ -204,7 +204,7 @@ names.  They may be either file or directory names.
 
 <F35>Sccsget<F0> resolves names until it finds one of the form <#7f>sccs/s.
 <F36>file<F0>" before invoking <F35>get<F0>.  If it finds a directory 
-(other than <#7f>sccs"), <F35>sccsget<F0> will recur on itself to 
+(other than <#7f>SCCS"), <F35>sccsget<F0> will recur on itself to 
 extract files at lower levels.
 
 <header>
@@ -221,7 +221,7 @@ variables used by <F35>sccsget<F0> include:
 
 <F56@R>SCCS_DIR<F34@R><Tab>specifies the directory in which <F35@R>getdelta
 <F34@R> will find the <#7f>s." files.  If not specified, <F35@R>getdelta<F34@R> 
-assumes <#7f>sccs".
+assumes <#7f>SCCS".
 
 <header>
 

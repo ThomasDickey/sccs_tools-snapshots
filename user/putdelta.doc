@@ -78,7 +78,7 @@ V6,
 <Page Header, Frame =
 V6,
 (g9,1,0
- (t14,1,4,5.698608,0.438782,2,7,0,0,,wst:clas12b,August\ 5\,\ 1988)
+ (t14,1,4,5.698608,0.438782,2,7,0,0,,wst:clas12b,June\ 28\,\ 1990)
  (t14,2,4,2.849304,0.438782,1,7,0,0,,wst:clas12b,SCCS\ Check-in\ Utility)
  (t14,3,4,0,0.438782,0,7,0,0,,wst:clas12b,putdelta)
  (E15,0,0,5,1,1,0.053333,1,15,0,0,1,0,0,0,0,5,127,7,0,0,7,1,1,1,0.066667,0.06666
@@ -127,7 +127,7 @@ DESCRIPTION
 
 <F35>Putdelta<F0> uses the <F36>sccs<F0> utilities <F35>admin<F0> 
 and <F35>delta<F0> to maintain versions of a given source file in 
-a dependent directory named <#7f>sccs".  It is more than an integration 
+a dependent directory named <#7f>SCCS".  It is more than an integration 
 of the <F35>admin<F0> and <F35>delta<F0> utilities, however:
 
 <bullet>
@@ -250,7 +250,7 @@ Environment variables imported by <F35>putdelta<F0> include:
 
 <F56>SCCS_DIR<F0><Tab>specifies the directory into which the <F36>sccs<F0> 
 <#7f>s." files are stored.  If no specified, <F35>putdelta<F0> assumes 
-<#7f>sccs".
+<#7f>SCCS".
 
 <options>
 
