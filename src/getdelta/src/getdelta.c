@@ -1,5 +1,5 @@
 #ifndef	lint
-static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/src/RCS/getdelta.c,v 6.6 1994/08/11 15:51:50 tom Exp $";
+static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/src/RCS/getdelta.c,v 6.7 1995/01/28 19:10:07 tom Exp $";
 #endif
 
 /*
@@ -169,8 +169,7 @@ void	PostProcess (
 					&hour, &min, &sec,
 					pgmr, &new, &old) > 0) {
 				date = packdate(1900+year, mon, mday, hour, min, sec);
-#if 1
-		/* for CmVision */
+#ifdef CMV_PATH	/* for CmVision */
 		if (fgets(bfr, sizeof(bfr), fp) && *bfr == '\001') {
 			if (!strncmp(bfr, "\001c ", 3)) {
 				char	*s;

@@ -1,5 +1,5 @@
 #ifndef	lint
-static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/src/RCS/putdelta.c,v 6.3 1994/07/15 09:58:15 tom Exp $";
+static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/src/RCS/putdelta.c,v 6.4 1995/01/28 18:58:51 tom Exp $";
 #endif
 
 /*
@@ -64,6 +64,7 @@ static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/
 
 #define	ACC_PTYPES
 #define	CHR_PTYPES
+#define	OPN_PTYPES
 #define	STR_PTYPES
 #define	TIM_PTYPES
 #include	<ptypes.h>
