@@ -1,0 +1,41 @@
+# $Id: makefile.in,v 6.1 1997/09/28 19:39:40 tom Exp $
+# Top-level make-file for SCCS_TOOLS
+
+THIS	= sccs_tools
+
+@make_include_left@@TD_LIB_rules@/td_lib.mk@make_include_right@
+
+####### (Standard Lists) #######################################################
+
+CLEAN		= *.bak *.log *.out *.tst .nfs* core
+PURE		= *.cache *.status
+
+####### (Standard Productions) #################################################
+all\
+install\
+deinstall::
+
+all\
+install::
+	cd src;		$(MAKE) install
+install\
+deinstall::
+	cd bin;		$(MAKE) $@
+	cd user;	$(MAKE) $@
+
+clean\
+distclean\
+sources::
+	cd certify;	$(MAKE) $@
+	cd src;		$(MAKE) $@
+	cd user;	$(MAKE) $@
+	cd bin;		$(MAKE) $@
+
+run_test\
+lint.out:
+	cd src;		$(MAKE) $@
+
+clean\
+distclean::			; $(RM) $(CLEAN)
+distclean::			; -$(RM) $(PURE)
+distclean::			; -$(RM) makefile */makefile

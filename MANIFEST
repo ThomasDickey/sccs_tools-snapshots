@@ -1,63 +1,66 @@
-MANIFEST for sccs_tools, version t19970913
+MANIFEST for sccs_tools, version t19970928
 --------------------------------------------------------------------------------
 MANIFEST                        this file
 COPYING                         copyright notice for CM_TOOLS
-Makefile                        top-level directory for SCCS_TOOLS
 README                          top-level read-me file for SCCS_TOOLS
 aclocal.m4                      autoconf macros
+configure.in                    template for configure script
 install-sh                      BSD-style install script
+makefile.in                     makefile for sccs_tools
 mkdirs.sh                       script to make directory hierarchy
+bin                             subdirectory
+bin/makefile.in                 makefile for sccs_tools/bin
 certify                         subdirectory
-certify/Makefile                make-file for SCCS_TOOLS certificate directory
 certify/README                  certificate "goodness" documentation
 certify/config.txt              configuration-sheet for SCCS_TOOLS
+certify/makefile.in             makefile for sccs_tools/certify
 certify/release.txt             release-notes for SCCS_TOOLS
-src                             subdirectory
-src/Makefile                    top-level makefile for SCCS_TOOLS src-directory
 src/fixsccs                     subdirectory
-src/fixsccs/Makefile            makefile for fixsccs
+src/fixsccs/makefile.in         makefile for sccs_tools/src/fixsccs
 src/fixsccs/src                 subdirectory
-src/fixsccs/src/Makefile        makefile for fixsccs
 src/fixsccs/src/fixsccs.c       fixes timestamps of s-files for compatibility with sccs_tools vs conventional usage
+src/fixsccs/src/makefile.in     makefile for sccs_tools/src/fixsccs/src
 src/fixsccs/test                subdirectory
-src/fixsccs/test/Makefile       makefile for fixsccs/test
+src/fixsccs/test/makefile.in    makefile for sccs_tools/src/fixsccs/test
 src/fixsccs/test/run_test.sh    test-script for fixsccs
 src/getdelta                    subdirectory
-src/getdelta/Makefile           makefile for getdelta utility
+src/getdelta/makefile.in        makefile for sccs_tools/src/getdelta
 src/getdelta/src                subdirectory
-src/getdelta/src/Makefile       
 src/getdelta/src/getdelta.c     
+src/getdelta/src/makefile.in    makefile for sccs_tools/src/getdelta/src
 src/getdelta/src/sccsget.c      c-language version of 'sccsget.sh'
 src/getdelta/src/sccsget.sh     
 src/getdelta/test               subdirectory
-src/getdelta/test/Makefile      make-file for testing 'getdelta'
+src/getdelta/test/makefile.in   makefile for sccs_tools/src/getdelta/test
 src/getdelta/test/run_test.sh   test-script for 'getdelta'
+src                             subdirectory
+src/makefile.in                 makefile for sccs_tools/src
 src/putdelta                    subdirectory
-src/putdelta/Makefile           makefile for 'putdelta' utility
+src/putdelta/makefile.in        makefile for sccs_tools/src/putdelta
 src/putdelta/src                subdirectory
-src/putdelta/src/Makefile       
+src/putdelta/src/makefile.in    makefile for sccs_tools/src/putdelta/src
 src/putdelta/src/putdelta.c     
 src/putdelta/src/sccsput.c      tree-recursive utility which invokes putdelta
 src/putdelta/src/sccsput.sh     
 src/putdelta/test               subdirectory
-src/putdelta/test/Makefile      make-file for testing 'putdelta'
+src/putdelta/test/makefile.in   makefile for sccs_tools/src/putdelta/test
 src/putdelta/test/run_test.sh   test-script for 'putdelta'
 src/sccs2rcs                    subdirectory
-src/sccs2rcs/Makefile           make-file for 'sccs2rcs' utility
+src/sccs2rcs/makefile.in        makefile for sccs_tools/src/sccs2rcs
 src/sccs2rcs/src                subdirectory
-src/sccs2rcs/src/Makefile       make-file for sccs/RCS conversion utility
+src/sccs2rcs/src/makefile.in    makefile for sccs_tools/src/sccs2rcs/src
 src/sccs2rcs/src/sccs2rcs.c     RCS "sccstorcs" utility.
 src/sccs2rcs/test               subdirectory
-src/sccs2rcs/test/Makefile      make-file for sccs/RCS conversion utility regression tests
 src/sccs2rcs/test/do_test.sh    performs an individual regression test
+src/sccs2rcs/test/makefile.in   makefile for sccs_tools/src/sccs2rcs/test
 src/sccs2rcs/test/run_test.sh   runs all regression tests
 src/sccs2rcs/test/s.testfile1.c test-file for sccs/RCS conversion
 src/sccs2rcs/test/s.testfile2.c test-file for sccs/RCS conversion
 src/sccs2rcs/test/s.testfile3.c test-file for sccs/RCS conversion
 user                            subdirectory
-user/Makefile                   make-file for SCCS_TOOLS user documentation (man-pages)
 user/getdelta.doc               
 user/getdelta.man               converted from interleaf to nroff
+user/makefile.in                makefile for sccs_tools/user
 user/putdelta.doc               
 user/putdelta.man               translated from interleaf to nroff
 user/sccs2rcs.man               man-page for sccs2rcs

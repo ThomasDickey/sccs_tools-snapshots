@@ -1,19 +1,15 @@
-# $Id: Makefile,v 6.2 1994/07/21 00:27:04 tom Exp $
-# Top-level makefile for SCCS_TOOLS timestamp-fix utility
+# $Id: makefile.in,v 6.2 1997/09/28 19:55:25 tom Exp $
+# Top-level makefile for SCCS_TOOLS sccs/RCS conversion utility
 
-THIS	= fixsccs
-TOP	= ../../..
-include $(TOP)/td_lib/support/td_lib.mk
+THIS	= sccs2rcs
+
+@make_include_left@@TD_LIB_rules@/td_lib.mk@make_include_right@
 
 ####### (Standard Lists) #######################################################
 B	= ../../bin
 
 IT	=\
 	$B/$(THIS)
-
-MFILES	=\
-	src/Makefile\
-	test/Makefile
 
 DIRS	=\
 	bin
@@ -24,26 +20,21 @@ run_test::	$(DIRS)
 
 all\
 clean\
-clobber\
-destroy\
+distclean\
 run_test\
-sources\
-lint.out::	$(MFILES)
+lint.out::
 	cd src;		$(MAKE) $@
 	cd test;	$(MAKE) $@
 
 clean\
-clobber::		; $(RM) $(CLEAN)
+distclean::		; $(RM) $(CLEAN)
 
-clobber\
-destroy::		; $(RM) -r bin
-
-destroy::		; $(DESTROY)
+distclean::		; $(RM) -r $(DIRS)
+distclean::		; $(RM) */makefile
 
 install:	all $(IT)
 deinstall:		; $(RM) $(IT)
 
 ####### (Details of Productions) ###############################################
 $(DIRS):			; mkdir $@
-$(MFILES):			; $(GET) $@
-$B/$(THIS):	bin/$(THIS)	; $(PUT)
+$B/$(THIS):	bin/$(THIS)	; $(INSTALL_PROGRAM) $? $@

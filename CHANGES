@@ -1,3 +1,20 @@
+1997-09-28  Thomas E. Dickey  <dickey@clark.net>
+
+	* user/makefile.in: make install prefix work
+
+	* src/fixsccs/makefile.in, src/getdelta/makefile.in, src/putdelta/makefile.in, src/sccs2rcs/makefile.in, src/makefile.in:
+	distclean:makefiles
+
+	* makefile.in, src/fixsccs/src/makefile.in: RCS_BASE
+
+	* src/fixsccs/src/fixsccs.c:
+	new interface for setmtime() has 3rd param: atime
+
+	* src/fixsccs/src/fixsccs.c: use MODULE_ID
+
+	* src/makefile.in, bin/makefile.in, src/fixsccs/makefile.in, src/getdelta/makefile.in, src/putdelta/makefile.in, src/sccs2rcs/makefile.in, user/makefile.in, certify/makefile.in, src/fixsccs/test/makefile.in, src/getdelta/test/makefile.in, src/putdelta/src/makefile.in, src/putdelta/test/makefile.in, src/sccs2rcs/src/makefile.in, src/sccs2rcs/test/makefile.in, src/getdelta/src/makefile.in, configure.in:
+	RCS_BASE
+
 1997-09-13  Thomas E. Dickey  <dickey@clark.net>
 
 	* aclocal.m4: RCS_BASE
