@@ -1,5 +1,5 @@
 #ifndef	lint
-static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/src/RCS/putdelta.c,v 6.4 1995/01/28 18:58:51 tom Exp $";
+static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/src/RCS/putdelta.c,v 6.5 1995/05/13 23:18:56 tom Exp $";
 #endif
 
 /*
@@ -500,7 +500,7 @@ void	EditFile(
 		(void) fputs (bfr, fpS);
 	}
 	FCLOSE(fpS);
-	if (setmtime(x_file, modtime) < 0)
+	if (setmtime(x_file, modtime, (time_t)0) < 0)
 		perror(x_file);
 	if (chmod(x_file, s_mode) < 0
 	 || rename(x_file, s_file) < 0)

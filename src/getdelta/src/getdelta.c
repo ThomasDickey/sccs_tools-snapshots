@@ -1,5 +1,5 @@
 #ifndef	lint
-static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/src/RCS/getdelta.c,v 6.8 1995/03/16 23:43:08 tom Exp $";
+static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/src/RCS/getdelta.c,v 6.9 1995/05/13 23:18:10 tom Exp $";
 #endif
 
 /*
@@ -213,7 +213,7 @@ void	PostProcess (
 
 	if (!noop && got) {
 		(void)chmod(name, s_mode);
-		if (setmtime(name, date) < 0)
+		if (setmtime(name, date, (time_t)0) < 0)
 			YELL "%s: cannot set time\n", name);
 		else if (lockit && !geteuid()) {
 			char	p_file[BUFSIZ];
