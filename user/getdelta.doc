@@ -186,7 +186,7 @@ V4,
 <Page Header, Frame =
 V4,
 (g9,1,0
- (t8,1,4,5.698608,0.438782,2,17,@nnclas12b,August\ 5\,\ 1988)
+ (t8,1,4,5.698608,0.438782,2,17,@nnclas12b,September\ 2\,\ 1988)
  (t8,2,4,2.849304,0.438782,1,17,@nnclas12b,SCCS\ Check-out\ Utility)
  (t8,3,4,0,0.438782,0,17,@nnclas12b,getdelta)
  (E10,0,0,0,1,1,0.053333,1,15,0,0,1,0,0,0,1,1,1,1,0.066667,0.066667,6,6,0,0.066
@@ -269,9 +269,6 @@ date, in the format
 <options>
 
 <Tab>represent the same date.
-
--<F31>d<F0> <F32>path<F0><Tab>specifies the directory in which <F31>getdelta
-<F0> will the <#7f>s." archive files.
 
 -<F31>f<F0><Tab>forces <F31>getdelta<F0> to remove the current version 
 of the file before extracting the specified version.  Otherwise, <F31>getdelta

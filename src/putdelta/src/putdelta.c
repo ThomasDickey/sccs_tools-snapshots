@@ -1,5 +1,5 @@
 #ifndef	lint
-static	char	sccs_id[] = "@(#)putdelta.c	1.2 88/08/09 09:47:19";
+static	char	sccs_id[] = "@(#)putdelta.c	1.3 88/09/02 09:29:56";
 #endif	lint
 
 /*
@@ -7,6 +7,7 @@ static	char	sccs_id[] = "@(#)putdelta.c	1.2 88/08/09 09:47:19";
  * Author:	T.E.Dickey
  * Created:	25 Apr 1986
  * Modified:
+ *		02 Sep 1988, use 'sccs_dir()'
  *		28 Jul 1988, renamed from 'sccsbase', rewrote to be a complete
  *			     package for admin/delta.
  *		10 Jun 1988, recoded to use 'newzone()'.
@@ -46,15 +47,14 @@ static	char	sccs_id[] = "@(#)putdelta.c	1.2 88/08/09 09:47:19";
 
 #include	"ptypes.h"
 
-#include	<stdio.h>
 #include	<ctype.h>
 #include	<time.h>
 #include	<signal.h>
 extern	struct	tm *localtime();
 extern	FILE	*tmpfile();
 extern	long	packdate();
-extern	char	*getenv();
 extern	char	*getuser();
+extern	char	*sccs_dir();
 extern	char	*strcat();
 extern	char	*strcpy();
 extern	char	*strncpy();
@@ -77,8 +77,7 @@ extern	char	*sys_errlist[];
 static	FILE	*fpT;
 static	int	silent	= FALSE,
 		ShowedIt;
-static	char	*sccs_dir= "sccs",
-		username[NAMELEN],
+static	char	username[NAMELEN],
 		admin_opts[BUFSIZ],
 		delta_opts[BUFSIZ];
 
@@ -456,7 +455,7 @@ char	*name;
 		(void)strcpy(s_file, name);
 		(void)strcpy(g_file, name = s);
 	} else {
-		FORMAT(s_file, "%s/s.%s", sccs_dir, strcpy(g_file, name));
+		FORMAT(s_file, "%s/s.%s", sccs_dir(), strcpy(g_file, name));
 	}
 
 	/* The file must exist; otherwise we give up! */
@@ -501,12 +500,9 @@ main (argc, argv)
 char	*argv[];
 {
 	register int	j;
-	char	*s;
 	char	tmp[BUFSIZ];
 
 	(void)strcpy(username, getuser());
-	if (s = getenv("SCCS_DIR"))
-		sccs_dir = s;
 
 	catarg(delta_opts, "-n");
 	fpT = tmpfile();
