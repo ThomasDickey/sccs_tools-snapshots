@@ -1,5 +1,5 @@
 #ifndef	lint
-static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/src/RCS/getdelta.c,v 3.17 1991/10/24 08:51:05 dickey Exp $";
+static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/src/RCS/getdelta.c,v 3.20 1991/11/18 15:36:15 ste_cm Exp $";
 #endif
 
 /*
@@ -7,6 +7,7 @@ static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/
  * Author:	T.E.Dickey
  * Created:	26 Mar 1986 (as a procedure)
  * Modified:
+ *		18 Nov 1991, use 'catarg()' for building 'get_opts[]'
  *		24 Oct 1991, converted to ANSI
  *		19 Jul 1991, corrected logic, allowing arguments of the form
  *			     "SCCS/s.file". Modified version-compare logic to
@@ -380,11 +381,11 @@ usage (_AR0)
 /*ARGSUSED*/
 _MAIN
 {
+	char	temp[BUFSIZ];
 	register int	j, k;
-	register char	*s;
+	char	*get_arg;
 
 	oldzone();
-	s = get_opts;
 
 	while ((j = getopt(argc, argv, "bc:efknr:s")) != EOF) {
 		switch (j) {
@@ -395,39 +396,45 @@ _MAIN
 				if (sid[k] == '.')
 					sid[k] = EOS;
 			TELL "sid: %s\n", sid);
-			FORMAT(s, "-r%s ", sid);
+			FORMAT(temp, "-r%s ", sid);
+			catarg(get_opts, temp);
 			break;
+
 		case 'c':
-			FORMAT(s, "-c %s ", optarg);
+			FORMAT(temp, "-c%s", optarg);
 			k = optind;
 			opt_c = cutoff(argc, argv);
-			while (k < optind) {
-				s += strlen(s);
-				FORMAT(s, "%s ", argv[k++]);
-			}
+			while (k < optind)
+				(void)strcat(strcat(temp, " "), argv[k++]);
+			catarg(get_opts, temp);
 			TELL "cutoff: %s\n", ctime(&opt_c));
 			break;
+
 		case 's':
 			silent	= TRUE;
-			FORMAT(s, "-%c ", j);
+			catarg(get_opts, "-s");
 			break;
+
 		case 'b':
 		case 'e':
 			lockit	= TRUE;
 		case 'k':
-			FORMAT(s, "-%c ", j);
+			FORMAT(temp, "-%c", j);
+			catarg(get_opts, temp);
 			writeable = S_IWRITE;
 			break;
+
 		/* options belonging to this program only */
 		case 'n':	noop	 = TRUE;	break;
 		case 'f':	force	 = TRUE;	break;
 		default:	usage();
 		}
-		s += strlen(s);
 	}
+
+	get_arg = get_opts + strlen(get_opts);
 	if (optind < argc) {
 		for (j = optind; j < argc; j++)
-			DoFile (argv[j], s);
+			DoFile (argv[j], get_arg);
 	} else
 		usage();
 	(void)exit(SUCCESS);
