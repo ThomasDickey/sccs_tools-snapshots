@@ -1,5 +1,5 @@
 #ifndef	lint
-static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/src/RCS/putdelta.c,v 3.10 1991/06/25 15:42:17 dickey Exp $";
+static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/src/RCS/putdelta.c,v 3.17 1991/06/26 14:33:12 dickey Exp $";
 #endif
 
 /*
@@ -7,11 +7,14 @@ static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/
  * Author:	T.E.Dickey
  * Created:	25 Apr 1986
  * Modified:
+ *		26 Jun 1991, added 'reftime' hack to account for filesystem
+ *			     times ahead of system-clock.  Added code to make
+ *			     z-file around critical zones.  Use x-file for
+ *			     intermediate-form when copying back to s-file.
  *		25 Jun 1991, revised 'usage()'. Added "-n" option.  Use
  *			     'sccs2name()' and 'name2sccs()'. Made this work in
  *			     set-uid mode.
  *		20 Jun 1991, use 'shoarg()'
- *		13 Sep 1988, use 'catchall()'
  *		06 Sep 1988, 'admin' doesn't recognize "-s" switch.
  *		28 Jul 1988, renamed from 'sccsbase', rewrote to be a complete
  *			     package for admin/delta.
@@ -46,10 +49,12 @@ static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/
  *			name => $SCCS_DIR/s.name
  *
  * Options:	(see usage)
+ *
+ * patch:	assumes no line is longer than BUFSIZ
  */
 
 #define	ACC_PTYPES
-#define	SIG_PTYPES
+/*#define	SIG_PTYPES*/
 #define	STR_PTYPES
 #include	"ptypes.h"
 #include	"sccsdefs.h"
@@ -57,12 +62,13 @@ static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/
 #include	<ctype.h>
 #include	<errno.h>
 #include	<time.h>
-#include	<signal.h>
+/*#include	<signal.h>*/
 extern	struct	tm *localtime();
 extern	FILE	*tmpfile();
 extern	long	packdate();
 extern	char	*getuser();
 extern	char	*pathcat();
+extern	time_t	time();
 extern	int	localzone;
 
 extern	char	*optarg;
@@ -71,6 +77,8 @@ extern	int	errno;
 extern	char	*sys_errlist[];
 
 /* local declarations: */
+#define	COPY(dst,src)	strncpy(dst, src, sizeof(dst))[sizeof(dst)-1] = EOS
+#define	PATHLEN		256	/* length of pathname */
 #define	NAMELEN		80	/* length of tokens in sccs-header */
 #define	TIMEZONE	5	/* time-zone we use to store dates */
 
@@ -89,42 +97,30 @@ static	char	username[NAMELEN],
 #define	HDR_DELTA	"\001d D "
 #define	LEN_DELTA	5	/* strlen(HDR_DELTA) */
 
-#ifdef	__STDCPP__
-#define	FOR_USER(F,U)	if (for_user2(F, U, d_group) < 0) failed(#F)
-#else
-#define	FOR_USER(F,U)	if (for_user2(F, U, d_group) < 0) failed("F")
-#endif	/* __STDCPP__ */
-
-static	char	fmt_lock[]  = "%s %s %s %s %s\n";
-static	char	fmt_delta[] = "%s %s %s %s %d %d\n";
+static	char	fmt_lock[]  = "%s %s %s %8s %8s\n";
+static	char	fmt_delta[] = "%s %8s %8s %s %d %d\n";
 static	char	fmt_date[]  = "%02d/%02d/%02d";
 static	char	fmt_time[]  = "%02d:%02d:%02d";
 
 				/* names of the current file */
-static	char	g_file[BUFSIZ],
-		s_file[BUFSIZ],
-		p_file[BUFSIZ];
+static	char	g_file[PATHLEN],
+		s_file[PATHLEN];
 static	int	s_mode;
 				/* data set by TestDelta */
-static	char	rev_code[BUFSIZ],
-		rev_pgmr[BUFSIZ],
-		rev_date[BUFSIZ],
-		rev_time[BUFSIZ];
+static	char	rev_code[NAMELEN],
+		rev_pgmr[NAMELEN],
+		rev_date[9],
+		rev_time[9];
 static	int	rev_this,
 		rev_last;
 
 				/* data used by EditFile */
 static	unsigned short chksum;
-				/* data used in 'actual_mkdir' */
-static	char	d_path[BUFSIZ];
+				/* data used in MkDir */
+static	char	d_path[PATHLEN];
 static	int	d_mode,
 		d_user,
 		d_group;
-				/* data used in 'actual_checkin' */
-static	char	*put_verb,
-		put_opts[BUFSIZ];
-				/* data used in 'force_lock' */
-static	char	lock_buffer[BUFSIZ];
 
 /************************************************************************
  *	local procedures						*
@@ -161,6 +157,43 @@ ShowIt (doit)
 		ShowedIt++;
 	}
 	return (doit || !silent);
+}
+
+/*
+ * Construct the specified sccs filename from the s-file
+ */
+static
+MakeName(dst, code)
+char	*dst, code;
+{
+	register char	*s;
+	if (s = strrchr(strcpy(dst, s_file), '/'))
+		*(++s) = code;
+	else
+		*dst = code;
+}
+
+/*
+ * Begin/end critical zone (i.e., prevent other sccs applications from running)
+ */
+static
+Critical(begin)
+int	begin;
+{
+	char	z_file[PATHLEN];
+
+	MakeName(z_file, 'z');
+	if (begin) {
+		short	id = getpid();
+		int	fd = open(z_file, O_EXCL | O_CREAT | O_WRONLY, 0444);
+		if (fd < 0
+		 || write(fd, (char *)&id, sizeof(id)) < 0
+		 || close(fd) < 0)
+			failed(z_file);
+	} else {
+		if (unlink(z_file) < 0)
+			failed(z_file);
+	}
 }
 
 /*
@@ -251,31 +284,19 @@ static
 TestDelta(bfr)
 char	*bfr;
 {
+	auto	char	tmp_code[BUFSIZ],
+			tmp_pgmr[BUFSIZ];
 	if (!strncmp(bfr, HDR_DELTA, LEN_DELTA)) {
 		bfr += LEN_DELTA;
 		if (sscanf(bfr, fmt_delta,
-		    rev_code, rev_date, rev_time, rev_pgmr,
+		    tmp_code, rev_date, rev_time, tmp_pgmr,
 		    &rev_this, &rev_last) == 6) {
+			COPY(rev_code, tmp_code);
+			COPY(rev_pgmr, tmp_pgmr);
 			return (TRUE);
 		}
 	}
 	return (FALSE);
-}
-
-/*
- * Writes the p-file forcing a lock
- */
-static
-force_lock()
-{
-	FILE	*fp;
-	if (fp = fopen(p_file, "a+")) {
-		(void)fputs(lock_buffer, fp);
-		(void)fclose(fp);
-		return;
-	}
-	failed(p_file);
-	/*NOTREACHED*/
 }
 
 /*
@@ -290,11 +311,14 @@ TestLock()
 	FILE	*fp;
 	int	year, mon, mday, hour, min, sec;
 	int	new_lock = FALSE;
-	char	bfr[BUFSIZ];
-	char	old_rev[NAMELEN];
-	char	new_rev[NAMELEN];
-	char	who_rev[NAMELEN];
+	char	bfr[BUFSIZ],
+		old_rev[BUFSIZ],
+		new_rev[BUFSIZ],
+		who_rev[BUFSIZ],
+		p_file[PATHLEN];
 
+	MakeName(p_file, 'p');
+	Critical(TRUE);
 	if (fp = fopen(p_file, "r")) {
 		while (fgets(bfr, sizeof(bfr), fp)) {
 			if ((sscanf(bfr, fmt_lock,
@@ -306,6 +330,8 @@ TestLock()
 				&hour, &sec, &min) == 3)
 			&& isCODE(old_rev)
 			&& isCODE(new_rev) ) {
+				FCLOSE(fp);
+				Critical(FALSE);
 				if (!strcmp(who_rev, username) ) {
 					return (TRUE);
 				} else {
@@ -315,30 +341,35 @@ TestLock()
 				}
 			}
 		}
-		(void)fclose(fp);
+		FCLOSE(fp);
 	}
 
 	/* try to determine the delta to which we should fake a lock */
 	if (fp = fopen(s_file, "r")) {
 		while (fgets(bfr, sizeof(bfr), fp) && *bfr == '\001') {
 			if (TestDelta(bfr)) {
-				FORMAT(lock_buffer, fmt_lock,
+				FORMAT(bfr, fmt_lock,
 					rev_code, NextDelta(rev_code),
 					username, rev_date, rev_time);
 				new_lock = TRUE;
 				break;
 			}
 		}
-		(void)fclose(fp);
+		FCLOSE(fp);
 	}
 
 	/* if we found a correctly-formatted delta in the s-file, lock it */
 	if (new_lock != FALSE) {
 		if (VERBOSE) shoarg(stdout, "lock", g_file);
-		FOR_USER(force_lock,getuid());
-		return (TRUE);
+		if (fp = fopen(p_file, "a+")) {
+			(void)fputs(bfr, fp);
+			FCLOSE(fp);
+			Critical(FALSE);
+			return (TRUE);
+		}
 	}
 	TELL("?? cannot lock %s\n", g_file);
+	Critical(FALSE);
 	return (FALSE);
 }
 
@@ -346,9 +377,9 @@ TestLock()
  * Modify the given delta's time to correspond with the file modification time.
  */
 static
-EditDelta(bfr, modtime, t)
+EditDelta(bfr, modtime, reftime, t)
 char	*bfr;
-time_t	modtime;
+time_t	modtime, reftime;
 struct	tm	*t;
 {
 	time_t	delta;
@@ -369,6 +400,8 @@ struct	tm	*t;
 		FORMAT(&bfr[LEN_DELTA], fmt_delta,
 			rev_code, rev_date, rev_time, rev_pgmr,
 			rev_this, rev_last);
+
+		modtime += reftime;
 		if (delta <= modtime) {
 			if (delta < modtime)
 				SHOW ("** file is newer than delta\n");
@@ -388,25 +421,24 @@ static
 EditFile(lines)
 long	lines;
 {
-	FILE	*fpS;
 	register int j;
-	char	bfr[BUFSIZ];
+	auto	FILE	*fpS;
+	auto	char	bfr[BUFSIZ],
+			x_file[PATHLEN];
 
-	if (chmod(s_file, 0644)) {
-		   TELL ("** cannot write-enable \"%s\"\n", s_file);
-		   return;
-	}
-	catchall(SIG_IGN);
-	fpS = fopen (s_file, "w");
+	MakeName(x_file, 'x');
+	if (!(fpS = fopen (x_file, "w")))
+		failed(x_file);
 	FPRINTF (fpS, "\001h%05d\n", chksum);
 	(void) rewind (fpT);
 	for (j = 1; j < lines; j++) {
 		(void) fgets (bfr, sizeof(bfr), fpT);
 		(void) fputs (bfr, fpS);
 	}
-	(void) fclose (fpS);
-	(void) chmod (s_file, s_mode);
-	catchall(SIG_DFL);
+	FCLOSE(fpS);
+	if (chmod(x_file, s_mode) < 0
+	 || rename(x_file, s_file) < 0)
+		perror(x_file);
 	SHOW ("** %d lines processed\n", lines);
 	(void) fflush (stdout);
 }
@@ -415,8 +447,9 @@ long	lines;
  * Modify the check-in date in a single SCCS s-file:
  */
 static
-ProcessFile(modtime)
-time_t	modtime;
+ProcessFile(modtime, reftime)
+time_t	modtime,	/* file's mod-time */
+	reftime;	/* min-estimate of delay between clock and file-system*/
 {
 	FILE		*fpS;
 	struct	tm	tfix;
@@ -432,12 +465,13 @@ time_t	modtime;
 	tfix = *localtime(&fixtime);
 
 	(void) rewind (fpT);
+	Critical(TRUE);
 	if (fpS = fopen (s_file, "r")) {
 		while (fgets (bfr, sizeof(bfr), fpS)) {
 			lines++;
 			len = strlen(bfr);
 			if (!changed && TestDelta(bfr)) {
-				if (! EditDelta(bfr, modtime, &tfix))
+				if (! EditDelta(bfr, modtime, reftime, &tfix))
 					break;
 				changed++;
 			}
@@ -447,37 +481,26 @@ time_t	modtime;
 				(void) fputs (bfr, fpT);
 			}
 		}
-		(void) fclose (fpS);
+		FCLOSE (fpS);
 
 		if (changed)
 			EditFile(lines);
 	} else {
 		TELL ("** could not open \"%s\"\n", s_file);
 	}
+	Critical(FALSE);
 }
 
 /*
  * Performs the 'mkdir()' using the proper ownership/mode.
  */
 static
-actual_mkdir()
+MkDir()
 {
 	int	old_mask = umask(0);
 	if (mkdir(d_path, d_mode) < 0)
 		failed(d_path);
 	(void)umask(old_mask);
-}
-
-/*
- * Performs the actual checkin
- */
-static
-actual_checkin()
-{
-	if (execute(put_verb, put_opts) < 0) {
-		perror(put_verb);
-		return;
-	}
 }
 
 /*
@@ -489,26 +512,30 @@ static
 DoFile(name)
 char	*name;
 {
-	time_t	put_time;
 	register char	*s;
+	auto	time_t	put_time,
+			ref_time = time(0);
 	struct	stat	sb;
-	auto	char	temp[BUFSIZ];
+	auto	char	temp[BUFSIZ],
+			*put_verb,
+			put_opts[BUFSIZ];
+	auto	int	put_flag = TRUE;
 
 	ShowedIt = FALSE;
 	(void)strcpy(s_file, name2sccs(name, FALSE));
 	(void)strcpy(g_file, sccs2name(name, FALSE));
 
 	/* The file must exist; otherwise we give up! */
-	if ((put_time = isFILE(g_file, &s_mode)) == 0) {
-		perror(g_file);
-		return;
-	}
+	if ((put_time = isFILE(g_file, &s_mode)) == 0)
+		failed(g_file);
 
-	/* Construct the name of the corresponding p-file */
-	if (s = strrchr(strcpy(p_file, s_file), '/'))
-		*(++s) = 'p';
+	/* It is possible (particularly on Apollo ring) for our clock time
+	 * to be earlier than the file's mod-time.
+	 */
+	if ((ref_time -= put_time) <= 0)
+		ref_time--;	/* negative iff clock < file */
 	else
-		*p_file = 'p';
+		ref_time = 0;
 
 	/* If the sccs-directory does not exist, make it */
 	if (s = strrchr(s_file, '/')) {
@@ -527,7 +554,8 @@ char	*name;
 			if (VERBOSE) shoarg(stdout, "mkdir", d_path);
 			if (!no_op) {
 				d_mode = sb.st_mode & 0777;
-				FOR_USER(actual_mkdir,d_user);
+				if (for_user2(MkDir, d_user, d_group) < 0)
+					failed("mkdir");
 			}
 		}
 	} else		/* ...else... user is putting files in "." */
@@ -544,6 +572,7 @@ char	*name;
 			return;
 		put_verb = "delta";
 		catarg(strcpy(put_opts, delta_opts), s_file);
+		put_flag = FALSE;
 	} else {
 		put_verb = "admin";
 		FORMAT(temp, "-i%s", g_file);
@@ -553,8 +582,13 @@ char	*name;
 
 	if (VERBOSE) shoarg(stdout, put_verb, put_opts);
 	if (!no_op) {
-		FOR_USER(actual_checkin,getuid());
-		ProcessFile(put_time);
+		if (execute(put_verb, put_opts) < 0)
+			failed(put_verb);
+		ProcessFile(put_time, ref_time);
+		if (put_flag && !geteuid()) {
+			if (chown(s_file, d_user, d_group) < 0)
+				failed("chown");
+		}
 	}
 }
 
@@ -568,7 +602,7 @@ char	*argv[];
 	register int	j;
 	char	tmp[BUFSIZ];
 
-	(void)strcpy(username, getuser());
+	COPY(username, getuser());
 
 	catarg(delta_opts, "-n");
 	fpT = tmpfile();
@@ -594,4 +628,15 @@ char	*argv[];
 		DoFile (argv[j]);
 	(void)exit(SUCCESS);
 	/*NOTREACHED*/
+}
+
+/*
+ * We have our own 'failed()' to ensure that we clear critical-zone
+ */
+failed(s)
+char	*s;
+{
+	Critical(FALSE);
+	perror(s);
+	(void)exit(FAIL);
 }

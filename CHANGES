@@ -1,3 +1,35 @@
+1991-06-26  dickey@software.org
+
+	* src/putdelta/src/putdelta.c:
+	if this is set-uid'd to root, change the ownership of the
+	archive to the directory-owner after the first insertion.
+
+	* src/putdelta/src/putdelta.c:
+	revised the code which copies back into the s-file by first
+	writing to the x-file and then renaming it (more reliable
+	than trying to suppress signals).
+
+	* src/putdelta/src/putdelta.c:
+	cleanup static buffer sizes some more (assumes no read is
+	larger than BUFSIZ).
+
+	* src/putdelta/src/putdelta.c:
+	added 'Critical()'; used it to mark critical zones.
+	incidentally fixed a missing fclose.
+
+	* src/putdelta/src/putdelta.c:
+	added reftime-hack to account for the bizarre case in which
+	the (apollo) filesystem time is ahead of the system clock.
+
+	* src/putdelta/src/putdelta.c:
+	added field-widths to 'fmt_lock[]' and 'fmt_date[]' where
+	scanf/printf are compatible so that I could safely reduce
+	the size of static arrays 'rev_date[]' and 'rev_time[]'.
+
+	* src/putdelta/src/putdelta.c:
+	really need to alter uid/gid only for the 'mkdir()' operation.
+	cleanup accordingly.
+
 1991-06-25  ste_cm@software.org
 
 	* src/putdelta/src/sccsput.c: oops: left "-k" out of getopt-list
