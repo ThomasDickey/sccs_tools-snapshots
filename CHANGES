@@ -1,3 +1,11 @@
+1989-06-12  dickey@software.org
+
+	* certify/config.txt: added note about dependency on CM_TOOLS
+
+1989-06-12  ste_cm@software.org
+
+	* certify/config.txt: BASELINE Mon Jul 10 09:16:36 EDT 1989
+
 1989-04-28  dickey@software.org
 
 	* src/sccs2rcs/src/sccs2rcs.c:
