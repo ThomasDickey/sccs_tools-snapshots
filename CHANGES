@@ -1,3 +1,7 @@
+1998-12-09  Thomas E. Dickey  <dickey@clark.net>
+
+	* install-sh: resync: xterm
+
 1998-04-22  Thomas E. Dickey  <dickey@clark.net>
 
 	* src/putdelta/src/sccsput.c:
