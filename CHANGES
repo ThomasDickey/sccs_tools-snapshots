@@ -1,3 +1,8 @@
+1995-09-07  Thomas E. Dickey  <dickey@clark.net>
+
+	* src/getdelta/src/getdelta.c:
+	dehexify binary files that (presumably) come from CmVision
+
 1995-05-13  Thomas E. Dickey  <dickey@clark.net>
 
 	* src/sccs2rcs/src/sccs2rcs.c: setmtime
