@@ -1,5 +1,5 @@
 #ifndef	lint
-static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/src/RCS/putdelta.c,v 3.1 1991/06/20 17:33:53 dickey Exp $";
+static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/src/RCS/putdelta.c,v 3.10 1991/06/25 15:42:17 dickey Exp $";
 #endif
 
 /*
@@ -7,10 +7,12 @@ static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/
  * Author:	T.E.Dickey
  * Created:	25 Apr 1986
  * Modified:
+ *		25 Jun 1991, revised 'usage()'. Added "-n" option.  Use
+ *			     'sccs2name()' and 'name2sccs()'. Made this work in
+ *			     set-uid mode.
  *		20 Jun 1991, use 'shoarg()'
  *		13 Sep 1988, use 'catchall()'
  *		06 Sep 1988, 'admin' doesn't recognize "-s" switch.
- *		02 Sep 1988, use 'sccs_dir()'
  *		28 Jul 1988, renamed from 'sccsbase', rewrote to be a complete
  *			     package for admin/delta.
  *		10 Jun 1988, recoded to use 'newzone()'.
@@ -43,23 +45,24 @@ static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/
  *
  *			name => $SCCS_DIR/s.name
  *
- * Options:	s	(silent) suppress all but essential messages reporting
- *			updates which were made.
- *		y note	specifies delta-comment
+ * Options:	(see usage)
  */
 
+#define	ACC_PTYPES
 #define	SIG_PTYPES
 #define	STR_PTYPES
 #include	"ptypes.h"
 #include	"sccsdefs.h"
 
 #include	<ctype.h>
+#include	<errno.h>
 #include	<time.h>
 #include	<signal.h>
 extern	struct	tm *localtime();
 extern	FILE	*tmpfile();
 extern	long	packdate();
 extern	char	*getuser();
+extern	char	*pathcat();
 extern	int	localzone;
 
 extern	char	*optarg;
@@ -72,11 +75,12 @@ extern	char	*sys_errlist[];
 #define	TIMEZONE	5	/* time-zone we use to store dates */
 
 #define	SHOW	if (ShowIt(TRUE))  PRINTF
+#define	VERBOSE	   (ShowIt(FALSE))
 #define	TELL	if (ShowIt(FALSE)) PRINTF
-#define	WARN	TELL ("?? %s\n", sys_errlist[errno])
 
 static	FILE	*fpT;
 static	int	silent	= FALSE,
+		no_op	= FALSE,
 		ShowedIt;
 static	char	username[NAMELEN],
 		admin_opts[BUFSIZ],
@@ -84,6 +88,12 @@ static	char	username[NAMELEN],
 
 #define	HDR_DELTA	"\001d D "
 #define	LEN_DELTA	5	/* strlen(HDR_DELTA) */
+
+#ifdef	__STDCPP__
+#define	FOR_USER(F,U)	if (for_user2(F, U, d_group) < 0) failed(#F)
+#else
+#define	FOR_USER(F,U)	if (for_user2(F, U, d_group) < 0) failed("F")
+#endif	/* __STDCPP__ */
 
 static	char	fmt_lock[]  = "%s %s %s %s %s\n";
 static	char	fmt_delta[] = "%s %s %s %s %d %d\n";
@@ -105,6 +115,16 @@ static	int	rev_this,
 
 				/* data used by EditFile */
 static	unsigned short chksum;
+				/* data used in 'actual_mkdir' */
+static	char	d_path[BUFSIZ];
+static	int	d_mode,
+		d_user,
+		d_group;
+				/* data used in 'actual_checkin' */
+static	char	*put_verb,
+		put_opts[BUFSIZ];
+				/* data used in 'force_lock' */
+static	char	lock_buffer[BUFSIZ];
 
 /************************************************************************
  *	local procedures						*
@@ -113,7 +133,18 @@ static	unsigned short chksum;
 static
 usage ()
 {
-	PRINTF ("usage: putdelta [-s -y<comment>] files\n");
+	static	char	*msg[] = {
+ "Usage: putdelta [options] files"
+,""
+,"Options"
+,"  -n       (no-op) shows actions, but does not perform them"
+,"  -s       (silent) suppress all but essential messages reporting updates"
+,"           which were made."
+,"  -y TEXT  describes the delta (otherwise you will be prompted)"
+	};
+	register int	j;
+	for (j = 0; j < sizeof(msg)/sizeof(msg[0]); j++)
+		FPRINTF(stderr, "%s\n", msg[j]);
 	(void)exit(FAIL);
 }
 
@@ -130,6 +161,27 @@ ShowIt (doit)
 		ShowedIt++;
 	}
 	return (doit || !silent);
+}
+
+/*
+ * Verify that we got a directory in the 'stat()' call. We use this for
+ * ownership information.
+ */
+static
+NeedDirectory(path, sb)
+char	*path;
+struct	stat	*sb;
+{
+	if (stat(path, sb) < 0)
+		failed(path);
+	if ((sb->st_mode & S_IFMT) != S_IFDIR) {
+		errno = ENOTDIR;
+		failed(path);
+	}
+	if (access(path, X_OK | R_OK) < 0)
+		failed(path);
+	d_user = sb->st_uid;
+	d_group = sb->st_gid;
 }
 
 /*
@@ -153,23 +205,6 @@ int	*mode_;
 			/*NOTREACHED*/
 		}
 	}
-	return (0);
-}
-
-/*
- * See if the name corresponds to an sccs "s." file
- */
-static
-char	*
-isSCCS(name)
-char	*name;
-{
-	register char *s = strrchr(name, '/');
-
-	if (!s) s = name;
-	else	s++;
-	if (!strncmp(s, SCCS_PREFIX, 2))
-		return (s+2);
 	return (0);
 }
 
@@ -228,6 +263,22 @@ char	*bfr;
 }
 
 /*
+ * Writes the p-file forcing a lock
+ */
+static
+force_lock()
+{
+	FILE	*fp;
+	if (fp = fopen(p_file, "a+")) {
+		(void)fputs(lock_buffer, fp);
+		(void)fclose(fp);
+		return;
+	}
+	failed(p_file);
+	/*NOTREACHED*/
+}
+
+/*
  * Inspect the p-file to see if we have a lock on a version.
  * If there are no locks, fake one so that "delta" will see it.
  *
@@ -271,7 +322,7 @@ TestLock()
 	if (fp = fopen(s_file, "r")) {
 		while (fgets(bfr, sizeof(bfr), fp) && *bfr == '\001') {
 			if (TestDelta(bfr)) {
-				FORMAT(bfr, fmt_lock,
+				FORMAT(lock_buffer, fmt_lock,
 					rev_code, NextDelta(rev_code),
 					username, rev_date, rev_time);
 				new_lock = TRUE;
@@ -282,9 +333,9 @@ TestLock()
 	}
 
 	/* if we found a correctly-formatted delta in the s-file, lock it */
-	if ((new_lock != FALSE) && (fp = fopen(p_file, "a+"))) {
-		(void)fputs(bfr, fp);
-		(void)fclose(fp);
+	if (new_lock != FALSE) {
+		if (VERBOSE) shoarg(stdout, "lock", g_file);
+		FOR_USER(force_lock,getuid());
 		return (TRUE);
 	}
 	TELL("?? cannot lock %s\n", g_file);
@@ -406,29 +457,27 @@ time_t	modtime;
 }
 
 /*
- * If the SCCS-directory does not exist, make it.
+ * Performs the 'mkdir()' using the proper ownership/mode.
  */
 static
-MakeDirectory()
+actual_mkdir()
 {
-	struct	stat	sb;
-	char	path[BUFSIZ],
-		*s;
+	int	old_mask = umask(0);
+	if (mkdir(d_path, d_mode) < 0)
+		failed(d_path);
+	(void)umask(old_mask);
+}
 
-	if (s = strrchr(s_file, '/')) {
-		(strncpy(path, s_file, (size_t)(s - s_file)))[s - s_file] = EOS;
-
-		if (stat(path, &sb) >= 0)
-			return ((sb.st_mode & S_IFMT) == S_IFDIR);
-		else {
-			TELL("** make directory %s\n", path);
-			if (mkdir(path, 0755) < 0) {
-				WARN;
-				return (FALSE);
-			}
-		}
-	}		/* ...else... user is putting files in "." */
-	return (TRUE);
+/*
+ * Performs the actual checkin
+ */
+static
+actual_checkin()
+{
+	if (execute(put_verb, put_opts) < 0) {
+		perror(put_verb);
+		return;
+	}
 }
 
 /*
@@ -440,25 +489,18 @@ static
 DoFile(name)
 char	*name;
 {
-	time_t		modtime;
+	time_t	put_time;
 	register char	*s;
-	static	char	temp[BUFSIZ],
-			*put_verb,
-			put_opts[BUFSIZ];
+	struct	stat	sb;
+	auto	char	temp[BUFSIZ];
 
 	ShowedIt = FALSE;
-	/* Construct the name of the s-file */
-	if (s = isSCCS(name)) {
-		(void)strcpy(s_file, name);
-		(void)strcpy(g_file, name = s);
-	} else {
-		FORMAT(s_file, "%s/%s%s",
-			sccs_dir(), SCCS_PREFIX, strcpy(g_file, name));
-	}
+	(void)strcpy(s_file, name2sccs(name, FALSE));
+	(void)strcpy(g_file, sccs2name(name, FALSE));
 
 	/* The file must exist; otherwise we give up! */
-	if ((modtime = isFILE(g_file, &s_mode)) == 0) {
-		WARN;
+	if ((put_time = isFILE(g_file, &s_mode)) == 0) {
+		perror(g_file);
 		return;
 	}
 
@@ -467,6 +509,34 @@ char	*name;
 		*(++s) = 'p';
 	else
 		*p_file = 'p';
+
+	/* If the sccs-directory does not exist, make it */
+	if (s = strrchr(s_file, '/')) {
+		size_t	len	= s - s_file;
+		(strncpy(d_path, s_file, len))[len] = EOS;
+
+		if (stat(d_path, &sb) >= 0) {
+			NeedDirectory(d_path, &sb);
+		} else {
+			/* mode and ownership should propagate from the
+			 * directory in which we create the sccs-directory.
+			 */
+			abspath(pathcat(temp, d_path, ".."));
+			NeedDirectory(temp, &sb);
+
+			if (VERBOSE) shoarg(stdout, "mkdir", d_path);
+			if (!no_op) {
+				d_mode = sb.st_mode & 0777;
+				FOR_USER(actual_mkdir,d_user);
+			}
+		}
+	} else		/* ...else... user is putting files in "." */
+		NeedDirectory(".", &sb);
+
+	if (getuid() == d_user) {
+		revert("set-uid mode redundant");
+		d_group = getegid();
+	}
 
 	/* If the s-file exists, we make a delta; otherwise initial insertion */
 	if (isFILE(s_file, (int *)0)) {
@@ -479,16 +549,13 @@ char	*name;
 		FORMAT(temp, "-i%s", g_file);
 		catarg(strcpy(put_opts, admin_opts), temp);
 		catarg(put_opts, s_file);
-		if (!MakeDirectory())
-			return;
-	}
-	if (!silent) shoarg(stdout, put_verb, put_opts);
-	if (execute(put_verb, put_opts) < 0) {
-		perror(put_verb);
-		return;
 	}
 
-	ProcessFile(modtime);
+	if (VERBOSE) shoarg(stdout, put_verb, put_opts);
+	if (!no_op) {
+		FOR_USER(actual_checkin,getuid());
+		ProcessFile(put_time);
+	}
 }
 
 /************************************************************************
@@ -505,8 +572,11 @@ char	*argv[];
 
 	catarg(delta_opts, "-n");
 	fpT = tmpfile();
-	while ((j = getopt(argc, argv, "sy:")) != EOF)
+	while ((j = getopt(argc, argv, "nsy:")) != EOF)
 		switch (j) {
+		case 'n':
+			no_op	= TRUE;
+			break;
 		case 's':
 			silent	= TRUE;
 			catarg(delta_opts, "-s");

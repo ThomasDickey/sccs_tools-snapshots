@@ -1,5 +1,5 @@
 #ifndef	lint
-static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/src/RCS/sccsput.c,v 3.1 1991/06/20 17:36:23 dickey Exp $";
+static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/src/RCS/sccsput.c,v 3.3 1991/06/25 15:55:29 ste_cm Exp $";
 #endif
 
 /*
@@ -7,6 +7,9 @@ static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/
  * Author:	T.E.Dickey
  * Created:	08 May 1990 (from sccsput.sh and rcsput.c)
  * Modified:
+ *		25 Jun 1991, added "-D", "-T" options.  Automatically unlink
+ *			log-file if it is empty (may retain prior file if one
+ *			exists).
  *		20 Jun 1991, use 'shoarg()'.
  *		07 Jun 1991, use 'getopt()'; cleanup option processing,
  *			including those that we pass-thru to 'putdelta'
@@ -44,6 +47,7 @@ static	char	*pager;		/* nonzero if we don't cat diffs */
 static	int	force;
 static	char	*k_opt	= "";
 static	int	quiet;
+static	int	found_diffs;	/* true iff we keep logfile */
 
 static
 filesize(name)
@@ -125,6 +129,8 @@ char	*archive;
 		if (log_fp != 0) {
 			PRINTF("appending to logfile");
 			cat2fp(log_fp, out_diff);
+			if (!found_diffs && filesize(out_diff) > 0)
+				found_diffs = TRUE;
 		}
 	} else {
 		PRINTF("*** no differences found ***\n");
@@ -234,15 +240,17 @@ usage(option)
 ,""
 ,"Options"
 ,"  -a       process all directories, including those beginning with \".\""
-,"  -b       (passed to sccsdiff)"
+,"  -b       (passed to \"diff\")"
 ,"  -c       send differences to terminal without $PAGER filtering"
 ,"  -f       force (initial) insertion even if file appears to be non-text"
-,"  -h       (passed to sccsdiff)"
+,"  -h       (passed to \"diff\")"
 ,"  -k       expand keywords from archive before differences"
 ,"  -l file  write all differences to log-file"
 ,"  -n       compute differences only, don't try to archive"
 ,"  -s       silent (passed to putdelta)"
 ,"  -y text  comment (passed to putdelta)"
+,"  -D opts  special options to pass to \"diff\""
+,"  -T tool  specify a checkin-tool other than \"putdelta\""
 ,""
 	};
 	register int	j;
@@ -258,12 +266,15 @@ char	*argv[];
 {
 	extern	int	optind;
 	extern	char	*optarg;
+	auto	char	deferred[BUFSIZ],
+			*logname;
+#define	DEFERRED	strcat(strcpy(deferred, "-"), optarg)
 
 	register int	j;
 
 	track_wd((char *)0);
 	pager = dftenv("more -l", "PAGER");
-	while ((j = getopt(argc, argv, "abcfhl:nsy:")) != EOF) {
+	while ((j = getopt(argc, argv, "abcfhkl:nsy:D:T:")) != EOF) {
 		switch (j) {
 		case 'a':	a_opt = TRUE;			break;
 		case 'b':	catarg(diff_opts, "-b");	break;
@@ -271,7 +282,8 @@ char	*argv[];
 		case 'f':	force = TRUE;			break;
 		case 'h':	catarg(diff_opts, "-h");	break;
 		case 'k':	k_opt = "-k";			break;
-		case 'l':	if (!(log_fp = fopen(optarg, "a+")))
+		case 'l':	found_diffs = filesize(logname = optarg) > 0;
+				if (!(log_fp = fopen(optarg, "a+")))
 					usage(0);
 				break;
 		case 'n':	no_op = TRUE;			break;
@@ -279,6 +291,8 @@ char	*argv[];
 		case 'y':	FORMAT(comment, "-y%.*s",
 					sizeof(comment-3), optarg);
 				break;
+		case 'D':	catarg(diff_opts, DEFERRED);	break;
+		case 'T':	verb = optarg;			break;
 		default:	usage(j);
 		}
 	}
@@ -288,6 +302,12 @@ char	*argv[];
 			do_arg(argv[optind++]);
 	} else
 		do_arg(".");
+
+	if (log_fp != 0) {
+		FCLOSE(log_fp);
+		if (!found_diffs)
+			(void)unlink(logname);
+	}
 
 	exit(SUCCESS);
 	/*NOTREACHED*/
