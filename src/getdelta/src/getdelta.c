@@ -1,5 +1,5 @@
 #ifndef	lint
-static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/src/RCS/getdelta.c,v 6.7 1995/01/28 19:10:07 tom Exp $";
+static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/src/RCS/getdelta.c,v 6.8 1995/03/16 23:43:08 tom Exp $";
 #endif
 
 /*
@@ -7,6 +7,7 @@ static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/
  * Author:	T.E.Dickey
  * Created:	26 Mar 1986 (as a procedure)
  * Modified:
+ *		16 Mar 1995, allow -r, -s options to repeat (use last).
  *		19 Jul 1994, added "-p" option.
  *		18 Jul 1994, corrected 'bump()' using 'vercmp()'.
  *		15 Jul 1994, use 'sccspath()'
@@ -406,11 +407,13 @@ void	usage (_AR0)
 _MAIN
 {
 	char	temp[BUFSIZ];
+	char	r_opt[BUFSIZ];
 	register int	j, k;
 	char	*get_arg;
 
 	oldzone();
 
+	*r_opt = EOS;
 	while ((j = getopt(argc, argv, "bc:efknpr:s")) != EOF) {
 		switch (j) {
 		/* options interpreted & pass through to "get" */
@@ -420,8 +423,7 @@ _MAIN
 				if (sid[k] == '.')
 					sid[k] = EOS;
 			TELL "sid: %s\n", sid);
-			FORMAT(temp, "-r%s", sid);
-			catarg(get_opts, temp);
+			FORMAT(r_opt, "-r%s", sid);
 			break;
 
 		case 'c':
@@ -441,7 +443,6 @@ _MAIN
 
 		case 's':
 			silent	= TRUE;
-			catarg(get_opts, "-s");
 			break;
 
 		case 'b':
@@ -459,6 +460,12 @@ _MAIN
 		default:	usage();
 		}
 	}
+
+	/* Use 'get' options once-only, since it complains otherwise */
+	if (*r_opt != EOS)
+		catarg(get_opts, r_opt);
+	if (silent)
+		catarg(get_opts, "-s");
 
 	get_arg = get_opts + strlen(get_opts);
 	if (optind < argc) {
