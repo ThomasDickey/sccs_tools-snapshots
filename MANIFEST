@@ -1,4 +1,4 @@
-MANIFEST for sccs_tools, version t19940715
+MANIFEST for sccs_tools, version t19940718
 --------------------------------------------------------------------------------
 MANIFEST                        this file
 COPYING                         copyright notice for CM_TOOLS
@@ -54,6 +54,7 @@ user/getdelta.doc
 user/getdelta.man               converted from interleaf to nroff
 user/putdelta.doc               
 user/putdelta.man               translated from interleaf to nroff
+user/sccs2rcs.man               man-page for sccs2rcs
 user/sccsget.doc                
 user/sccsget.man                translated from interleaf to nroff
 user/sccsput.doc                

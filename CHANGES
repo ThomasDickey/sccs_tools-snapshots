@@ -1,3 +1,15 @@
+1994-07-18  Thomas E. Dickey  <dickey@clark.net>
+
+	* src/sccs2rcs/src/sccs2rcs.c:
+	use the "-w" option of 'ci' to preserve author info also.
+
+	* src/getdelta/src/getdelta.c:
+	use 'vercmp()' to correct the behavior when I'm extracting version 1.1
+	from an archive that has version 4.1! (My mod for 'bump()' long ago
+	broke this...)
+
+	* user/sccs2rcs.man: RCS_BASE
+
 1994-07-15  Thomas E. Dickey  <dickey@clark.net>
 
 	* src/putdelta/src/putdelta.c: use 'sccspath()'

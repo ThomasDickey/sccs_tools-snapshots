@@ -1,0 +1,114 @@
+.\" $Id: sccs2rcs.man,v 6.1 1994/07/18 15:37:23 tom Exp $
+.de DS
+.RS
+.nf
+.sp
+..
+.de DE
+.fi
+.RE
+.sp .5
+..
+.hy 0
+.TH SCCS2RCS 1
+.SH NAME
+.PP
+\fBsccs2rcs\fR \- build RCS file from SCCS file preserving deltas.
+.
+.SH USAGE
+.PP
+\fBsccs2rcs\fI [options] [file-specifications]
+.
+.SH SYNOPSIS
+.PP
+\fBSccs2rcs\fR reads an \fIsccs\fR archive, analyzes its revision history
+and issues commands to the \fIrcs\fR checkin program to construct an
+equivalent \fIrcs\fR archive.
+.
+.SH DESCRIPTION
+.PP
+This is an enhanced version of a utility \fBsccstorcs\fR, which translates
+an \fIsccs\fR archive into an \fIrcs\fR archive.
+The program reads the archive, extracts the version numbers and comments
+and applies them to construct an equivalent archive in \fIrcs\fR format.
+.
+.PP
+There are two enhancements made.
+The fundamental change is that this utility preserves the time stamp
+information when translating.
+.
+.PP
+The secondary enhancement detects \fIsccs\fR keywords in the file,
+and replaces them by an \fIrcs\fR identifier.
+This works by searching for the string "@(#)" in each line,
+and replacing from that point til the end of the line (or the
+next quote character) with the \fIrcs\fR "Id" keyword.
+.
+.PP
+When keyword replacement is specified, the utility also looks for
+a suitable place to insert the \fIrcs\fR "Log" keyword.
+It does this by scanning each line that begins with the same
+string specified for the comment-prefix option, skipping
+whitespace and looking for (ignoring case) one of the following
+keywords, terminated by a colon:
+.
+.RS
+last,
+modified,
+revised,
+revision,
+updated,
+update
+.RE
+.
+.SH OPTIONS
+.PP
+.
+.TP
+.BI \-c " string"
+specifies the comment-prefix option in the \fIrcs\fR file.
+You should use this option when you use the "\fB\-e\fR" option
+to translate keywords.
+.
+.TP
+.B \-e
+attempts to replace \fIsccs\fR keywords by \fIrcs\fR keywords.
+.
+.TP
+.B \-q
+quiet, tells the \fIsccs\fR and \fIrcs\fR utilities to shut up.
+This option is overridden by "\fB\-v\fR".
+.
+.TP
+.B \-v
+verbose, controls the amount of messages that describe what
+the program is doing.
+Repeat this option to show the contents of the \fIsccs\fR file header.
+.
+.TP
+.B \-t
+shows what would be done, but doesn't do it.
+.
+.SH FILES
+.PP
+\fBSccs2rcs\fR uses the following files
+.TP
+\fBgetdelta\fR
+A wrapper for the \fIsccs\fR utility \fBget\fR that checks out a file
+keeping its modification time the same as the original checkin time.
+.
+.TP
+\fBcheckin\fR
+A wrapper for the \fIrcs\fR utility \fBci\fR that checks in a file preserving
+its modification time.
+.
+.SH SEE ALSO
+.PP
+sccsfile\ (5), rcs\ (5), get\ (1), getdelta\ (1), checkin\ (1)
+.
+.SH AUTHOR
+.PP
+Ken Greer
+.br
+Modified by Thomas Dickey (dickey@clark.net) to preserve time stamps, and
+to convert keywords.

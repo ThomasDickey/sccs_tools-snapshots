@@ -1,6 +1,6 @@
 #ifndef	lint
 static char *RCSid =
-"$Header: /users/source/archives/sccs_tools.vcs/src/sccs2rcs/src/RCS/sccs2rcs.c,v 6.1 1993/09/23 20:21:51 dickey Exp $";
+"$Header: /users/source/archives/sccs_tools.vcs/src/sccs2rcs/src/RCS/sccs2rcs.c,v 6.2 1994/07/18 20:03:11 tom Exp $";
 #endif
 
 /*
@@ -8,7 +8,10 @@ static char *RCSid =
  * Author: Ken Greer
  *
  * $Log: sccs2rcs.c,v $
- * Revision 6.1  1993/09/23 20:21:51  dickey
+ * Revision 6.2  1994/07/18 20:03:11  tom
+ * use the "-w" option of 'ci' to preserve author info also.
+ *
+ * Revision 6.1  1993/09/23  20:21:51  dickey
  * gcc warnings
  *
  * Revision 6.0  93/04/29  12:30:16  ste_cm
@@ -158,6 +161,7 @@ int
 
 typedef struct delta
 {
+    char *author;
     char *revision;
     char *commentary;
     struct delta *next;
@@ -251,10 +255,12 @@ DELTA *	new_delta _ONE(char *, line)
 {
     register DELTA *delta;
     char rev[32];
+    char author[32];
 
-    if (sscanf (line, "%*s %*s %s", rev) < 1)
+    if (sscanf (line, "%*s %*s %s %*s %*s %s", rev, author) < 1)
 	quit("delta format");
     delta = XALLOC(DELTA);
+    delta -> author = string (author);
     delta -> revision = string (rev);
     delta -> commentary = NULL;
     return (delta);
@@ -497,10 +503,12 @@ int	install_deltas (
 {
     FILE *pd;
     char command[BUFSIZ];
+    char author [BUFSIZ];
     char version[BUFSIZ];
 
     for (; delta; delta = delta -> next)
     {
+	FORMAT(author,  "-w%s", delta->author);
 	FORMAT(version, "-r%s", delta->revision);
 	if (trace || verbose > 1)
 	    PRINTF("# installing delta %s\n", version);
@@ -517,6 +525,7 @@ int	install_deltas (
 		return (-1);
 
 	RCSarg(command);
+	catarg(command, author);
 	if (quiet)	catarg(command, "-q");
 	catarg(command, version);
 	catarg(command, rcsfile);
@@ -820,6 +829,7 @@ void	print_header (
 
     for (d = header -> deltas; d; d = d -> next)
     {
+	PRINTF ("\nAuthor:  %s",   d -> author);
 	PRINTF ("\nRelease: %s\n", d -> revision);
 	PRINTF ("Commentary:\n%s", d -> commentary);
     }
