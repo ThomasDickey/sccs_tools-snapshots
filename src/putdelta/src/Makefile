@@ -1,4 +1,4 @@
-# $Header: /users/source/archives/sccs_tools.vcs/src/putdelta/src/RCS/Makefile,v 2.1 1990/05/08 14:10:27 dickey Exp $
+# $Header: /users/source/archives/sccs_tools.vcs/src/putdelta/src/RCS/Makefile,v 3.0 1991/06/05 17:06:09 ste_cm Rel $
 # Make-file for SCCS check-in utilities
 #
 ####### (Environment) ##########################################################
@@ -11,7 +11,6 @@ GET	= checkout
 DEFINES	=
 INCLUDES= -I$I
 CPP_OPTS= $(DEFINES) $(INCLUDES)
-CFLAGS	= -O
 LIBS	= $L/lib.a
 DATE	= echo '****'`date` >> $@
 LINTOPT	= $(CPP_OPTS) -ltd
@@ -31,6 +30,7 @@ clean:				; rm -f *.o *.bak *.out
 clobber:	clean		; rm -f $(ALL)
 destroy:
 	sh -c 'for i in *;do case $$i in RCS);; *) rm -f $$i;;esac;done;exit 0'
+run_tests:
 sources:	$(SOURCES)
 #
 install:	$B/putdelta\

@@ -1,11 +1,14 @@
-# $Header: /users/source/archives/sccs_tools.vcs/src/sccs2rcs/src/RCS/Makefile,v 2.0 1989/07/10 08:41:13 ste_cm Rel $
+# $Header: /users/source/archives/sccs_tools.vcs/src/sccs2rcs/src/RCS/Makefile,v 3.0 1991/06/05 17:08:25 ste_cm Rel $
 # Make-file for sccs/RCS conversion utility
 #
 # $Log: Makefile,v $
-# Revision 2.0  1989/07/10 08:41:13  ste_cm
-# BASELINE Mon Jul 10 09:22:04 EDT 1989
+# Revision 3.0  1991/06/05 17:08:25  ste_cm
+# BASELINE Tue Jun 18 08:04:39 1991 -- apollo sr10.3
 #
-#	Revision 1.5  89/07/10  08:41:13  dickey
+#	Revision 2.1  91/06/05  17:08:25  dickey
+#	mods for baseline
+#	
+#	Revision 1.5  89/07/10  08:41:25  dickey
 #	corrected 'destroy', 'source' rules
 #	
 #	Revision 1.4  89/03/29  13:26:02  dickey
@@ -29,9 +32,10 @@ GET	= checkout
 #
 ####### (Command-line Options) #################################################
 INCLUDES= -I$I
-CFLAGS  = $(DEFINES) $(INCLUDES) -O
+CPP_OPTS= $(DEFINES) $(INCLUDES)
 DATE	= echo '****'`date` >> $@
-LINTOPT	= $(DEFINES) $(INCLUDES) -ltd
+LINTOPT	= $(CPP_OPTS) -ltd
+.c.o:	; $(CC) $(CFLAGS) $(CPP_OPTS) -c $<
 #
 ####### (Standard Lists) #######################################################
 ALL	= $B/sccs2rcs
@@ -46,6 +50,7 @@ clean:				; rm -f *.o *.out
 clobber:	clean		; rm -f $(ALL)
 destroy:
 	sh -c 'for i in *;do case $$i in RCS);; *) rm -f $$i;;esac;done'
+run_tests:
 sources:	$(SRCS)
 #
 ####### (Details of Productions) ###############################################

@@ -1,3 +1,66 @@
+1991-06-05  dickey@software.org
+
+	* src/sccs2rcs/test/do_test.sh:
+	push-aside pre-existing RCS-directory so this script will work ok.
+
+1991-06-05  ste_cm@software.org
+
+	* src/sccs2rcs/test/do_test.sh:
+	BASELINE Tue Jun 18 08:04:39 1991 -- apollo sr10.3
+
+1991-06-05  dickey@software.org
+
+	* src/sccs2rcs/src/Makefile: mods for baseline
+
+1991-06-05  ste_cm@software.org
+
+	* src/sccs2rcs/src/Makefile:
+	BASELINE Tue Jun 18 08:04:39 1991 -- apollo sr10.3
+
+1991-06-05  dickey@software.org
+
+	* src/putdelta/src/Makefile: fixes for baseline
+
+1991-06-05  ste_cm@software.org
+
+	* src/putdelta/src/Makefile:
+	BASELINE Tue Jun 18 08:04:39 1991 -- apollo sr10.3
+
+1991-06-05  dickey@software.org
+
+	* src/getdelta/src/Makefile: suppress CFLAGS
+
+1991-06-05  ste_cm@software.org
+
+	* src/getdelta/src/Makefile:
+	BASELINE Tue Jun 18 08:04:39 1991 -- apollo sr10.3
+
+1991-06-05  dickey@software.org
+
+	* src/getdelta/src/Makefile: dummy-rule for run_tests
+
+	* Makefile: corrected typos
+
+1991-06-05  ste_cm@software.org
+
+	* Makefile: BASELINE Tue Jun 18 08:04:39 1991 -- apollo sr10.3
+
+1991-06-05  dickey@software.org
+
+	* Makefile: standardized install-rules
+
+	* src/sccs2rcs/test/Makefile: dummied unused rules
+
+1991-06-05  ste_cm@software.org
+
+	* src/sccs2rcs/test/Makefile:
+	BASELINE Mon Jul 20 12:41:28 1992 -- CM_TOOLS #11
+
+	* src/sccs2rcs/test/Makefile: BASELINE Tue Dec 17 11:56:35 1991
+
+	* src/sccs2rcs/test/Makefile:
+	BASELINE Tue Jun 18 08:04:39 1991 -- apollo sr10.3
+
 1991-06-04  dickey@software.org
 
 	* Makefile: standardized install-path
