@@ -1,18 +1,20 @@
-: '$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/test/RCS/run_test.sh,v 2.0 1989/03/29 13:52:18 ste_cm Rel $'
+#!/bin/sh
+# $Id: run_test.sh,v 3.0 1991/05/24 09:20:01 ste_cm Rel $
 # test-script for see that 'putdelta' is working.
 #
-# $Log: run_test.sh,v $
-# Revision 2.0  1989/03/29 13:52:18  ste_cm
-# BASELINE Mon Jul 10 09:24:06 EDT 1989
-#
-# Revision 1.1  89/03/29  13:52:18  dickey
-# Initial revision
-# 
-#
-date
-rm -rf sccs dummy
+SCCS=${SCCS_DIR-SCCS}
+PATH=`cd ../bin;pwd`:$PATH;	export PATH
+
+echo '** '`date`
+for tool in putdelta sccsput
+do
+cat <<eof/
+**
+**	Testing $tool:
+eof/
+rm -rf $SCCS dummy
 copy Makefile dummy
-if ( ../bin/putdelta -s dummy )
+if ( $tool -s dummy )
 then
 	N=`ls -l dummy Makefile |\
 		fgrep -v otal |\
@@ -24,8 +26,9 @@ then
 		ls -l dummy Makefile
 	fi
 	echo '** archived file is'
-	ls -l sccs/s.dummy
+	ls -l $SCCS/s.dummy
 else
-	echo '?? putdelta failed'
+	echo '?? $tool failed'
 fi
-rm -rf sccs dummy
+rm -rf $SCCS dummy
+done

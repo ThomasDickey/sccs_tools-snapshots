@@ -1,5 +1,5 @@
 #ifndef	lint
-static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/src/RCS/getdelta.c,v 2.1 1991/05/23 09:26:57 dickey Exp $";
+static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/src/RCS/getdelta.c,v 3.0 1991/05/24 07:58:35 ste_cm Rel $";
 #endif
 
 /*
@@ -7,9 +7,15 @@ static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/
  * Author:	T.E.Dickey
  * Created:	26 Mar 1986 (as a procedure)
  * $Log: getdelta.c,v $
- * Revision 2.1  1991/05/23 09:26:57  dickey
- * apollo sr10.3 cpp complains about endif-tags
+ * Revision 3.0  1991/05/24 07:58:35  ste_cm
+ * BASELINE Tue Jun 18 08:04:39 1991 -- apollo sr10.3
  *
+ *		Revision 2.2  91/05/24  07:58:35  dickey
+ *		lint (apollo sr10.3)
+ *		
+ *		Revision 2.1  91/05/23  09:27:31  dickey
+ *		apollo sr10.3 cpp complains about endif-tags
+ *		
  *		Revision 1.9  89/03/22  09:24:38  dickey
  *		sccs2rcs keywords
  *		
@@ -40,6 +46,7 @@ static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/
  *		f	force deletion of existing file
  */
 
+#define	STR_PTYPES
 #include	"ptypes.h"
 
 #include	<ctype.h>
@@ -89,7 +96,7 @@ char	*version;
 	int	code	= (sid == NULL);
 
 	if (!code) {
-		register int	len = strlen (sid),
+		register size_t	len = strlen (sid),
 				cmp = strlen (version),
 				dot;
 		if (len == cmp)

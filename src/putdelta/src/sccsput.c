@@ -1,5 +1,5 @@
 #ifndef	lint
-static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/src/RCS/sccsput.c,v 2.2 1991/05/23 09:10:43 dickey Exp $";
+static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/src/RCS/sccsput.c,v 2.3 1991/05/24 08:29:00 dickey Exp $";
 #endif
 
 /*
@@ -7,9 +7,12 @@ static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/
  * Author:	T.E.Dickey
  * Created:	08 May 1990 (from sccsput.sh and rcsput.c)
  * $Log: sccsput.c,v $
- * Revision 2.2  1991/05/23 09:10:43  dickey
- * apollo sr10.3 cpp complains about endif-tags
+ * Revision 2.3  1991/05/24 08:29:00  dickey
+ * lint (apollo sr10.3)
  *
+ *		Revision 2.2  91/05/23  09:25:57  dickey
+ *		apollo sr10.3 cpp complains about endif-tags
+ *		
  *		Revision 2.1  90/05/08  14:31:46  dickey
  *		RCS_BASE
  *		
@@ -61,7 +64,7 @@ char	*name;
 {
 	auto	FILE	*ifp;
 	auto	char	t[BUFSIZ];
-	auto	int	n;
+	auto	size_t	n;
 
 	if (ifp = fopen(name, "r")) {
 		while ((n = fread(t, sizeof(char), sizeof(t), ifp)) > 0)
@@ -77,8 +80,8 @@ char	*cmd, *name;
 {
 	auto	FILE	*ifp, *ofp;
 	auto	char	buffer[BUFSIZ];
-	auto	int	empty	= TRUE,
-			n;
+	auto	int	empty	= TRUE;
+	auto	size_t	n;
 
 	VERBOSE("%% %s\n", cmd);
 	if (!tmpnam(name) || !(ofp = fopen(name,"w")))

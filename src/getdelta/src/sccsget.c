@@ -1,5 +1,5 @@
 #ifndef	lint
-static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/src/RCS/sccsget.c,v 2.1 1991/05/23 13:08:25 dickey Exp $";
+static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/src/RCS/sccsget.c,v 3.0 1991/05/24 08:13:12 ste_cm Rel $";
 #endif
 
 /*
@@ -7,9 +7,15 @@ static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/
  * Author:	T.E.Dickey
  * Created:	23 May 1991 (from sccsget.sh and rcsget.c)
  * $Log: sccsget.c,v $
- * Revision 2.1  1991/05/23 13:08:25  dickey
- * RCS_BASE
+ * Revision 3.0  1991/05/24 08:13:12  ste_cm
+ * BASELINE Tue Jun 18 08:04:39 1991 -- apollo sr10.3
  *
+ *		Revision 2.2  91/05/24  08:13:12  dickey
+ *		lint (apollo sr10.3)
+ *		
+ *		Revision 2.1  91/05/23  13:11:49  dickey
+ *		RCS_BASE
+ *		
  *		
  *
  * Function:	Use SCCS-get to checkout one or more files from the sccs-
@@ -49,8 +55,7 @@ static	int	force;
 static	int	quiet;
 
 static
-checkout(path,name)
-char	*path;
+checkout(name)
 char	*name;
 {
 	auto	char	args[BUFSIZ];
@@ -91,7 +96,7 @@ struct	stat	*sp;
 			track_wd(path);
 	} else if (isFILE(sp->st_mode)) {
 		track_wd(path);
-		checkout(path,name);
+		checkout(name);
 	} else
 		ok_acc = -1;
 
@@ -140,7 +145,7 @@ char	*argv[];
 		case 'f': catarg(get_opts, tmp); force	= TRUE;	break;
 		case 'r': catarg(get_opts, OPT);		break;
 		case 's': catarg(get_opts, tmp); quiet	= TRUE;	break;
-		default:  usage(j);
+		default:  usage();
 		}
 	}
 
