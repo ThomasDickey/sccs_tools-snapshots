@@ -1,3 +1,7 @@
+1991-06-04  dickey@software.org
+
+	* Makefile: standardized install-path
+
 1991-05-24  dickey@software.org
 
 	* src/putdelta/test/run_test.sh: make this test both tools
