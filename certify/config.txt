@@ -1,0 +1,21 @@
+$Header: /users/source/archives/sccs_tools.vcs/certify/RCS/config.txt,v 1.1 1989/03/29 14:56:24 dickey Exp $
+
+--------------------------------------------------------------------------------
+
+The SCCS_TOOLS set of programs is designed to be run in a BSD-unix environment.
+The tools are written in C.
+
+The non-RCS tools (e.g., 'getdelta' and 'putdelta') have been tested on the
+Apollo, Gould and Sun systems at the SPC.  All of the programs have been built
+on all three platforms.
+
+--------------------------------------------------------------------------------
+
+	Miscellaneous tools not included here, which are used in non-critical
+	make-rules:
+
+	Lint tools for the above systems:
+		tdlint
+		makellib
+
+	lincnt - C-language line counter

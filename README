@@ -1,0 +1,38 @@
+$Header: /users/source/archives/sccs_tools.vcs/RCS/README,v 3.0 1989/03/29 14:22:12 ste_cm Rel $
+
+--------------------------------------------------------------------------------
+
+This module consists of the following programs (or scripts):
+
+	getdelta
+	putdelta
+	sccsget
+	sccsput
+	sccs2rcs
+
+To build the system from sources, do the following:
+
+	(1) Adjust the top-level makefile, if necessary, to reflect the
+	    installation-path (INSTALL_PATH) of these programs
+
+Make the system by typing
+
+	make all
+
+This will build all binary programs into staging directories (bin) below
+the src-directory, then install them into the top-level bin-directory.
+
+You may build the binary programs into the staging directories alone,
+and run tests by typing
+
+	cd src
+	make all
+	make run_tests
+
+When you are satisfied that the individual programs are ready for
+installation, type (from this directory)
+
+	make install
+
+That will first copy from the staging directories, then from the top-level
+bin-directory to the $(INSTALL_PATH) directory.

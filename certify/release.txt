@@ -1,0 +1,5 @@
+$Header: /users/source/archives/sccs_tools.vcs/certify/RCS/release.txt,v 2.0 1989/03/29 14:55:15 ste_cm Rel $
+
+--------------------------------------------------------------------------------
+
+This version of SCCS_TOOLS implements sccsget and sccsput as shell-scripts.
