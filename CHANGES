@@ -1,3 +1,7 @@
+1988-05-05  dickey@software.org
+
+	* user/sccsget.doc, user/sccsput.doc: New file.
+
 1984-10-17  root  <root@invisible-island.net>
 
 	* src/sccs2rcs/src/sccs2rcs.c: FROM_KEYS
