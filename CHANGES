@@ -1,3 +1,26 @@
+1989-10-10  dickey@software.org
+
+	* certify/release.txt, certify/config.txt: apollo sr10.1 notes
+
+	* src/getdelta/src/sccsget.sh, src/putdelta/src/sccsput.sh:
+	bypass apollo sr10.1 bug by specifying interpreter
+
+	* src/sccs2rcs/test/run_test.sh: fix for apollo sr10.1
+
+1989-10-10  ste_cm@software.org
+
+	* src/sccs2rcs/test/run_test.sh:
+	BASELINE Tue Jun 18 08:04:39 1991 -- apollo sr10.3
+
+1989-10-10  dickey@software.org
+
+	* src/sccs2rcs/test/do_test.sh:
+	use current directory as RCS-directory for testing
+
+	* src/sccs2rcs/src/sccs2rcs.c:
+	use RCS_DIR environment variable ('rcs_dir()' function) where needed to
+	make this work better with CM_TOOLS
+
 1989-10-05  dickey@software.org
 
 	* src/sccs2rcs/src/sccs2rcs.c:
