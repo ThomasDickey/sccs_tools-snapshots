@@ -1,3 +1,50 @@
+1991-06-07  dickey@software.org
+
+	* certify/README: update for apollo sr10.3
+
+1991-06-07  ste_cm@software.org
+
+	* certify/README: BASELINE Mon Jul 20 12:41:28 1992 -- CM_TOOLS #11
+
+	* certify/README: BASELINE Tue Dec 17 11:56:35 1991
+
+	* certify/README: BASELINE Tue Jun 18 08:04:39 1991 -- apollo sr10.3
+
+	* certify/README: BASELINE Wed May  5 11:05:31 1993 -- TD_LIB #12
+
+1991-06-07  dickey@software.org
+
+	* certify/config.txt: notes for apollo sr10.3 baseline
+
+1991-06-07  ste_cm@software.org
+
+	* certify/config.txt:
+	BASELINE Tue Jun 18 08:04:39 1991 -- apollo sr10.3
+
+1991-06-07  dickey@software.org
+
+	* certify/release.txt: notes for sr10.3 baseline
+
+1991-06-07  ste_cm@software.org
+
+	* certify/release.txt:
+	BASELINE Tue Jun 18 08:04:39 1991 -- apollo sr10.3
+
+1991-06-07  dickey@software.org
+
+	* src/putdelta/src/sccsput.c:
+	use 'getopt()'; cleanup option processing, including those
+	that we pass-thru to 'putdelta'
+
+1991-06-07  ste_cm@software.org
+
+	* src/putdelta/src/sccsput.c:
+	BASELINE Tue Jun 18 08:04:39 1991 -- apollo sr10.3
+
+1991-06-07  dickey@software.org
+
+	* src/putdelta/src/sccsput.c: corrected pathname of "-l" value
+
 1991-06-05  dickey@software.org
 
 	* src/sccs2rcs/test/do_test.sh:
