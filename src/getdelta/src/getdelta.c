@@ -1,5 +1,5 @@
 #ifndef	lint
-static	char	sccs_id[] = "@(#)getdelta.c	1.2 88/07/29 10:20:57";
+static	char	sccs_id[] = "@(#)getdelta.c	1.3 88/08/08 06:57:50";
 #endif	lint
 
 /*
@@ -111,7 +111,7 @@ PostProcess (name, s_file)
 char	*name, *s_file;
 {
 	FILE	*fp;
-	long	date	= 0;
+	time_t	date	= 0;
 	int	got	= FALSE,
 		year, mon, mday,
 		hour, min, sec, new, old;

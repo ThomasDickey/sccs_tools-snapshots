@@ -1,3 +1,7 @@
+1988-08-08  dickey@software.org
+
+	* src/getdelta/src/getdelta.c: lint
+
 1988-08-05  dickey@software.org
 
 	* user/getdelta.doc, user/putdelta.doc: New file.
