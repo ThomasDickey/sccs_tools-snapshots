@@ -1,5 +1,8 @@
-MANIFEST for sccs_tools, version t19841017
+MANIFEST for sccs_tools, version t19880505
 --------------------------------------------------------------------------------
 MANIFEST                        this file
 src/sccs2rcs/src                subdirectory
 src/sccs2rcs/src/sccs2rcs.c     RCS "sccstorcs" utility.
+user                            subdirectory
+user/sccsget.doc                
+user/sccsput.doc                
