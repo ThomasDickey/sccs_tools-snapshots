@@ -3,6 +3,7 @@
  * Author:	T.E.Dickey
  * Created:	26 Mar 1986 (as a procedure)
  * Modified:
+ *		27 Jun 2000, Y2K fix. 
  *		07 Apr 2000, if only a cutoff date is given, set retrieved file
  *			     modification time.
  *		07 Feb 2000, don't use variable named 'new', since gcc 2.95.2
@@ -56,7 +57,7 @@
 #include	<ptypes.h>
 #include	<sccsdefs.h>
 
-MODULE_ID("$Id: getdelta.c,v 6.21 2000/04/07 14:41:38 tom Exp $")
+MODULE_ID("$Id: getdelta.c,v 6.22 2000/06/27 16:54:18 tom Exp $")
 
 /* local definitions */
 #define	NAMELEN		80	/* length of tokens in sccs-header */
@@ -313,7 +314,9 @@ void	PostProcess (
 			if (sscanf (s, fmt, version,
 					&year, &mon,  &mday,
 					&hour, &min, &sec,
-					pgmr, &added, &deleted) > 0) {
+					pgmr, &added, &deleted) == 10) {
+				if (year < 38)
+					year += 100;
 				date = packdate(1900+year, mon, mday, hour, min, sec);
 #ifdef CMV_PATH	/* for CmVision */
 				if ((s = fgets(bfr, sizeof(bfr), fp)) != 0
