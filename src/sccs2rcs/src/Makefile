@@ -1,4 +1,4 @@
-# $Id: Makefile,v 6.0 1993/04/29 08:35:20 ste_cm Rel $
+# $Id: Makefile,v 6.1 1993/09/23 20:03:11 dickey Exp $
 # Make-file for sccs/RCS conversion utility
 
 TOP	= ../../../..
@@ -19,7 +19,7 @@ run_test:
 sources:	$(SOURCES)
 
 ####### (Details of Productions) ###############################################
-$B/sccs2rcs:	$(MAIN_O)	; $(CC) -o $@ $(MAIN_O)
+$B/sccs2rcs:	$(MAIN_O)	; $(LINK) -o $@ $(MAIN_O)
 sccs2rcs.o:	$(PTYPES_H) $(RCSDEFS_H)
 #
 ####### (Development) ##########################################################

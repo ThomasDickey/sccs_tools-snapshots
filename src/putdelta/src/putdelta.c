@@ -1,5 +1,5 @@
 #ifndef	lint
-static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/src/RCS/putdelta.c,v 6.0 1992/07/17 09:37:40 ste_cm Rel $";
+static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/src/RCS/putdelta.c,v 6.1 1993/09/23 19:55:40 dickey Exp $";
 #endif
 
 /*
@@ -7,6 +7,7 @@ static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/
  * Author:	T.E.Dickey
  * Created:	25 Apr 1986
  * Modified:
+ *		23 Sep 1993, gcc warnings
  *		24 Oct 1991, converted to ANSI
  *		24 Jul 1991, pass-thru "-r" option to 'admin', since this is
  *			     how we specify initial version.
@@ -68,8 +69,6 @@ static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/
 #include	<ctype.h>
 #include	<errno.h>
 #include	<time.h>
-extern	FILE	*tmpfile();
-/* patch extern	int	localzone;*/
 extern	char	*sys_errlist[];
 
 /************************************************************************
@@ -139,7 +138,7 @@ static	int	d_mode,
  ************************************************************************/
 
 static
-usage (_AR0)
+void	usage (_AR0)
 {
 	static	char	*msg[] = {
  "Usage: putdelta [options] files"
@@ -165,9 +164,9 @@ usage (_AR0)
  * apply to it.
  */
 static
-ShowIt (
-_AR1(int,	doit))
-_DCL(int,	doit)
+int	ShowIt (
+	_AR1(int,	doit))
+	_DCL(int,	doit)
 {
 	if (!ShowedIt && (doit || !silent)) {
 		PRINTF ("File \"%s\"\n", g_file);
@@ -180,15 +179,15 @@ _DCL(int,	doit)
  * Construct the specified sccs filename from the s-file
  */
 static
-MakeName(
-_ARX(char *,	dst)
-_AR1(int,	code)
-	)
-_DCL(char *,	dst)
-_DCL(int,	code)
+void	MakeName(
+	_ARX(char *,	dst)
+	_AR1(int,	code)
+		)
+	_DCL(char *,	dst)
+	_DCL(int,	code)
 {
 	register char	*s;
-	if (s = strrchr(strcpy(dst, s_file), '/'))
+	if ((s = strrchr(strcpy(dst, s_file), '/')) != NULL)
 		*(++s) = code;
 	else
 		*dst = code;
@@ -198,9 +197,9 @@ _DCL(int,	code)
  * Begin/end critical zone (i.e., prevent other sccs applications from running)
  */
 static
-Critical(
-_AR1(int,	begin))
-_DCL(int,	begin)
+void	Critical(
+	_AR1(int,	begin))
+	_DCL(int,	begin)
 {
 	auto	char	z_file[PATHLEN];
 	static	int	began;
@@ -237,12 +236,12 @@ _DCL(int,	begin)
  * ownership information.
  */
 static
-NeedDirectory(
-_ARX(char *,	path)
-_AR1(STAT *,	sb)
-	)
-_DCL(char *,	path)
-_DCL(STAT *,	sb)
+void	NeedDirectory(
+	_ARX(char *,	path)
+	_AR1(STAT *,	sb)
+		)
+	_DCL(char *,	path)
+	_DCL(STAT *,	sb)
 {
 	if (stat(path, sb) < 0)
 		failed(path);
@@ -260,12 +259,12 @@ _DCL(STAT *,	sb)
  * See if the specified file exists.  If so, verify that it is indeed a file.
  */
 static
-is_a_file(
-_ARX(char *,	name)
-_AR1(int *,	mode_)
-	)
-_DCL(char *,	name)
-_DCL(int *,	mode_)
+time_t	is_a_file(
+	_ARX(char *,	name)
+	_AR1(int *,	mode_)
+		)
+	_DCL(char *,	name)
+	_DCL(int *,	mode_)
 {
 	STAT	sb;
 
@@ -287,9 +286,9 @@ _DCL(int *,	mode_)
  * Test a string to see if it looks like a revision-code.
  */
 static
-isCODE(
-_AR1(char *,	string))
-_DCL(char *,	string)
+int	isCODE(
+	_AR1(char *,	string))
+	_DCL(char *,	string)
 {
 	while (*string)
 		if (isdigit(*string) || *string == '.')
@@ -303,16 +302,15 @@ _DCL(char *,	string)
  * Given a revision-code, compute the next one
  */
 static
-char *
-NextDelta(
-_AR1(char *,	this))
-_DCL(char *,	this)
+char *	NextDelta(
+	_AR1(char *,	this))
+	_DCL(char *,	this)
 {
 	int	next;
 	char	*s;
 	static	char	bfr[80];
 
-	if (s = strrchr(this, '.')) {
+	if ((s = strrchr(this, '.')) != NULL) {
 		if (sscanf(++s, "%d", &next) != 1)
 			next = 1;
 		FORMAT(bfr, "%.*s%d", s-this, this, next+1);
@@ -325,9 +323,9 @@ _DCL(char *,	this)
  * Test the buffer to see if it contains a delta-control line
  */
 static
-TestDelta(
-_AR1(char *,	bfr))
-_DCL(char *,	bfr)
+int	TestDelta(
+	_AR1(char *,	bfr))
+	_DCL(char *,	bfr)
 {
 	auto	char	tmp_code[BUFSIZ],
 			tmp_pgmr[BUFSIZ];
@@ -351,7 +349,7 @@ _DCL(char *,	bfr)
  * Note: This restricts us to making locks only if none exist.
  */
 static
-TestLock(_AR0)
+int	TestLock(_AR0)
 {
 	FILE	*fp;
 	int	year, mon, mday, hour, min, sec;
@@ -364,7 +362,7 @@ TestLock(_AR0)
 
 	MakeName(p_file, 'p');
 	Critical(TRUE);
-	if (fp = fopen(p_file, "r")) {
+	if ((fp = fopen(p_file, "r")) != NULL) {
 		while (fgets(bfr, sizeof(bfr), fp)) {
 			if ((sscanf(bfr, fmt_lock,
 				old_rev, new_rev, who_rev,
@@ -397,7 +395,7 @@ TestLock(_AR0)
 	}
 
 	/* try to determine the delta to which we should fake a lock */
-	if (fp = fopen(s_file, "r")) {
+	if ((fp = fopen(s_file, "r")) != NULL) {
 		while (fgets(bfr, sizeof(bfr), fp) && *bfr == '\001') {
 			if (TestDelta(bfr)) {
 				FORMAT(bfr, fmt_lock,
@@ -416,7 +414,7 @@ TestLock(_AR0)
 		if (no_op) {
 			Critical(FALSE);
 			return (TRUE);
-		} else if (fp = fopen(p_file, "a+")) {
+		} else if ((fp = fopen(p_file, "a+")) != NULL) {
 			(void)fputs(bfr, fp);
 			FCLOSE(fp);
 			Critical(FALSE);
@@ -432,16 +430,16 @@ TestLock(_AR0)
  * Modify the given delta's time to correspond with the file modification time.
  */
 static
-EditDelta(
-_ARX(char *,	bfr)
-_ARX(time_t,	modtime)
-_ARX(time_t,	reftime)
-_AR1(struct tm *,t)
-	)
-_DCL(char *,	bfr)
-_DCL(time_t,	modtime)
-_DCL(time_t,	reftime)
-_DCL(struct tm *,t)
+int	EditDelta(
+	_ARX(char *,	bfr)
+	_ARX(time_t,	modtime)
+	_ARX(time_t,	reftime)
+	_AR1(struct tm *,t)
+		)
+	_DCL(char *,	bfr)
+	_DCL(time_t,	modtime)
+	_DCL(time_t,	reftime)
+	_DCL(struct tm *,t)
 {
 	time_t	delta;
 	int	year, mon, mday, hour, min, sec;
@@ -479,12 +477,12 @@ _DCL(struct tm *,t)
  * original SCCS-file:
  */
 static
-EditFile(
-_ARX(time_t,	modtime)
-_AR1(long,	lines)
-	)
-_DCL(time_t,	modtime)
-_DCL(long,	lines)
+void	EditFile(
+	_ARX(time_t,	modtime)
+	_AR1(long,	lines)
+		)
+	_DCL(time_t,	modtime)
+	_DCL(long,	lines)
 {
 	register int j;
 	auto	FILE	*fpS;
@@ -514,12 +512,12 @@ _DCL(long,	lines)
  * Modify the check-in date in a single SCCS s-file:
  */
 static
-ProcessFile(
-_ARX(time_t,	modtime)/* file's mod-time */
-_AR1(time_t,	reftime)/* min-estimate of delay between clock and file-system*/
-	)
-_DCL(time_t,	modtime)
-_DCL(time_t,	reftime)
+void	ProcessFile(
+	_ARX(time_t,	modtime)/* file's mod-time */
+	_AR1(time_t,	reftime)/* min-estimate of delay between clock and file-system*/
+		)
+	_DCL(time_t,	modtime)
+	_DCL(time_t,	reftime)
 {
 	FILE		*fpS;
 	struct	tm	tfix;
@@ -536,7 +534,7 @@ _DCL(time_t,	reftime)
 
 	(void) rewind (fpT);
 	Critical(TRUE);
-	if (fpS = fopen (s_file, "r")) {
+	if ((fpS = fopen (s_file, "r")) != NULL) {
 		while (fgets (bfr, sizeof(bfr), fpS)) {
 			lines++;
 			len = strlen(bfr);
@@ -565,7 +563,7 @@ _DCL(time_t,	reftime)
  * Performs the 'mkdir()' using the proper ownership/mode.
  */
 static
-MkDir(_AR0)
+void	MkDir(_AR0)
 {
 	int	old_mask = umask(0);
 	if (mkdir(d_path, d_mode) < 0)
@@ -579,9 +577,9 @@ MkDir(_AR0)
  * file to be checked-out from the sccs file name.
  */
 static
-DoFile(
-_AR1(char *,	name))
-_DCL(char *,	name)
+void	DoFile(
+	_AR1(char *,	name))
+	_DCL(char *,	name)
 {
 	register char	*s;
 	auto	time_t	put_time,
@@ -609,7 +607,7 @@ _DCL(char *,	name)
 		ref_time = 0;
 
 	/* If the sccs-directory does not exist, make it */
-	if (s = strrchr(s_file, '/')) {
+	if ((s = strrchr(s_file, '/')) != NULL) {
 		size_t	len	= s - s_file;
 		(strncpy(d_path, s_file, len))[len] = EOS;
 
@@ -735,9 +733,9 @@ _MAIN
 /*
  * We have our own 'failed()' to ensure that we clear critical-zone
  */
-failed(
-_AR1(char *,	s))
-_DCL(char *,	s)
+void	failed(
+	_AR1(char *,	s))
+	_DCL(char *,	s)
 {
 	Critical(-1);
 	perror(s);

@@ -1,5 +1,5 @@
 #ifndef	lint
-static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/src/RCS/sccsput.c,v 6.0 1991/10/24 09:11:44 ste_cm Rel $";
+static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/src/RCS/sccsput.c,v 6.1 1993/09/23 20:00:08 dickey Exp $";
 #endif
 
 /*
@@ -7,6 +7,7 @@ static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/
  * Author:	T.E.Dickey
  * Created:	08 May 1990 (from sccsput.sh and rcsput.c)
  * Modified:
+ *		23 Sep 1993, gcc warnings
  *		24 Oct 1991, converted to ANSI
  *		13 Sep 1991, use common 'filesize()'
  *		24 Jul 1991, corrected size of 'comment[]'
@@ -36,7 +37,6 @@ static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/
 #include	<ptypes.h>
 #include	<rcsdefs.h>
 #include	<sccsdefs.h>
-extern	FILE	*popen();
 
 #define	isDIR(mode)	((mode & S_IFMT) == S_IFDIR)
 #define	isFILE(mode)	((mode & S_IFMT) == S_IFREG)
@@ -56,18 +56,18 @@ static	int	quiet;
 static	int	found_diffs;	/* true iff we keep logfile */
 
 static
-cat2fp(
-_ARX(FILE *,	fp)
-_AR1(char *,	name)
-	)
-_DCL(FILE *,	fp)
-_DCL(char *,	name)
+void	cat2fp(
+	_ARX(FILE *,	fp)
+	_AR1(char *,	name)
+		)
+	_DCL(FILE *,	fp)
+	_DCL(char *,	name)
 {
 	auto	FILE	*ifp;
 	auto	char	t[BUFSIZ];
 	auto	size_t	n;
 
-	if (ifp = fopen(name, "r")) {
+	if ((ifp = fopen(name, "r")) != NULL) {
 		while ((n = fread(t, sizeof(char), sizeof(t), ifp)) > 0)
 			if (fwrite(t, sizeof(char), n, fp) != n)
 				break;
@@ -76,20 +76,22 @@ _DCL(char *,	name)
 }
 
 static
-pipe2file(
-_ARX(char *,	cmd)
-_AR1(char *,	name)
-	)
-_DCL(char *,	cmd)
-_DCL(char *,	name)
+int	pipe2file(
+	_ARX(char *,	cmd)
+	_AR1(char *,	name)
+		)
+	_DCL(char *,	cmd)
+	_DCL(char *,	name)
 {
 	auto	FILE	*ifp, *ofp;
 	auto	char	buffer[BUFSIZ];
 	auto	int	empty	= TRUE;
 	auto	size_t	n;
 
-	if (!tmpnam(name) || !(ofp = fopen(name,"w")))
+	if (!tmpnam(name))
 		failed("tmpnam");
+	if (!(ofp = fopen(name,"w")))
+		failed("tmpnam-open");
 	if (!quiet) {
 		FORMAT(buffer, "%s > ", cmd);
 		shoarg(stdout, buffer, name);
@@ -108,12 +110,12 @@ _DCL(char *,	name)
 }
 
 static
-different(
-_ARX(char *,	working)
-_AR1(char *,	archive)
-	)
-_DCL(char *,	working)
-_DCL(char *,	archive)
+int	different(
+	_ARX(char *,	working)
+	_AR1(char *,	archive)
+		)
+	_DCL(char *,	working)
+	_DCL(char *,	archive)
 {
 	auto	char	buffer[BUFSIZ],
 			in_diff[MAXPATHLEN],
@@ -161,19 +163,19 @@ _DCL(char *,	archive)
 }
 
 static
-checkin(
-_ARX(char *,	path)
-_AR1(char *,	name)
-	)
-_DCL(char *,	path)
-_DCL(char *,	name)
+void	checkin(
+	_ARX(char *,	path)
+	_AR1(char *,	name)
+		)
+	_DCL(char *,	path)
+	_DCL(char *,	name)
 {
 	auto	char	args[BUFSIZ];
 	auto	char	*working = sccs2name(name,FALSE);
 	auto	char	*archive = name2sccs(name,FALSE);
 	auto	int	first;
 
-	if (first = (filesize(archive) < 0)) {
+	if ((first = (filesize(archive) < 0)) != 0) {
 		if (!Force && !istextfile(working)) {
 			PRINTF("*** \"%s\" does not seem to be a text file\n",
 				working);
@@ -220,7 +222,7 @@ _DCL(char *,	name)
 
 /*ARGSUSED*/
 static
-WALK_FUNC(scan_tree)
+int	WALK_FUNC(scan_tree)
 {
 	auto	char	tmp[MAXPATHLEN],
 			*s = pathcat(tmp, path, name);
@@ -249,16 +251,17 @@ WALK_FUNC(scan_tree)
 }
 
 static
-do_arg(
-_AR1(char *,	name))
-_DCL(char *,	name)
+void	do_arg(
+	_AR1(char *,	name))
+	_DCL(char *,	name)
 {
 	(void)walktree((char *)0, name, scan_tree, "r", 0);
 }
 
-usage(
-_AR1(int,	option))
-_DCL(int,	option)
+static
+void	usage(
+	_AR1(int,	option))
+	_DCL(int,	option)
 {
 	static	char	*tbl[] = {
  "Usage: sccsput [options] files_or_directories"
@@ -293,7 +296,7 @@ _DCL(int,	option)
 _MAIN
 {
 	auto	char	deferred[BUFSIZ],
-			*logname;
+			*logname = NULL;
 #define	DEFERRED	strcat(strcpy(deferred, "-"), optarg)
 
 	register int	j;

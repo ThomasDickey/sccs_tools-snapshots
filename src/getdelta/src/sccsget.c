@@ -1,5 +1,5 @@
 #ifndef	lint
-static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/src/RCS/sccsget.c,v 6.0 1991/10/24 08:53:07 ste_cm Rel $";
+static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/src/RCS/sccsget.c,v 6.1 1993/09/23 19:47:12 dickey Exp $";
 #endif
 
 /*
@@ -7,6 +7,7 @@ static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/
  * Author:	T.E.Dickey
  * Created:	23 May 1991 (from sccsget.sh and rcsget.c)
  * Modified:
+ *		23 Sep 1993, gcc warnings
  *		24 Oct 1991, converted to ANSI
  *		20 Jun 1991, pass-thru "-e" option, use 'shoarg()'
  *		
@@ -28,7 +29,6 @@ static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/
 #include	<ptypes.h>
 #include	<rcsdefs.h>
 #include	<sccsdefs.h>
-extern	FILE	*popen();
 
 #define	isDIR(mode)	((mode & S_IFMT) == S_IFDIR)
 #define	isFILE(mode)	((mode & S_IFMT) == S_IFREG)
@@ -42,9 +42,9 @@ static	int	force;
 static	int	quiet;
 
 static
-checkout(
-_AR1(char *,	name))
-_DCL(char *,	name)
+void	checkout(
+	_AR1(char *,	name))
+	_DCL(char *,	name)
 {
 	auto	char	args[BUFSIZ];
 	auto	char	*working = sccs2name(name,FALSE);
@@ -58,9 +58,9 @@ _DCL(char *,	name)
 }
 
 static
-fexists(
-_AR1(char *,	name))
-_DCL(char *,	name)
+int	fexists(
+	_AR1(char *,	name))
+	_DCL(char *,	name)
 {
 	struct	stat	sb;
 	return (stat(name, &sb) >= 0) && isFILE(sb.st_mode);
@@ -68,7 +68,7 @@ _DCL(char *,	name)
 
 /*ARGSUSED*/
 static
-WALK_FUNC(scan_tree)
+int	WALK_FUNC(scan_tree)
 {
 	auto	char	tmp[BUFSIZ],
 			*s = pathcat(tmp, path, name);
@@ -101,14 +101,15 @@ WALK_FUNC(scan_tree)
 }
 
 static
-do_arg(
-_AR1(char *,	name))
-_DCL(char *,	name)
+void	do_arg(
+	_AR1(char *,	name))
+	_DCL(char *,	name)
 {
 	(void)walktree((char *)0, name, scan_tree, "r", 0);
 }
 
-usage(_AR0)
+static
+void	usage(_AR0)
 {
 	static	char	*tbl[] = {
  "Usage: sccsput [options] files_or_directories"

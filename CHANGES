@@ -1,3 +1,19 @@
+1993-09-23  dickey@software.org
+
+	* src/sccs2rcs/src/sccs2rcs.c: gcc warnings
+
+	* src/sccs2rcs/src/Makefile: use 'LINK' macro
+
+	* src/putdelta/src/sccsput.c, src/putdelta/src/putdelta.c: gcc warnings
+
+	* src/putdelta/src/Makefile: use 'LINK' macro
+
+	* src/getdelta/src/getdelta.c: gcc warnings
+
+	* src/getdelta/src/Makefile: use 'LINK' macro
+
+	* src/getdelta/src/sccsget.c: gcc warnings
+
 1993-05-06  ste_cm@software.org
 
 	* Makefile: BASELINE Thu May  6 09:17:51 1993
