@@ -1,4 +1,4 @@
-# $Id: Makefile,v 5.3 1993/04/29 08:52:34 dickey Exp $
+# $Id: Makefile,v 6.0 1993/05/06 09:17:16 ste_cm Rel $
 # Top-level make-file for SCCS_TOOLS
 
 TOP	= ..
@@ -26,8 +26,8 @@ install::
 	cd src;		$(MAKE) install
 install\
 deinstall::
-	cd user;	$(MAKE) $@ INSTALL_BIN=`cd ..;cd $(INSTALL_BIN);pwd`
-	cd bin;		$(MAKE) $@ INSTALL_MAN=`cd ..;cd $(INSTALL_MAN);pwd`
+	cd bin;		$(MAKE) $@ INSTALL_BIN=`cd ..;cd $(INSTALL_BIN);pwd`
+	cd user;	$(MAKE) $@ INSTALL_MAN=`cd ..;cd $(INSTALL_MAN);pwd`
 
 clean\
 clobber\
