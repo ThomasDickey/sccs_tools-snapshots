@@ -1,5 +1,5 @@
 #ifndef	lint
-static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/src/RCS/putdelta.c,v 3.17 1991/06/26 14:33:12 dickey Exp $";
+static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/src/RCS/putdelta.c,v 3.21 1991/06/27 08:48:22 ste_cm Exp $";
 #endif
 
 /*
@@ -54,7 +54,6 @@ static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/
  */
 
 #define	ACC_PTYPES
-/*#define	SIG_PTYPES*/
 #define	STR_PTYPES
 #include	"ptypes.h"
 #include	"sccsdefs.h"
@@ -62,7 +61,6 @@ static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/
 #include	<ctype.h>
 #include	<errno.h>
 #include	<time.h>
-/*#include	<signal.h>*/
 extern	struct	tm *localtime();
 extern	FILE	*tmpfile();
 extern	long	packdate();
@@ -76,7 +74,9 @@ extern	int	optind;
 extern	int	errno;
 extern	char	*sys_errlist[];
 
-/* local declarations: */
+/************************************************************************
+ *	local definitions						*
+ ************************************************************************/
 #define	COPY(dst,src)	strncpy(dst, src, sizeof(dst))[sizeof(dst)-1] = EOS
 #define	PATHLEN		256	/* length of pathname */
 #define	NAMELEN		80	/* length of tokens in sccs-header */
@@ -86,6 +86,20 @@ extern	char	*sys_errlist[];
 #define	VERBOSE	   (ShowIt(FALSE))
 #define	TELL	if (ShowIt(FALSE)) PRINTF
 
+#define	HDR_DELTA	"\001d D "
+#define	LEN_DELTA	5	/* strlen(HDR_DELTA) */
+
+#ifndef	ADMIN_TOOL
+#define	ADMIN_TOOL	"admin"
+#endif
+
+#ifndef	DELTA_TOOL
+#define	DELTA_TOOL	"delta"
+#endif
+
+/************************************************************************
+ *	local data							*
+ ************************************************************************/
 static	FILE	*fpT;
 static	int	silent	= FALSE,
 		no_op	= FALSE,
@@ -93,9 +107,6 @@ static	int	silent	= FALSE,
 static	char	username[NAMELEN],
 		admin_opts[BUFSIZ],
 		delta_opts[BUFSIZ];
-
-#define	HDR_DELTA	"\001d D "
-#define	LEN_DELTA	5	/* strlen(HDR_DELTA) */
 
 static	char	fmt_lock[]  = "%s %s %s %8s %8s\n";
 static	char	fmt_delta[] = "%s %8s %8s %s %d %d\n";
@@ -180,19 +191,33 @@ static
 Critical(begin)
 int	begin;
 {
-	char	z_file[PATHLEN];
+	auto	char	z_file[PATHLEN];
+	static	int	began;
+	static	char	*msg	= "cannot create lock file (cm4)";
+
+	if (no_op)
+		return;
 
 	MakeName(z_file, 'z');
-	if (begin) {
+	if (begin == TRUE) {
 		short	id = getpid();
 		int	fd = open(z_file, O_EXCL | O_CREAT | O_WRONLY, 0444);
+		began	= TRUE;
 		if (fd < 0
 		 || write(fd, (char *)&id, sizeof(id)) < 0
-		 || close(fd) < 0)
-			failed(z_file);
-	} else {
-		if (unlink(z_file) < 0)
-			failed(z_file);
+		 || close(fd) < 0) {
+			perror(msg);
+			exit(FAIL);
+		}
+	} else if (began) {
+		int	save	= errno;
+		if ((unlink(z_file) < 0) && (begin == FALSE)) {
+			if (errno != EPERM
+			 && errno != ENOENT)
+				perror(msg);
+		}
+		errno	= save;
+		began	= FALSE;
 	}
 }
 
@@ -211,7 +236,7 @@ struct	stat	*sb;
 		errno = ENOTDIR;
 		failed(path);
 	}
-	if (access(path, X_OK | R_OK) < 0)
+	if (access(path, R_OK | W_OK | X_OK) < 0)
 		failed(path);
 	d_user = sb->st_uid;
 	d_group = sb->st_gid;
@@ -361,7 +386,10 @@ TestLock()
 	/* if we found a correctly-formatted delta in the s-file, lock it */
 	if (new_lock != FALSE) {
 		if (VERBOSE) shoarg(stdout, "lock", g_file);
-		if (fp = fopen(p_file, "a+")) {
+		if (no_op) {
+			Critical(FALSE);
+			return (TRUE);
+		} else if (fp = fopen(p_file, "a+")) {
 			(void)fputs(bfr, fp);
 			FCLOSE(fp);
 			Critical(FALSE);
@@ -570,11 +598,11 @@ char	*name;
 	if (isFILE(s_file, (int *)0)) {
 		if (!TestLock())
 			return;
-		put_verb = "delta";
+		put_verb = DELTA_TOOL;
 		catarg(strcpy(put_opts, delta_opts), s_file);
 		put_flag = FALSE;
 	} else {
-		put_verb = "admin";
+		put_verb = ADMIN_TOOL;
 		FORMAT(temp, "-i%s", g_file);
 		catarg(strcpy(put_opts, admin_opts), temp);
 		catarg(put_opts, s_file);
@@ -636,7 +664,7 @@ char	*argv[];
 failed(s)
 char	*s;
 {
-	Critical(FALSE);
+	Critical(-1);
 	perror(s);
 	(void)exit(FAIL);
 }

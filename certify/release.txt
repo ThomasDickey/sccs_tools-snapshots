@@ -1,6 +1,13 @@
-$Id: release.txt,v 3.0 1991/06/07 09:08:49 ste_cm Rel $
+$Id: release.txt,v 3.1 1991/06/27 08:11:24 dickey Exp $
 
 --------------------------------------------------------------------------------
+
+Baseline 4:
+----------
+Revised 'getdelta' and 'putdelta' to operate properly as set-uid programs.
+
+Modified 'getdelta' to allow it to extract into a file not in the current
+directory (by temporarily changing working directories).
 
 Baseline 3:
 ----------

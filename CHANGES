@@ -1,3 +1,36 @@
+1991-06-27  ste_cm@software.org
+
+	* src/getdelta/src/getdelta.c: added "-b" option
+
+	* src/putdelta/src/putdelta.c:
+	make "-n" (no-op) suppress actual creation of lock-files.
+
+	* src/putdelta/src/putdelta.c:
+	revised Critical to treat unlink specially so that 'failed()'
+	works properly
+
+1991-06-27  dickey@software.org
+
+	* certify/release.txt: notes for 24-26 june 1991
+
+	* certify/config.txt: need new procedure 'for_user2()' in CM_TOOLS #10
+
+	* src/getdelta/src/Makefile: define explicit path for 'get'
+
+	* src/getdelta/src/getdelta.c:
+	added hook to safeguard set-uid operation by making explict
+	path for 'get'
+
+	* src/putdelta/src/putdelta.c:
+	made message for GiveUp correspond better with sccs-get.
+
+	* src/putdelta/src/Makefile:
+	force definition of paths for admin/delta to safeguard set-uid operation
+
+	* src/putdelta/src/putdelta.c: corrected error-exit of 'Critical()'
+	Verify that user has write-access on SCCS-directory.
+	Provided hook to enable make-process to set path of admin/delta
+
 1991-06-26  dickey@software.org
 
 	* src/putdelta/src/putdelta.c:

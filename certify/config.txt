@@ -1,4 +1,4 @@
-$Id: config.txt,v 3.0 1991/06/07 09:11:17 ste_cm Rel $
+$Id: config.txt,v 3.1 1991/06/27 08:09:05 dickey Exp $
 
 --------------------------------------------------------------------------------
 
@@ -16,7 +16,7 @@ following systems at the SPC:
 --------------------------------------------------------------------------------
 
 To build this set of programs, you need CM_TOOLS common library and interface
-files (baseline 2+).
+files (baseline 10+).
 
 --------------------------------------------------------------------------------
 
