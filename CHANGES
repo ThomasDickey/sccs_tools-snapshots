@@ -1,3 +1,8 @@
+1989-10-16  dickey@software.org
+
+	* src/putdelta/src/putdelta.c:
+	show error if we cannot execute subprocess
+
 1989-10-10  dickey@software.org
 
 	* certify/release.txt, certify/config.txt: apollo sr10.1 notes

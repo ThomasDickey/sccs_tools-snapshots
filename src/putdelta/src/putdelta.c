@@ -1,5 +1,5 @@
 #ifndef	lint
-static	char	sccs_id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/src/RCS/putdelta.c,v 2.0 1988/09/13 09:00:19 ste_cm Rel $";
+static	char	Id[] = "$Id: putdelta.c,v 2.1 1989/10/16 16:56:17 dickey Exp $";
 #endif	lint
 
 /*
@@ -7,9 +7,12 @@ static	char	sccs_id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putd
  * Author:	T.E.Dickey
  * Created:	25 Apr 1986
  * $Log: putdelta.c,v $
- * Revision 2.0  1988/09/13 09:00:19  ste_cm
- * BASELINE Mon Jul 10 09:25:16 EDT 1989
+ * Revision 2.1  1989/10/16 16:56:17  dickey
+ * show error if we cannot execute subprocess
  *
+ *		Revision 2.0  88/09/13  09:00:19  ste_cm
+ *		BASELINE Mon Jul 10 09:25:16 EDT 1989
+ *		
  *		Revision 1.6  88/09/13  09:00:19  dickey
  *		sccs2rcs keywords
  *		
@@ -354,7 +357,7 @@ long	lines;
 	}
 	catchall(SIG_IGN);
 	fpS = fopen (s_file, "w");
-	(void) fprintf (fpS, "\001h%05d\n", chksum);
+	FPRINTF (fpS, "\001h%05d\n", chksum);
 	(void) rewind (fpT);
 	for (j = 1; j < lines; j++) {
 		(void) fgets (bfr, sizeof(bfr), fpT);
@@ -490,8 +493,10 @@ char	*name;
 	}
 	TELL("** %s %s\n", put_verb, put_opts);
 
-	if (execute(put_verb, put_opts) < 0)
+	if (execute(put_verb, put_opts) < 0) {
+		perror(put_verb);
 		return;
+	}
 
 	ProcessFile(modtime);
 }
