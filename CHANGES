@@ -1,3 +1,11 @@
+1995-09-08  Thomas E. Dickey  <dickey@clark.net>
+
+	* src/getdelta/src/getdelta.c:
+	polished the previous change some w/r to space, and added logic to pick
+	up filemode from CmVision files (to let me set the executable-modes).
+	Also, if the s-file isn't really an s-file, don't remove the working
+	file.
+
 1995-09-07  Thomas E. Dickey  <dickey@clark.net>
 
 	* src/getdelta/src/getdelta.c:
