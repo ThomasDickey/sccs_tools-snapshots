@@ -1,7 +1,3 @@
-#ifndef	lint
-static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/fixsccs/src/RCS/fixsccs.c,v 6.6 1994/07/21 00:19:21 tom Exp $";
-#endif
-
 /*
  * Title:	fixsccs.c (sccs put-tree)
  * Author:	T.E.Dickey
@@ -23,6 +19,8 @@ static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/fixsccs/s
 #include	<ptypes.h>
 #include	<sccsdefs.h>
 #include	<time.h>	/* declares 'ctime()' */
+
+MODULE_ID("$Id: fixsccs.c,v 6.8 1997/09/28 19:37:49 tom Exp $")
 
 static	int	a_opt;		/* all-directory scan */
 static	int	no_op;		/* no-op mode */
@@ -52,7 +50,7 @@ void	FixSCCS(
 			PRINTF("   set: %s", ctime(&date));
 		}
 		if (!no_op) {
-			if (setmtime(archive, date) < 0)
+			if (setmtime(archive, date, (time_t)0) < 0)
 				failed(archive);
 		}
 		fixed++;

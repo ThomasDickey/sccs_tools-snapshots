@@ -1,12 +1,19 @@
-# $Id: Makefile,v 6.1 1994/07/21 00:10:06 tom Exp $
+# $Id: makefile.in,v 6.2 1997/09/28 20:03:42 tom Exp $
 
-TOP	= ../..
-include $(TOP)/td_lib/support/td_lib.mk
+
+
+@make_include_left@@TD_LIB_rules@/td_lib.mk@make_include_right@
 
 ####### (Development) ##########################################################
+
+prefix		= @prefix@
+exec_prefix	= @exec_prefix@
+mandir		= @mandir@
+top_srcdir	= @top_srcdir@
+
 USE	= man
 SECTION	= 1
-PREFIX	= $(INSTALL_MAN)/$(USE)$(SECTION)/
+PREFIX	= $(mandir)/$(USE)$(SECTION)/
 
 ####### (Standard Lists) #######################################################
 IT	=\
@@ -26,18 +33,17 @@ SOURCES	=\
 ####### (Standard Productions) #################################################
 all:	$(SOURCES) $(ALL)	; @echo '** use "make install"'
 clean:				; $(RM) $(CLEAN)
-clobber:	clean		; $(RM) $(ALL)
-destroy:			; $(DESTROY)
+distclean:	clean		; $(RM) $(ALL)
 run_test:
-sources:	$(SOURCES)
-install:	$(IT)
+install:	$(PREFIX) $(IT)
 deinstall:			; $(RM) $(IT)
 
 ####### (Details of Productions) ###############################################
-$(PREFIX)getdelta.$(SECTION):	getdelta.$(USE)	; $(PUT)
-$(PREFIX)putdelta.$(SECTION):	putdelta.$(USE)	; $(PUT)
-$(PREFIX)sccs2rcs.$(SECTION):	sccs2rcs.$(USE)	; $(PUT)
-$(PREFIX)sccsget.$(SECTION):	sccsget.$(USE)	; $(PUT)
-$(PREFIX)sccsput.$(SECTION):	sccsput.$(USE)	; $(PUT)
+$(PREFIX):			; $(top_srcdir)/mkdirs.sh $@
+$(PREFIX)getdelta.$(SECTION):	getdelta.$(USE)	; $(INSTALL_DATA) $? $@
+$(PREFIX)putdelta.$(SECTION):	putdelta.$(USE)	; $(INSTALL_DATA) $? $@
+$(PREFIX)sccs2rcs.$(SECTION):	sccs2rcs.$(USE)	; $(INSTALL_DATA) $? $@
+$(PREFIX)sccsget.$(SECTION):	sccsget.$(USE)	; $(INSTALL_DATA) $? $@
+$(PREFIX)sccsput.$(SECTION):	sccsput.$(USE)	; $(INSTALL_DATA) $? $@
 
-$(SOURCES):			; $(GET) $@
+$(SOURCES):

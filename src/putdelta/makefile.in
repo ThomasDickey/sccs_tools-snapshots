@@ -1,20 +1,16 @@
-# $Id: Makefile,v 6.1 1994/07/21 00:29:52 tom Exp $
-# Top-level makefile for SCCS_TOOLS get-delta utility
+# $Id: makefile.in,v 6.2 1997/09/28 19:55:25 tom Exp $
+# Top-level makefile for SCCS_TOOLS put-delta utility
 
-THIS	= getdelta
-TOP	= ../../..
-include $(TOP)/td_lib/support/td_lib.mk
+THIS	= putdelta
+
+@make_include_left@@TD_LIB_rules@/td_lib.mk@make_include_right@
 
 ####### (Standard Lists) #######################################################
 B	= ../../bin
 
 IT	=\
 	$B/$(THIS)\
-	$B/sccsget
-
-MFILES	=\
-	src/Makefile\
-	test/Makefile
+	$B/sccsput
 
 DIRS	=\
 	bin
@@ -25,19 +21,17 @@ run_test::	$(DIRS)
 
 all\
 clean\
-clobber\
-destroy\
+distclean\
 run_test\
-sources\
-lint.out::	$(MFILES)
+lint.out::
 	cd src;		$(MAKE) $@
 	cd test;	$(MAKE) $@
 
 clean\
-clobber::		; $(RM) $(CLEAN)
+distclean::		; $(RM) $(CLEAN)
 
-clobber\
-destroy::		; $(RM) -r bin
+distclean::		; $(RM) -r $(DIRS)
+distclean::		; $(RM) */makefile
 
 destroy::		; $(DESTROY)
 
@@ -46,6 +40,5 @@ deinstall:		; $(RM) $(IT)
 
 ####### (Details of Productions) ###############################################
 $(DIRS):			; mkdir $@
-$(MFILES):			; $(GET) $@
-$B/$(THIS):	bin/$(THIS)	; $(PUT)
-$B/sccsget:	bin/sccsget	; $(PUT)
+$B/$(THIS):	bin/$(THIS)	; $(INSTALL_PROGRAM) $? $@
+$B/sccsput:	bin/sccsput	; $(INSTALL_PROGRAM) $? $@
