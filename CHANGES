@@ -1,3 +1,9 @@
+1995-01-28  Thomas E. Dickey  <dickey@clark.net>
+
+	* src/getdelta/src/getdelta.c: updated ifdef for 'cmv'
+
+	* src/putdelta/src/putdelta.c: use OPN_PTYPES
+
 1994-08-11  Thomas E. Dickey  <dickey@clark.net>
 
 	* src/getdelta/src/getdelta.c:
