@@ -1,6 +1,8 @@
-MANIFEST for sccs_tools, version t19890323
+MANIFEST for sccs_tools, version t19890327
 --------------------------------------------------------------------------------
 MANIFEST                        this file
+certify                         subdirectory
+certify/Makefile                make-file for SCCS_TOOLS certificate directory
 src/getdelta/src                subdirectory
 src/getdelta/src/Makefile       
 src/getdelta/src/getdelta.c     
