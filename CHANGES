@@ -1,3 +1,9 @@
+1993-05-06  ste_cm@software.org
+
+	* Makefile: BASELINE Thu May  6 09:17:51 1993
+
+	* Makefile: oops: corrected install-rule
+
 1993-05-05  dickey@software.org
 
 	* certify/release.txt: baseline-date
