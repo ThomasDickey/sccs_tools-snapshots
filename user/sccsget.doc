@@ -5,9 +5,9 @@
 	Default Printer =	"cx">
 
 <!Font Definitions,
+	F27 = Classic 10,
 	F30 = Classic 12,
 	F21 = Typewriter 10,
-	F27 = Classic 10,
 	F34 = Classic 14 Bold,
 	F31 = Classic 12 Bold,
 	F32 = Classic 12 Italic,
@@ -118,8 +118,8 @@
 	Diagram =
 V4,
 (g9,32767,0
- (E10,0,0,0,1,1,0.053333,1,15,0,0,1,0,0,0,1,1,1,1,0.066667,0.066667,6,6,0,0.066
-  667,6))>
+ (E10,0,0,0,1,1,0.053333,1,15,0,0,1,0,0,0,0.007813,1,1,1,0.066667,0.066667,6,6,
+  0,0.066667,6))>
 
 <!Master Frame,
 	Name =			Bottom,
@@ -130,8 +130,8 @@ V4,
 	Diagram =
 V4,
 (g9,32767,0
- (E10,0,0,0,1,1,0.053333,1,15,0,0,1,0,0,0,1,1,1,1,0.066667,0.066667,6,6,0,0.066
-  667,6))>
+ (E10,0,0,0,1,1,0.053333,1,15,0,0,1,0,0,0,0.007813,1,1,1,0.066667,0.066667,6,6,
+  0,0.066667,6))>
 
 <!Master Frame,
 	Name =			"Following Anchor",
@@ -142,8 +142,8 @@ V4,
 	Diagram =
 V4,
 (g9,32767,0
- (E10,0,0,0,1,1,0.053333,1,15,0,0,1,0,0,0,1,1,1,1,0.066667,0.066667,6,6,0,0.066
-  667,6))>
+ (E10,0,0,0,1,1,0.053333,1,15,0,0,1,0,0,0,0.007813,1,1,1,0.066667,0.066667,6,6,
+  0,0.066667,6))>
 
 <!Master Frame,
 	Name =			"Following Text",
@@ -154,8 +154,8 @@ V4,
 	Diagram =
 V4,
 (g9,32767,0
- (E10,0,0,0,1,1,0.053333,1,15,0,0,1,0,0,0,1,1,1,1,0.066667,0.066667,6,6,0,0.066
-  667,6))>
+ (E10,0,0,0,1,1,0.053333,1,15,0,0,1,0,0,0,0.007813,1,1,1,0.066667,0.066667,6,6,
+  0,0.066667,6))>
 
 <!Master Frame,
 	Name =			Footnote,
@@ -167,8 +167,8 @@ V4,
 	Diagram =
 V4,
 (g9,32767,0
- (E10,0,0,0,1,1,0.053333,1,15,0,0,1,0,0,0,1,1,1,1,0.066667,0.066667,6,6,0,0.066
-  667,6))>
+ (E10,0,0,0,1,1,0.053333,1,15,0,0,1,0,0,0,0.007813,1,1,1,0.066667,0.066667,6,6,
+  0,0.066667,6))>
 
 <!Master Frame,
 	Name =			Top,
@@ -179,13 +179,13 @@ V4,
 	Diagram =
 V4,
 (g9,32767,0
- (E10,0,0,0,1,1,0.053333,1,15,0,0,1,0,0,0,1,1,1,1,0.066667,0.066667,6,6,0,0.066
-  667,6))>
+ (E10,0,0,0,1,1,0.053333,1,15,0,0,1,0,0,0,0.007813,1,1,1,0.066667,0.066667,6,6,
+  0,0.066667,6))>
 
 <Page Header, Frame =
 V4,
 (g9,1,0
- (t8,1,4,5.698608,0.438782,2,17,@nnclas12b,May\ 5\,\ 1988)
+ (t8,1,4,5.698608,0.438782,2,17,@nnclas12b,August\ 4\,\ 1988)
  (t8,2,4,2.849304,0.438782,1,17,@nnclas12b,SCCS\ Check-out\ Script)
  (t8,3,4,0,0.438782,0,17,@nnclas12b,sccsget)
  (E10,0,0,0,1,1,0.053333,1,15,0,0,1,0,0,0,1,1,1,1,0.066667,0.066667,6,6,0,0.066
@@ -197,8 +197,8 @@ V4,
  (t8,1,4,5.698608,0.478772,2,17,@nnclas10,)
  (t8,2,4,2.849304,0.478772,1,17,@nnclas12b,-\ \240\ -)
  (t8,3,4,0,0.478772,0,17,@nnclas10,)
- (E10,0,0,0,1,1,0.053333,1,15,0,0,1,0,0,0,1,1,1,1,0.066667,0.066667,6,6,0,0.066
-  667,6))>
+ (E10,0,0,0,1,1,0.053333,1,15,0,0,1,0,0,0,0.007813,1,1,1,0.066667,0.066667,6,6,
+  0,0.066667,6))>
 
 <header>
 
@@ -244,10 +244,11 @@ OPTIONS
 
 <paragraph>
 
-<F31>Sccsget<F0> is a directory-recursive interface to the <F31>get<F0> 
-utility which does special things with the file modification date.  
-Most of its options are passed to <F31>get<F0>, and then interpreted 
-to determine the correct modification date:
+<F31>Sccsget<F0> is a directory-recursive interface <F30@R>to the <F31@R>getdelta
+<F30@R> utility<F0> (which invokes <F32>sccs<F0>'s <F31>get<F0>) 
+which does special things with the file modification date.  Most of 
+its options are passed to <F31>get<F0>, and then interpreted to determine 
+the correct modification date:
 
 <options>
 
@@ -261,8 +262,6 @@ date, in the format
 <subfixed>
 
 -c 77/2/2 9:22:25
-
-<subfixed>
 
 -c 770202092225
 
@@ -309,16 +308,13 @@ ENVIRONMENT
 
 <F31>Sccsget<F0> is a Bourne shell script.  On Apollo DOMAIN/IX, 
 it uses System<SP>5 features, including <F32>getopt<SP>(1)<F0>.  
-Environment variables used by sccsget include:
+Environment variables used by <F31>sccsget<F0> include:
 
 <options>
 
-<F49>RUNLIB<F0><Tab>identifies the execution path of this tool, and 
-of subordinate components (e.g., <F31>sccsdate<F0>).<Tab>
-
-<F49>TZ<F0><Tab>is the unix time zone, which is overridden internally 
-so that file modification dates are independent of the local time 
-zone.
+<F49@R>SCCS_DIR<F30@R><Tab>specifies the directory in which <F31@R>getdelta<F30@R> 
+will find the <#7f>s." files.  If not specified, <F31@R>getdelta<F30@R> 
+assumes <#7f>sccs".
 
 <header>
 
@@ -330,12 +326,12 @@ Sccsget uses the following files:
 
 <options>
 
-<F49>sccsget<F0><Tab>the Bourne shell script<Tab>
+<F49>sccsget<F0><Tab>the Bourne shell script
 
-<F49>sccsdate<F0><Tab>a utility which modifies the file's modification 
-date after check-out so that the file's modification date matches 
-the version-date selected with the <#7f>-<F31>c<F0>" or <#7f>-<F31>r<F0>" 
-option.
+<F49@R>getdelta<F30@R><Tab>a utility which invokes <F31@R>get<F30@R>, and 
+then modifies the file's modification date after check-out so that 
+the file's modification date matches the version-date selected with 
+the <#7f>-<F31@R>c<F30@R>" or <#7f>-<F31@R>r<F30@R>" option.
 
 <header>
 
@@ -351,7 +347,7 @@ SEE ALSO
 
 <paragraph>
 
-sccsput, ded, get<SP>(1)
+<F30@R>getdelta, <F0>sccsput, ded, get<SP>(1)
 
 <header>
 

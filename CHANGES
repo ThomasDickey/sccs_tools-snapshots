@@ -1,3 +1,11 @@
+1988-08-04  dickey@software.org
+
+	* user/sccsget.doc:
+	described change to use 'getdelta' rather than 'sccsdate'.
+
+	* user/sccsput.doc:
+	described change from 'sccsbase' to 'putdelta' module; described SCCS_DIR environment variable.
+
 1988-08-03  dickey@software.org
 
 	* src/putdelta/src/Makefile, src/getdelta/src/Makefile:
