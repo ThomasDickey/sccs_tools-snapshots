@@ -1,4 +1,4 @@
-.\" $Id: sccs2rcs.man,v 6.1 1994/07/18 15:37:23 tom Exp $
+.\" $Id: sccs2rcs.man,v 6.2 1994/07/19 15:29:55 tom Exp $
 .de DS
 .RS
 .nf
@@ -73,6 +73,7 @@ to translate keywords.
 .TP
 .B \-e
 attempts to replace \fIsccs\fR keywords by \fIrcs\fR keywords.
+Repeat the option to also edit the Log-comment.
 .
 .TP
 .B \-q

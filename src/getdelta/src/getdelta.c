@@ -1,5 +1,5 @@
 #ifndef	lint
-static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/src/RCS/getdelta.c,v 6.4 1994/07/18 19:38:24 tom Exp $";
+static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/src/RCS/getdelta.c,v 6.5 1994/07/19 16:41:29 tom Exp $";
 #endif
 
 /*
@@ -7,6 +7,8 @@ static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/
  * Author:	T.E.Dickey
  * Created:	26 Mar 1986 (as a procedure)
  * Modified:
+ *		19 Jul 1994, added "-p" option.
+ *		18 Jul 1994, corrected 'bump()' using 'vercmp()'.
  *		15 Jul 1994, use 'sccspath()'
  *		13 Jul 1994, Linux/gcc warnings
  *		23 Sep 1993, SunOS/gcc warnings
@@ -43,12 +45,11 @@ static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/
  */
 
 #define	ACC_PTYPES
+#define	CHR_PTYPES
 #define	STR_PTYPES
 #define	TIM_PTYPES
 #include	<ptypes.h>
 #include	<sccsdefs.h>
-
-#include	<ctype.h>
 
 /* local definitions */
 #define	NAMELEN		80	/* length of tokens in sccs-header */
@@ -70,7 +71,8 @@ static	int	writeable = 0,		/* nonzero to make g-file writeable */
 		silent	= FALSE,	/* "-s" option */
 		force	= FALSE,	/* "-f" option */
 		lockit	= FALSE,	/* "-e" option */
-		noop	= FALSE;	/* "-n" option */
+		noop	= FALSE,	/* "-n" option */
+		piped	= FALSE;	/* "-p" option */
 
 static	char	*sid	= NULL,
 		get_opts[BUFSIZ],
@@ -283,7 +285,8 @@ void	DoFile (
 			buffer[BUFSIZ],
 			*s;
 
-	if (!Permitted(working, FALSE) || !Permitted(archive, !lockit))
+	if ((!piped && !Permitted(working, FALSE))
+	 || !Permitted(archive, !lockit))
 		return;
 
 	/*
@@ -316,7 +319,9 @@ void	DoFile (
 	 */
 	if (is_a_file(s_file,&s_mode)) {
 		if (is_a_file(name,(int *)0)) {
-			if (force) {
+			if (piped) {
+				;
+			} else if (force) {
 				if (!noop && (unlink(name) < 0))
 					failed(name);
 			} else {
@@ -339,7 +344,8 @@ void	DoFile (
 			if (execute(sccspath(GET_TOOL), get_opts) < 0)
 				failed(name);
 		}
-		PostProcess(name, s_file);
+		if (!piped)
+			PostProcess(name, s_file);
 	}
 
 	/*
@@ -368,6 +374,7 @@ void	usage (_AR0)
 ,"  -f      force overwrite of existing file"
 ,"  -k      extract without keyword expansion (passed to \"get\")"
 ,"  -n      noop: show states we would do"
+,"  -p      pipe the file to standard output (passed to \"get\")"
 ,"  -r SID  (a la \"get\") recognizes SCCS-sid description"
 ,"  -s      make the operation less noisy (passed to \"get\")"
 	};
@@ -390,7 +397,7 @@ _MAIN
 
 	oldzone();
 
-	while ((j = getopt(argc, argv, "bc:efknr:s")) != EOF) {
+	while ((j = getopt(argc, argv, "bc:efknpr:s")) != EOF) {
 		switch (j) {
 		/* options interpreted & pass through to "get" */
 		case 'r':
@@ -411,6 +418,11 @@ _MAIN
 				(void)strcat(strcat(temp, " "), argv[k++]);
 			catarg(get_opts, temp);
 			TELL "cutoff: %s\n", ctime(&opt_c));
+			break;
+
+		case 'p':
+			piped	= TRUE;
+			catarg(get_opts, "-p");
 			break;
 
 		case 's':
