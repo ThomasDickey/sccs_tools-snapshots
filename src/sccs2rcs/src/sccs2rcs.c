@@ -3,6 +3,9 @@
  * Author: Ken Greer
  *
  * $Log: sccs2rcs.c,v $
+ * Revision 6.6  2001/12/11 15:04:07  tom
+ * change interface to rcs_dir()
+ *
  * Revision 6.5  1995/05/13 23:19:39  tom
  * use MODULE_ID
  *
@@ -137,7 +140,7 @@
 #include "sccsdefs.h"
 #include <errno.h>
 
-MODULE_ID("$Id: sccs2rcs.c,v 6.5 1995/05/13 23:19:39 tom Exp $")
+MODULE_ID("$Id: sccs2rcs.c,v 6.6 2001/12/11 15:04:07 tom Exp $")
 
 #define SOH	001		/* SCCS lines start with SOH (Control-A) */
 #define RCS	"rcs"
@@ -469,7 +472,7 @@ int	initialize_rcsfile (
     char command[BUFSIZ];
     FILE *pd;
 
-    if (mkdir(rcs_dir(), 0755) < 0) {	/* forces common naming convention */
+    if (mkdir(rcs_dir(NULL,NULL), 0755) < 0) {	/* forces common naming convention */
 	if (errno != EEXIST)
 	    failed("mkdir");
     }

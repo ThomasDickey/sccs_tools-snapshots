@@ -29,7 +29,7 @@
 #include	<rcsdefs.h>
 #include	<sccsdefs.h>
 
-MODULE_ID("$Id: sccsget.c,v 6.5 1994/07/19 15:45:13 tom Exp $")
+MODULE_ID("$Id: sccsget.c,v 6.6 2001/12/11 15:03:06 tom Exp $")
 
 static	char	get_opts[BUFSIZ];
 static	char	*verb = "getdelta";
@@ -142,7 +142,7 @@ int	WALK_FUNC(scan_tree)
 					track_wd(vault);
 				(void)walktree(path, vault, do_archive, "r", 0);
 			}
-		} else if (sameleaf(s, rcs_dir())) {
+		} else if (sameleaf(s, rcs_dir(NULL, NULL))) {
 			readable = -1;
 		}
 		if (readable >= 0) {
