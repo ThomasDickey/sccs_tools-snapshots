@@ -1,3 +1,12 @@
+1989-04-28  dickey@software.org
+
+	* src/sccs2rcs/src/sccs2rcs.c:
+	"toupper" is more portable than "_toupper"
+
+1989-04-28  ste_cm@software.org
+
+	* src/sccs2rcs/src/sccs2rcs.c: BASELINE Mon Jul 10 09:22:04 EDT 1989
+
 1989-04-18  dickey@software.org
 
 	* user/sccsput.doc: resaved under tps4.0
