@@ -1,9 +1,9 @@
-# $Id: Makefile,v 5.2 1992/10/19 11:49:51 dickey Exp $
+# $Id: Makefile,v 6.0 1993/04/29 08:58:52 ste_cm Rel $
 # Top-level makefile for SCCS_TOOLS sccs/RCS conversion utility
 
 THIS	= sccs2rcs
 TOP	= ../../..
-include $(TOP)/cm_library/support/cm_library.mk
+include $(TOP)/td_lib/support/td_lib.mk
 
 ####### (Standard Lists) #######################################################
 B	= ../../bin
@@ -19,13 +19,14 @@ DIRS	=\
 	bin
 
 ####### (Standard Productions) #################################################
-all::	$(DIRS)
+all\
+run_test::	$(DIRS)
 
 all\
 clean\
 clobber\
 destroy\
-run_tests\
+run_test\
 sources\
 lincnt.out\
 lint.out::	$(MFILES)

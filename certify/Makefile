@@ -1,20 +1,20 @@
-# $Id: Makefile,v 5.1 1992/10/19 10:40:18 dickey Exp $
+# $Id: Makefile,v 6.0 1993/04/29 08:36:21 ste_cm Rel $
 
 TOP	= ../..
-include $(TOP)/cm_library/support/cm_library.mk
+include $(TOP)/td_lib/support/td_lib.mk
 
 ####### (Standard Lists) #######################################################
 SOURCES	=\
 	README\
-	config_sheet.txt\
-	release_notes.txt
+	config.txt\
+	release.txt
 
 ####### (Standard Productions) #################################################
 all:	$(SOURCES) $(ALL)
 clean:				; rm -f $(CLEAN)
 clobber:	clean		; rm -f $(ALL)
 destroy:			; $(DESTROY)
-run_tests:
+run_test:
 sources:	$(SOURCES)
 install:
 deinstall:

@@ -1,13 +1,13 @@
-# $Id: Makefile,v 5.1 1992/10/19 11:00:59 dickey Exp $
+# $Id: Makefile,v 6.0 1993/04/29 09:46:39 ste_cm Rel $
 # make-file for testing sccs/RCS conversion utility
 
 TOP	= ../../../..
-include $(TOP)/cm_library/support/cm_library.mk
+include $(TOP)/td_lib/support/td_lib.mk
 
 ####### (Standard Lists) #######################################################
 SCRIPTS	=\
-	do_a_test.sh\
-	run_tests.sh
+	do_test.sh\
+	run_test.sh
 
 S_FILES	=\
 	s.testfile1.c\
@@ -24,7 +24,7 @@ destroy:			; $(DESTROY)
 sources:	$(SOURCES)
 lint.out\
 lincnt.out:
-run_tests:	$(SOURCES)	; $@.sh
+run_test:	$(SOURCES)	; $(RUN_TESTS)
 
 ####### (Details of Productions) ###############################################
 $(SOURCES):			; $(GET) $@

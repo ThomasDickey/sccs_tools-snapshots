@@ -1,9 +1,9 @@
-# $Id: Makefile,v 5.1 1992/10/19 10:49:49 dickey Exp $
+# $Id: Makefile,v 6.0 1993/04/29 08:57:21 ste_cm Rel $
 # Top-level makefile for SCCS_TOOLS put-delta utility
 
 THIS	= putdelta
 TOP	= ../../..
-include $(TOP)/cm_library/support/cm_library.mk
+include $(TOP)/td_lib/support/td_lib.mk
 
 ####### (Standard Lists) #######################################################
 B	= ../../bin
@@ -21,10 +21,13 @@ DIRS	=\
 
 ####### (Standard Productions) #################################################
 all\
+run_test::	$(DIRS)
+
+all\
 clean\
 clobber\
 destroy\
-run_tests\
+run_test\
 sources\
 lincnt.out\
 lint.out::	$(MFILES)

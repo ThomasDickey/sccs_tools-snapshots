@@ -1,6 +1,6 @@
 #ifndef	lint
 static char *RCSid =
-"$Header: /users/source/archives/sccs_tools.vcs/src/sccs2rcs/src/RCS/sccs2rcs.c,v 5.0 1991/10/24 09:17:22 ste_cm Rel $";
+"$Header: /users/source/archives/sccs_tools.vcs/src/sccs2rcs/src/RCS/sccs2rcs.c,v 6.0 1993/04/29 12:30:16 ste_cm Rel $";
 #endif
 
 /*
@@ -8,9 +8,21 @@ static char *RCSid =
  * Author: Ken Greer
  *
  * $Log: sccs2rcs.c,v $
- * Revision 5.0  1991/10/24 09:17:22  ste_cm
- * BASELINE Mon Jul 20 12:41:28 1992 -- CM_TOOLS #11
+ * Revision 6.0  1993/04/29 12:30:16  ste_cm
+ * BASELINE Wed May  5 11:05:31 1993 -- TD_LIB #12
  *
+ * Revision 5.3  93/04/29  12:30:16  dickey
+ * missed an option
+ * 
+ * Revision 5.2  93/04/29  10:11:34  dickey
+ * provided "-q" option for CI-tool
+ * 
+ * Revision 5.1  93/04/29  09:06:28  dickey
+ * shorten-filenames
+ * 
+ * Revision 5.0  91/10/24  09:17:22  ste_cm
+ * BASELINE Mon Jul 20 12:41:28 1992 -- CM_TOOLS #11
+ * 
  * Revision 4.0  91/10/24  09:17:22  ste_cm
  * BASELINE Tue Dec 17 11:56:35 1991
  * 
@@ -475,6 +487,7 @@ char *sccsfile, *rcsfile;
 		return (-1);
 
 	RCSarg(command);
+	if (quiet)	catarg(command, "-q");
 	catarg(command, version);
 	catarg(command, rcsfile);
 
@@ -519,6 +532,7 @@ char	*filename;
 	auto	int	header	= TRUE;
 	auto	char	key[80];
 	auto	char	*rcsfile;
+	auto	int	code	= S_FAIL;
 	register char	*s = 0;
 
 	if (comment_opt) {
@@ -528,9 +542,9 @@ char	*filename;
 	comments[0] = EOS;
 	if (!rcsopen(rcsfile = name2rcs(filename,FALSE), -verbose, TRUE))
 		quit2("Could not find archive %s\n", rcsfile);
-	while (header && (s = rcsread(s))) {
+	while (header && (s = rcsread(s, code))) {
 		s = rcsparse_id(key, s);
-		switch(rcskeys(key)) {
+		switch(code = rcskeys(key)) {
 		case S_COMMENT:
 			s = rcsparse_str(s, store_comment);
 		case S_VERS:
@@ -711,6 +725,7 @@ char	*filename;
 		}
 		*bfr = EOS;
 		FORMAT(tmp, "-m%s keywords", WHOAMI);
+		if (quiet)	catarg(bfr, "-q");
 		catarg(bfr, tmp);
 		catarg(bfr, filename);
 		(void)invoke(CI, bfr);
