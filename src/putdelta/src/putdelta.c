@@ -1,5 +1,5 @@
 #ifndef	lint
-static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/src/RCS/putdelta.c,v 3.21 1991/06/27 08:48:22 ste_cm Exp $";
+static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/putdelta/src/RCS/putdelta.c,v 3.22 1991/07/01 09:35:50 dickey Exp $";
 #endif
 
 /*
@@ -582,6 +582,20 @@ char	*name;
 			if (VERBOSE) shoarg(stdout, "mkdir", d_path);
 			if (!no_op) {
 				d_mode = sb.st_mode & 0777;
+				/*
+				 * If this is not running in set-uid mode, make
+				 * the directory with group-permissions so that
+				 * the owner of the parent directory can still
+				 * put files in it too.
+				 *
+				 * patch: should verify group-compatibility
+				 */
+				if (getuid() != d_user
+				 || getgid() != d_group)
+					d_mode |= (S_IWRITE>>3);
+					/* force to group-writeable */
+				if (getuid() == geteuid())
+					d_user = getuid();
 				if (for_user2(MkDir, d_user, d_group) < 0)
 					failed("mkdir");
 			}
