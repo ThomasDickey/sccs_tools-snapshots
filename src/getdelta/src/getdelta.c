@@ -1,5 +1,5 @@
 #ifndef	lint
-static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/src/RCS/getdelta.c,v 6.9 1995/05/13 23:18:10 tom Exp $";
+static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/src/RCS/getdelta.c,v 6.10 1995/09/07 21:44:02 tom Exp $";
 #endif
 
 /*
@@ -7,6 +7,7 @@ static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/
  * Author:	T.E.Dickey
  * Created:	26 Mar 1986 (as a procedure)
  * Modified:
+ *		07 Sep 1995, added processing for CmVision binary-files.
  *		16 Mar 1995, allow -r, -s options to repeat (use last).
  *		19 Jul 1994, added "-p" option.
  *		18 Jul 1994, corrected 'bump()' using 'vercmp()'.
@@ -61,6 +62,8 @@ static	char	Id[] = "$Header: /users/source/archives/sccs_tools.vcs/src/getdelta/
 #define	GET_TOOL	"get"
 #endif
 
+#define	CTL_A	'\001'
+
 /************************************************************************
  *	local data							*
  ************************************************************************/
@@ -76,8 +79,7 @@ static	int	writeable = 0,		/* nonzero to make g-file writeable */
 		piped	= FALSE;	/* "-p" option */
 
 static	char	*sid	= NULL,
-		get_opts[BUFSIZ],
-		bfr[BUFSIZ];
+		get_opts[BUFSIZ];
 
 /************************************************************************
  *	local procedures						*
@@ -142,8 +144,101 @@ _DCL(char *,	version)
 	return (code);
 }
 
+#ifdef CMV_PATH
+static	int	file_is_binary;
+static	char	cmv_binary[] = "\\\\\\\\";
+
 /*
- * Process a single file:
+ * Inspect the file to see if it's a binary file. If so, we must suppress
+ * keyword-expansion for the current file.  We "know" that s-files that hold
+ * binary data begin with 4 backslashes.
+ */
+static
+void	CheckForBinary(
+	_AR1(char *,	s_file))
+	_DCL(char *,	s_file)
+{
+	FILE	*fp;
+	file_is_binary = FALSE;
+	if ((fp = fopen (s_file, "r")) != NULL) {
+		char	buf[BUFSIZ];
+		while (fgets(buf, sizeof(buf), fp) != 0) {
+			if (buf[0] == CTL_A
+			 && buf[1] == 'I') {
+				if (fgets(buf, sizeof(buf), fp)
+				 && !strncmp(buf, cmv_binary, 4))
+					file_is_binary = TRUE;
+				break;
+			}
+		}
+	}
+}
+
+/*
+ * If the current file is a CmVision binary-file, de-hexify it by converting
+ * backslash sequences to characters.
+ */
+static
+void	DeHexify(
+	_AR1(char *,	name))
+	_DCL(char *,	name)
+{
+	FILE	*ifp;
+	FILE	*ofp;
+	Stat_t	sb;
+	char *	temp;
+	char	dirname[MAXPATHLEN];
+	char	buffer[1024];
+	int	first = TRUE;
+	static	char	hex[] = "0123456789ABCDEF";
+
+	(void)strcpy(dirname, pathhead(name, &sb));
+	temp = tempnam(dirname, "get");
+	if ((ifp = fopen(name, "r")) == 0)
+		failed(name);
+
+	if ((ofp = fopen(temp, "w")) == 0)
+		failed(temp);
+
+	/* we're reading lines no longer than 256 characters */
+	while (fgets(buffer, sizeof(buffer), ifp)) {
+		char *s = buffer;
+		if (first) {
+			if (strncmp(buffer, cmv_binary, 4)) {
+				FPRINTF(stderr, "? not a binary: %s\n", name);
+				exit(EXIT_FAILURE);
+			}
+			first = FALSE;
+			s += 4;
+		}
+		while (*s != EOS) {
+			int c;
+			if ((c = *s++) == '\\') {
+				char *a = strchr(hex, *s++);
+				char *b = strchr(hex, *s++);
+				if (a == 0
+				 || b == 0) {
+					FPRINTF(stderr, "? non-hex\n");
+					exit(EXIT_FAILURE);
+				}
+				c = ((a - hex) << 4) + (b - hex);
+				if (c == 'J' && *s == '\n')
+					break;
+			}
+			fputc(c, ofp);
+		}
+	}
+	fclose(ifp);
+	fclose(ofp);
+	if (rename(temp, name) < 0)
+		failed(name);
+	free(temp);
+}
+#endif
+
+/*
+ * Process a single file by finding the check-in date and using that to
+ * timestamp the file.
  */
 static
 void	PostProcess (
@@ -158,31 +253,34 @@ void	PostProcess (
 	int	got	= FALSE,
 		year, mon, mday,
 		hour, min, sec, new, old;
-	char	version[NAMELEN], pgmr[NAMELEN];
+	char	version[NAMELEN];
+	char	pgmr[NAMELEN];
+	char	bfr[BUFSIZ];
 
 	static	char	fmt[] = "\001d D %s %d/%d/%d %d:%d:%d %s %d %d";
 
 	if ((fp = fopen (s_file, "r")) != NULL) {
 		newzone(5,0,FALSE);	/* interpret in EST/EDT zone */
-		while (fgets(bfr, sizeof(bfr), fp) && *bfr == '\001') {
+		while (fgets(bfr, sizeof(bfr), fp) && *bfr == CTL_A) {
 			if (sscanf (bfr, fmt, version,
 					&year, &mon,  &mday,
 					&hour, &min, &sec,
 					pgmr, &new, &old) > 0) {
 				date = packdate(1900+year, mon, mday, hour, min, sec);
 #ifdef CMV_PATH	/* for CmVision */
-		if (fgets(bfr, sizeof(bfr), fp) && *bfr == '\001') {
-			if (!strncmp(bfr, "\001c ", 3)) {
-				char	*s;
-				time_t	when;
-				if ((s = strstr(bfr, "\\\001O")) != 0) {
-					while (strncmp(s, ":M", 2) && *s)
-						s++;
-					if (sscanf(s, ":M%ld:", &when))
-						date = when;
+				if (fgets(bfr, sizeof(bfr), fp)
+				 && *bfr == CTL_A) {
+					if (!strncmp(bfr, "\001c ", 3)) {
+						char	*s;
+						time_t	when;
+						if ((s = strstr(bfr, "\\\001O")) != 0) {
+							while (strncmp(s, ":M", 2) && *s)
+								s++;
+							if (sscanf(s, ":M%ld:", &when))
+								date = when;
+						}
+					}
 				}
-			}
-		}
 #endif
 				if (opt_c) {
 					if (date > opt_c)
@@ -212,11 +310,15 @@ void	PostProcess (
 		TELL "** could not open \"%s\"\n", s_file);
 
 	if (!noop && got) {
+#ifdef CMV_PATH
+		if (file_is_binary)
+			DeHexify(name);
+#endif
 		(void)chmod(name, s_mode);
 		if (setmtime(name, date, (time_t)0) < 0)
 			YELL "%s: cannot set time\n", name);
 		else if (lockit && !geteuid()) {
-			char	p_file[BUFSIZ];
+			char	p_file[MAXPATHLEN];
 			char	*s = strrchr(strcpy(p_file, s_file), '/');
 			if (s != 0)
 				s++;
@@ -249,7 +351,7 @@ int	is_a_file(
 			return (TRUE);
 		} else {
 			YELL "?? \"%s\" is not a file\n", name);
-			(void)exit(FAIL);
+			(void)exit(EXIT_FAILURE);
 			/*NOTREACHED*/
 		}
 	}
@@ -267,7 +369,7 @@ int	Permitted(
 	_DCL(char *,	name)
 	_DCL(int,	read_only)
 {
-	char	path[BUFSIZ];
+	char	path[MAXPATHLEN];
 	int	mode	= X_OK | R_OK;
 	char	*mark	= strrchr(pathcat(path, ".", name), '/');
 
@@ -287,17 +389,18 @@ int	Permitted(
 static
 void	DoFile (
 	_ARX(char *,	name)
-	_AR1(char *,	s_file)
+	_AR1(char *,	arguments)
 		)
 	_DCL(char *,	name)
-	_DCL(char *,	s_file)
+	_DCL(char *,	arguments)
 {
 	auto	int	ok	= TRUE;
 	auto	char	*working = sccs2name(name, FALSE);
 	auto	char	*archive = name2sccs(name, FALSE);
-	auto	char	old_wd[BUFSIZ],
-			new_wd[BUFSIZ],
-			buffer[BUFSIZ],
+	auto	char	old_wd[MAXPATHLEN],
+			new_wd[MAXPATHLEN],
+			s_file[MAXPATHLEN],
+			buffer[MAXPATHLEN],
 			*s;
 
 	if ((!piped && !Permitted(working, FALSE))
@@ -317,7 +420,7 @@ void	DoFile (
 		abspath(pathcat(new_wd, old_wd, buffer));
 		abspath(strcpy(s_file, name2sccs(name, FALSE)));
 		if (!silent) {
-			char	temp[BUFSIZ];
+			char	temp[MAXPATHLEN];
 			shoarg(stdout, "cd", relpath(temp, old_wd, new_wd));
 		}
 		if (chdir(new_wd) < 0)
@@ -353,7 +456,15 @@ void	DoFile (
 	 * Process the file if we found no errors
 	 */
 	if (ok) {
-		if (!silent) shoarg(stdout, GET_TOOL, get_opts);
+		*arguments = EOS;
+#ifdef CMV_PATH
+		CheckForBinary(s_file);
+		if (file_is_binary)
+			catarg(arguments, "-k");
+#endif
+		(void)strcat(arguments, s_file);
+		if (!silent)
+			shoarg(stdout, GET_TOOL, get_opts);
 		if (!noop) {
 			newzone(0,0,FALSE);	/* do this in GMT zone */
 			if (execute(sccspath(GET_TOOL), get_opts) < 0)
@@ -396,7 +507,7 @@ void	usage (_AR0)
 	register int	j;
 	for (j = 0; j < sizeof(msg)/sizeof(msg[0]); j++)
 		YELL "%s\n", msg[j]);
-	(void)exit(FAIL);
+	(void)exit(EXIT_FAILURE);
 	/*NOTREACHED*/
 }
 
@@ -473,6 +584,6 @@ _MAIN
 			DoFile (argv[j], get_arg);
 	} else
 		usage();
-	(void)exit(SUCCESS);
+	(void)exit(EXIT_SUCCESS);
 	/*NOTREACHED*/
 }
