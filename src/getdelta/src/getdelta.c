@@ -61,7 +61,7 @@
 #include	<ptypes.h>
 #include	<sccsdefs.h>
 
-MODULE_ID("$Id: getdelta.c,v 6.26 2002/04/30 11:03:26 tom Exp $")
+MODULE_ID("$Id: getdelta.c,v 6.27 2002/07/05 13:42:07 tom Exp $")
 
 /* local definitions */
 #define	NAMELEN		80	/* length of tokens in sccs-header */
@@ -373,7 +373,7 @@ void	PostProcess (
 		TELL "** could not open \"%s\"\n", s_file);
 
 	if (!noop && got) {
-#if S_FILES_14
+#if defined(S_FILES_14)
 		/*
 		 * If we extracted a shortened (14-char) name, try to rename it
 		 * to the longer name supplied by the user.
@@ -508,7 +508,7 @@ void	DoFile (
 	 * limit, to see if we'll be able to extract it.
 	 */
 	if (is_a_file(s_file,&s_mode)
-#if S_FILES_14
+#if defined(S_FILES_14)
 	 || (fleaf14(s_file) && is_a_file(s_file, &s_mode))
 #endif
 	   ) {

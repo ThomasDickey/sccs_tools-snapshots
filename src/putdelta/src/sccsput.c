@@ -37,7 +37,7 @@
 #include	<rcsdefs.h>
 #include	<sccsdefs.h>
 
-MODULE_ID("$Id: sccsput.c,v 6.8 2001/12/11 15:03:40 tom Exp $")
+MODULE_ID("$Id: sccsput.c,v 6.9 2002/07/05 13:42:07 tom Exp $")
 
 #define	DEBUG		if (debug) PRINTF
 #define	VERBOSE		if (!quiet) PRINTF
@@ -207,7 +207,7 @@ void	SccsPut(
 	auto	char	*working = sccs2name(name,FALSE);
 	auto	char	*archive = name2sccs(name,FALSE);
 	auto	int	first;
-#if S_FILES_14
+#if defined(S_FILES_14)
 	auto	char	temp[MAXPATHLEN];
 #endif
 
@@ -218,7 +218,7 @@ void	SccsPut(
 	if (filesize(archive) >= 0) {
 		first = FALSE;
 	}
-#if S_FILES_14
+#if defined(S_FILES_14)
 	else if (fleaf14(strcpy(temp, archive))
 		&& filesize(temp) >= 0) {
 		archive = temp;
@@ -346,7 +346,7 @@ void	usage(
 ,"  -T tool  specify a checkin-tool other than \"putdelta\""
 ,""
 	};
-	register int	j;
+	unsigned j;
 	for (j = 0; j < sizeof(tbl)/sizeof(tbl[0]); j++)
 		FPRINTF(stderr, "%s\n", tbl[j]);
 	if (option == '?')

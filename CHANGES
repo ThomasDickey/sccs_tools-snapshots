@@ -1,3 +1,11 @@
+2002-07-05  Thomas E. Dickey  <dickey@invisible-island.net>
+
+	* src/getdelta/src/getdelta.c, src/putdelta/src/sccsput.c:
+	change ifdef convention to work with "gcc -Wundef"
+
+	* src/fixsccs/src/fixsccs.c, src/getdelta/src/sccsget.c, src/sccs2rcs/src/sccs2rcs.c:
+	gcc warning
+
 2002-06-29  Thomas E. Dickey  <dickey@invisible-island.net>
 
 	* mkdirs.sh: resync with my-autoconf
