@@ -1,0 +1,4 @@
+1984-10-17  root  <root@invisible-island.net>
+
+	* src/sccs2rcs/src/sccs2rcs.c: FROM_KEYS
+
