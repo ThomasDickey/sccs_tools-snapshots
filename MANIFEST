@@ -1,4 +1,4 @@
-MANIFEST for sccs_tools, version t19880804
+MANIFEST for sccs_tools, version t19880805
 --------------------------------------------------------------------------------
 MANIFEST                        this file
 src/getdelta/src                subdirectory
@@ -12,5 +12,7 @@ src/putdelta/src/sccsput.sh
 src/sccs2rcs/src                subdirectory
 src/sccs2rcs/src/sccs2rcs.c     RCS "sccstorcs" utility.
 user                            subdirectory
+user/getdelta.doc               
+user/putdelta.doc               
 user/sccsget.doc                
 user/sccsput.doc                
