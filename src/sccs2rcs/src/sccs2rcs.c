@@ -1,6 +1,6 @@
 #ifndef	lint
 static char *RCSid =
-"$Header: /users/source/archives/sccs_tools.vcs/src/sccs2rcs/src/RCS/sccs2rcs.c,v 6.2 1994/07/18 20:03:11 tom Exp $";
+"$Header: /users/source/archives/sccs_tools.vcs/src/sccs2rcs/src/RCS/sccs2rcs.c,v 6.3 1994/07/19 15:27:34 tom Exp $";
 #endif
 
 /*
@@ -8,8 +8,8 @@ static char *RCSid =
  * Author: Ken Greer
  *
  * $Log: sccs2rcs.c,v $
- * Revision 6.2  1994/07/18 20:03:11  tom
- * use the "-w" option of 'ci' to preserve author info also.
+ * Revision 6.3  1994/07/19 15:27:34  tom
+ * require repeating "-e" option to enable Log-comment editing.
  *
  * Revision 6.1  1993/09/23  20:21:51  dickey
  * gcc warnings
@@ -753,7 +753,7 @@ void	edit_keywords _ONE(char *, filename)
 		while (fgets(bfr, sizeof(bfr), fpS)) {
 			edit_lines++;
 			changes += edit_what(bfr);
-			if (!log_tag && edit_log(bfr)) {
+			if (!log_tag && (edit_key > 1) && edit_log(bfr)) {
 				log_tag = TRUE;
 				changes++;
 			}
@@ -847,8 +847,8 @@ _MAIN
 		case 'c':
 			comment_opt = optarg;
 			break;
-		case 'e':
-			edit_key = TRUE;
+		case 'e':		/* once to edit Id-string */
+			edit_key++;	/* repeat to edit Log-comment */
 			break;
 		case 'q':
 			quiet = TRUE;

@@ -1,3 +1,20 @@
+1994-07-19  Thomas E. Dickey  <dickey@clark.net>
+
+	* src/getdelta/src/getdelta.c: added "-p" option
+
+	* src/getdelta/src/sccsget.c:
+	use 'sccs_debug()' to control verbosity level
+
+	* src/getdelta/src/sccsget.c: use MODULE_ID
+
+	* user/sccs2rcs.man: tweaked the "-e" option.
+
+	* src/sccs2rcs/src/sccs2rcs.c:
+	require repeating "-e" option to enable Log-comment editing.
+
+	* src/getdelta/src/sccsget.c: added logic to support SCCS_VAULT
+	added repeated -n option
+
 1994-07-18  Thomas E. Dickey  <dickey@clark.net>
 
 	* src/sccs2rcs/src/sccs2rcs.c:
