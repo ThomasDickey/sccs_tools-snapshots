@@ -1,3 +1,8 @@
+2002-07-06  Thomas E. Dickey  <dickey@invisible-island.net>
+
+	* src/sccs2rcs/src/sccs2rcs.c, src/putdelta/src/putdelta.c:
+	char-subscript warning (gcc/solaris)
+
 2002-07-05  Thomas E. Dickey  <dickey@invisible-island.net>
 
 	* src/getdelta/src/getdelta.c, src/putdelta/src/sccsput.c:

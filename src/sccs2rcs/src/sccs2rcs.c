@@ -3,6 +3,9 @@
  * Author: Ken Greer
  *
  * $Log: sccs2rcs.c,v $
+ * Revision 6.8  2002/07/06 16:18:09  tom
+ * char-subscript warning (gcc/solaris)
+ *
  * Revision 6.7  2002/07/05 13:42:07  tom
  * gcc warning
  *
@@ -143,7 +146,7 @@
 #include "sccsdefs.h"
 #include <errno.h>
 
-MODULE_ID("$Id: sccs2rcs.c,v 6.7 2002/07/05 13:42:07 tom Exp $")
+MODULE_ID("$Id: sccs2rcs.c,v 6.8 2002/07/06 16:18:09 tom Exp $")
 
 #define SOH	001		/* SCCS lines start with SOH (Control-A) */
 #define RCS	"rcs"
@@ -220,9 +223,9 @@ void	quit _ONE(char *, fmt)
 }
 
 static
-char *	xalloc _ONE(unsigned, size)
+void *	xalloc _ONE(unsigned, size)
 {
-    char *p;
+    void *p;
     if ((p = malloc (size)) == NULL)
 	quit ("Out of Memory.\n");
     return (p);
@@ -624,7 +627,8 @@ int	edit_what _ONE(char *, s)
 			s = t;
 			len = strlen(t = strcpy(tmp, t + len)) - 1;
 			while (	(len != 0)
-			&&	(ispunct(t[len]) || isspace(t[len]) ) )
+			&&	(ispunct(UCH(t[len]))
+			   ||    isspace(UCH(t[len])) ) )
 					len--;
 			len++;
 			if (	(t = strchr(tmp, '"'))
@@ -660,12 +664,12 @@ int	match(
 		if (*s++ != *t++)
 			return (0);
 	}
-	if (isalnum(*s))
+	if (isalnum(UCH(*s)))
 		return (0);
 	return (s-base);
 }
 
-#define	SKIP(s)		while(isspace(*s))	s++;
+#define	SKIP(s)		while(isspace(UCH(*s)))	s++
 #define	MATCH(t)	(len = match(tmp+(s-base),t))
 
 /*
@@ -685,7 +689,7 @@ int	edit_log _ONE(char *, s)
 	SKIP(s);		/* be tolerant about leading blanks */
 	SKIP(t);
 	while (*t) {
-		if (isspace(*s) && isspace(*t)) {
+		if (isspace(UCH(*s)) && isspace(UCH(*t))) {
 			SKIP(s);
 			SKIP(t);
 			continue;
@@ -696,7 +700,7 @@ int	edit_log _ONE(char *, s)
 
 	/* make a copy in uppercase to simplify matching */
 	for (t = base = s; (tmp[t-s] = *t) != EOS; t++)
-		if (isalpha(*t) && islower(*t))
+		if (isalpha(UCH(*t)) && islower(UCH(*t)))
 			tmp[t-s] = toupper(*t);
 
 	while (*s) {
