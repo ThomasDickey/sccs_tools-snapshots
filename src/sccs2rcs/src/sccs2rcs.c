@@ -1,5 +1,5 @@
 static char *RCSid =
-"$Header: /users/source/archives/sccs_tools.vcs/src/sccs2rcs/src/RCS/sccs2rcs.c,v 1.4 1984/10/17 21:12:11 root Exp $";
+"$Header: /users/source/archives/sccs_tools.vcs/src/sccs2rcs/src/RCS/sccs2rcs.c,v 1.5 1989/03/20 11:05:07 dickey Exp $";
 
 /*
  * SCCSTORCS - build RCS file from SCCS file preserving deltas.
@@ -12,9 +12,14 @@ static char *RCSid =
  * author.
  *
  * $Log: sccs2rcs.c,v $
- * Revision 1.4  1984/10/17 21:12:11  root
- * FROM_KEYS
+ * Revision 1.5  1989/03/20 11:05:07  dickey
+ * rewrote, making this smart enough to preserve checkin-dates, and to work
+ * with the conventional RCS and sccs directory convention.  Renamed to avoid
+ * confusion with the dumb version.
  *
+ * Revision 1.4  84/10/17  21:12:11  root
+ * FROM_KEYS
+ * 
  * Revision 1.4  84/10/17  21:12:11  root
  * Added check for having multiple deltas in a row for the same revision.
  * --ks
@@ -41,18 +46,25 @@ static char *RCSid =
  */
 
 #include <stdio.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 
 #define TRUE	1
 #define FALSE	0
 #define SOH	001		/* SCCS lines start with SOH (Control-A) */
-#define RCS	"rcs -q"
-#define GET	"get -s"
-#define CI	"ci -q -f"
+#define RCS	"rcs"
+#define GET	"getdelta -f"
+#define CI	"checkin -f"
+#define CO	"checkout"
+#define	_Q(s)	(quiet ? "-s" : "")
 
 #define prefix(a, b)	(strncmp(a, b, strlen(a)) == 0)
 #define null(str)	((str) == NULL ? "<null>\n" : (str))
 
+static	char	*workfile;	/* set iff we infer working file */
+
 int
+    quiet = FALSE,
     trace = FALSE,	/* just show what would be done, don't run commands */
     verbose = FALSE;	/* Print commands before executing */
 
@@ -238,6 +250,18 @@ FILE *fd;
 }
 
 /*
+ * See if a file exists
+ */
+fexists(name)
+char	*name;
+{
+	struct	stat	sb;
+
+	return (stat(name, &sb) >= 0
+	||  (sb.st_mode & S_IFMT) == S_IFREG);
+}
+
+/*
  * Convert SCCS file to RCS file
  */
 HEADER *
@@ -246,10 +270,20 @@ char *sccsfile;
 {
     HEADER *header;
     FILE *fd;
+    workfile = 0;
     if (strncmp (sname (sccsfile), "s.", 2) != 0)	/* An SCCS file? */
     {
-	fprintf (stderr, "%s: not an SCCS file.\n", sccsfile);
-	return (NULL);
+	static	char	temp[BUFSIZ];
+
+	sprintf(temp, "sccs/s.%s", sccsfile);
+	if (fexists(sccsfile))
+		workfile = sccsfile;
+	if (fexists(temp))
+		sccsfile = temp;
+	else {
+		fprintf (stderr, "%s: not an SCCS file.\n", sccsfile);
+		return (NULL);
+	}
     }
     if ((fd = fopen (sccsfile, "r")) == NULL)
     {
@@ -258,6 +292,9 @@ char *sccsfile;
     }
     header = collect_header (fd);
     fclose (fd);
+    if (trace)
+	print_header (sccsfile, header);
+    build_new_rcs_file (header, sccsfile);
     return (header);
 }
 
@@ -292,6 +329,7 @@ char *description, *rcsfile;
     extern FILE *popen();
     FILE *pd;
 
+    mkdir("RCS", 0755);		/* forces common naming convention */
     sprintf (command, "%s -i -U %s", RCS, rcsfile);
     if (trace || verbose)
 	printf ("%% %s\n", command);
@@ -316,17 +354,21 @@ char *sccsfile, *rcsfile;
 	/*
 	 * Get the SCCS file.
 	 */
-	sprintf (command, "%s -p -r%s %s > %s",
-	    GET, delta -> revision, sccsfile, rcsfile);
-	if (trace || verbose)
+
+	sprintf (command, "%s %s -r%s %s",
+	    GET, _Q(s), delta -> revision, sccsfile);
+	if (trace || verbose) {
+	    printf("# processing %s\n", rcsfile);
 	    printf("%% %s\n", command);
+	}
 	if (!trace)
 	{
 	    if (system (command))
 		return (-1);
 	}
 
-	sprintf (command, "%s -r%s %s", CI, delta -> revision, rcsfile);
+	sprintf (command, "%s %s -r%s %s",
+		CI, _Q(q), delta -> revision, rcsfile);
 	if (trace || verbose)
 	    printf("%% %s\n", command);
 	if (trace)
@@ -414,7 +456,12 @@ char **argv;
     {
 	switch (argv[1][1])
 	{
+	    case 'q':
+		quiet = TRUE;
+		break;
 	    case 'v':
+		if (verbose)
+			quiet = TRUE;
 		verbose = TRUE;
 		break;
 	    case 't': 
@@ -427,7 +474,7 @@ char **argv;
     }
 
     if (argc <= 1)
-	quit ("Usage: sccstorcs [-t -v] s.file ...\n");
+	quit ("Usage: sccstorcs [-t -v -q] s.file ...\n");
 
     for (; argc > 1; argc--, argv++)
     {
@@ -436,9 +483,13 @@ char **argv;
 	sccsfile = argv[1];
 	if ((header = read_sccs (sccsfile)) != NULL)
 	{
-	    if (trace)
-		print_header (sccsfile, header);
-	    build_new_rcs_file (header, sccsfile);
+	    if (workfile) {	/* restore original working file */
+		char	command[BUFSIZ];
+		sprintf(command, "%s %s %s", CO, _Q(q), workfile);
+		if (trace || verbose)
+			printf ("%% %s\n", command);
+	    	(void)system (command);
+	    }
 	}
 	else
 	    errors++;
