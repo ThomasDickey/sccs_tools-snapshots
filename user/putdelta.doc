@@ -1,18 +1,18 @@
-<!OPS, Version = 5.2>
+<!OPS, Version = 6.4>
 
 <!Document,
 	Final Output Device =	"cx",
 	Default Printer =	"cx">
 
 <!Font Definitions,
-	F27 = Classic 10,
-	F30 = Classic 12,
-	F21 = Typewriter 10,
-	F34 = Classic 14 Bold,
-	F31 = Classic 12 Bold,
-	F32 = Classic 12 Italic,
+	F84 = Thames 10,
+	F34 = Classic 12,
+	F38 = Classic 14 Bold,
+	F35 = Classic 12 Bold,
+	F31 = Classic 10,
+	F36 = Classic 12 Italic,
 	F6 = Symbols 12,
-	F49 = Modern 12>
+	F56 = Modern 12>
 
 <!Page,
 	Starting Page # = 	Inherit>
@@ -20,15 +20,15 @@
 <!Autonumber Stream, List, 1>
 
 <!Autonumber Stream, Outline, 3,
-	Level 1 Symbol Type =	UPPER ROMAN,
-	Level 2 Symbol Type =	UPPER ALPHA>
+	Level 1 Symbol Type =	Upper Roman,
+	Level 2 Symbol Type =	Upper Alpha>
 
 <!Class, bullet,
 	Top Margin =		0.083 inches,
 	Bottom Margin =		0 inches,
 	Left Margin =		0.50 inches,
 	First Indent =		-0.25 inches,
-	Font =			F30>
+	Font =			F34>
 
 <!Class, footnote,
 	Top Margin =		0.07 inches,
@@ -36,13 +36,13 @@
 	Left Margin =		0.25 inches,
 	First Indent =		-0.25 inches,
 	Line Spacing =		1.100 lines,
-	Font =			F30>
+	Font =			F34>
 
 <!Class, header,
 	Top Margin =		0.193 inches,
 	Bottom Margin =		0 inches,
 	Alignment =		Left,
-	Font =			F34,
+	Font =			F38,
 	Allow Page Break Within = no,
 	Allow Page Break After = no>
 
@@ -51,16 +51,16 @@
 	Bottom Margin =		0 inches,
 	Left Margin =		1.50 inches,
 	First Indent =		-1 inches,
-	Font =			F30,
+	Font =			F34,
 	Hyphenation =		off,
 	Allow Page Break Within = no,
-	Left Tab =		0/0.75/1.50 inches>
+	Left Tab =		0/0.75/1.50 Inches>
 
 <!Class, paragraph,
 	Top Margin =		0.083 inches,
 	Bottom Margin =		0 inches,
 	Left Margin =		0.25 inches,
-	Font =			F30>
+	Font =			F34>
 
 <!Master Frame,
 	Name =			Footnote,
@@ -70,28 +70,28 @@
 	Width =			5.70 inches,
 	Height =		0.204 inches,
 	Diagram =
-V4,
-(g9,32767,0
- (E10,0,0,0,1,1,0.053333,1,15,0,0,1,0,0,0,0,1,1,1,0.066667,0.066667,6,6,0,0.066
-  667,6))>
+V6,
+(g9,0,0
+ (E15,0,0,5,1,1,0.053333,1,15,0,0,1,0,0,0,0,5,127,7,0,0,7,1,1,1,0.066667,0.06666
+  7,6,6,0,0.066667,6))>
 
 <Page Header, Frame =
-V4,
+V6,
 (g9,1,0
- (t8,1,4,5.698608,0.438782,2,17,@nnclas12b,August\ 5\,\ 1988)
- (t8,2,4,2.849304,0.438782,1,17,@nnclas12b,SCCS\ Check-in\ Utility)
- (t8,3,4,0,0.438782,0,17,@nnclas12b,putdelta)
- (E10,0,0,0,1,1,0.053333,1,15,0,0,1,0,0,0,0,1,1,1,0.066667,0.066667,6,6,0,0.066
-  667,6))>
+ (t14,1,4,5.698608,0.438782,2,7,0,0,,wst:clas12b,August\ 5\,\ 1988)
+ (t14,2,4,2.849304,0.438782,1,7,0,0,,wst:clas12b,SCCS\ Check-in\ Utility)
+ (t14,3,4,0,0.438782,0,7,0,0,,wst:clas12b,putdelta)
+ (E15,0,0,5,1,1,0.053333,1,15,0,0,1,0,0,0,0,5,127,7,0,0,7,1,1,1,0.066667,0.06666
+  7,6,6,0,0.066667,6))>
 
 <Page Footer, Frame =
-V4,
+V6,
 (g9,1,0
- (t8,1,4,5.698608,0.478772,2,17,@nnclas10,)
- (t8,2,4,2.849304,0.478772,1,17,@nnclas12b,-\ \240\ -)
- (t8,3,4,0,0.478772,0,17,@nnclas10,)
- (E10,0,0,0,1,1,0.053333,1,15,0,0,1,0,0,0,0,1,1,1,0.066667,0.066667,6,6,0,0.066
-  667,6))>
+ (t14,1,4,5.698608,0.478772,2,7,0,0,,wst:clas10,)
+ (t14,2,4,2.849304,0.478772,1,7,0,0,,wst:clas12b,-\ \X80a0\ -)
+ (t14,3,4,0,0.478772,0,7,0,0,,wst:clas10,)
+ (E15,0,0,5,1,1,0.053333,1,15,0,0,1,0,0,0,0,5,127,7,0,0,7,1,1,1,0.066667,0.06666
+  7,6,6,0,0.066667,6))>
 
 <header>
 
@@ -99,7 +99,7 @@ V4,
 
 <paragraph>
 
-<F31>putdelta<F0> <#1f> SCCS check-in utility
+<F35>putdelta<F0> <#1f> SCCS check-in utility
 
 <header>
 
@@ -107,7 +107,7 @@ USAGE
 
 <paragraph>
 
-<F31>putdelta<F32> [options] [file-specifications]
+<F35>putdelta<F36> [options] [file-specifications]
 
 <header>
 
@@ -115,9 +115,9 @@ SYNOPSIS
 
 <paragraph>
 
-<F31>Putdelta<F0> is a simple, easy to use interface to <F32>sccs<F0> 
-(<F31>s<F0>ource <F31>c<F0>ode <F31>c<F0>ontrol <F31>s<F0>ystem).  
-It checks into the <F32>sccs<F0> archive all files specified.
+<F35>Putdelta<F0> is a simple, easy to use interface to <F36>sccs<F0> 
+(<F35>s<F0>ource <F35>c<F0>ode <F35>c<F0>ontrol <F35>s<F0>ystem).  
+It checks into the <F36>sccs<F0> archive all files specified.
 
 <header>
 
@@ -125,18 +125,20 @@ DESCRIPTION
 
 <paragraph>
 
-<F31>Putdelta<F0> uses the <F32>sccs<F0> utilities <F31>admin<F0> 
-and <F31>delta<F0> to maintain versions of a given source file in 
+<F35>Putdelta<F0> uses the <F36>sccs<F0> utilities <F35>admin<F0> 
+and <F35>delta<F0> to maintain versions of a given source file in 
 a dependent directory named <#7f>sccs".  It is more than an integration 
-of the <F31>admin<F0> and <F31>delta<F0> utilities, however:
+of the <F35>admin<F0> and <F35>delta<F0> utilities, however:
 
 <bullet>
 
-<F6>S<F0><Tab>If the <F32>sccs<F0> archive directory does not already 
-exist, <F31>putdelta<F0> creates it.
+<F6>S<F0><Tab>If the <F36>sccs<F0> archive directory does not already 
+exist, <F35>putdelta<F0> creates it.
 
-<F6>S<F0><Tab>If the file has not been locked, <F31>putdelta<F0> 
-creates a lock (i.e., a <#7f>p." file)
+<bullet>
+
+<F6>S<F0><Tab>If the file has not been locked, <F35>putdelta<F0> creates 
+a lock (i.e., a <#7f>p." file)
 <Frame,
 	Name =			Footnote,
 	Placement =		Bottom of Page,
@@ -146,70 +148,83 @@ creates a lock (i.e., a <#7f>p." file)
 	Height =		0.667 inches,
 	Page # =		1,
 	Diagram =
-V4,
+V6,
 (g9,1,0
- (T8,1,12,0.066667,0.066667,5.546669,1,0.333333,0,516,0,17,0,0,0,0,0,0,1,1,2048
-  ,512,102,1101,3,
+ (T12,1,12,0.066667,0.066667,5,127,5,7,127,8,0,3,
+<!Page, Width = 5.547 inches, Height = 0.35 inches,
+	Revision Bar Placement = Left>
 <footnote>
 
-<F6>!<F0><Tab>If a <#7f>p." file already exists, <F31>putdelta<F0> 
+<F6>!<F0><Tab>If a <#7f>p." file already exists, <F35>putdelta<F0> 
 will attempt to use the lock.  However, if the lock belongs to another 
-user, <F31>putdelta<F0> will not check-in the file.
+user, <F35>putdelta<F0> will not check-in the file.
 
 <End Text>)
- (v4,2,0,-0.1,0,0.9,0,17,1,0)
- (E10,0,0,0,1,1,0.053333,1,15,0,0,1,0,0,0,0,1,1,1,0.066667,0.066667,6,6,0,0.066
-  667,6))>
+ (v6,2,0,-0.1,0,0.9,0,7,0,8,0)
+ (E15,0,0,5,1,1,0.053333,1,15,0,0,1,0,0,0,0,5,127,7,0,0,7,1,1,1,0.066667,0.06666
+  7,6,6,0,0.066667,6))>
 <F6>!<F0>.
 
-<F6>S<F0><Tab><F31>Putdelta<F0> retains the executable-mode of 
-the file which is checked-in.  That is, if it is a shell-script (and 
-has a mode such as 755), the mode of <F32>sccs<F0> <#7f>s." file 
-is set to 555.  The <F31>getdelta<F0> utility works in the opposite 
-fashion, setting the extracted file's mode to correspond to that of 
-the <#7f>s." file.
+<bullet>
 
-<F6>S<F0><Tab><F31>Putdelta<F0> sets the <#7f>-n" option of delta, 
+<F6>S<F0><Tab><F35>Putdelta<F0> retains the executable-mode of the 
+file which is checked-in.  That is, if it is a shell-script (and has 
+a mode such as 755), the mode of <F36>sccs<F0> <#7f>s." file is set 
+to 555.  The <F35>getdelta<F0> utility works in the opposite fashion, 
+setting the extracted file's mode to correspond to that of the <#7f>s." 
+file.
+
+<bullet>
+
+<F6>S<F0><Tab><F35>Putdelta<F0> sets the <#7f>-n" option of delta, 
 so that your file is not deleted after check-in.
 
-<F6>S<F0><Tab>The <#7f>s." file is post-processed by <F31>putdelta<F0> 
+<bullet>
+
+<F6>S<F0><Tab>The <#7f>s." file is post-processed by <F35>putdelta<F0> 
 so that the check-in date matches the file's modification date.
 
 <paragraph>
 
-The last point is the fundamental advantage offered by <F31>putdelta<F0>.  
-The ordinary <F32>sccs<F0> methodology uses the current date as the 
+The last point is the fundamental advantage offered by <F35>putdelta<F0>.  
+The ordinary <F36>sccs<F0> methodology uses the current date as the 
 check-in date.  This works well only for large projects in which a 
 central project administrator is responsible for controlling the versions 
-of source files.  It does not work well for small projects, for which <F32>sccs
+of source files.  It does not work well for small projects, for which <F36>sccs
 <F0>'s primary advantage is its compact storage of multiple versions 
 of a file.
+
+<paragraph>
 
 By using the file's modification date as a reference, you can more 
 easily back up to a meaningful version <#1f> by date, rather than 
 version number.
 
-<|,2><F31>Putdelta<F0> integrates the essential functions used in 
-the <F32>sccs<F0> check-in process into one utility program.
+<paragraph>
+
+<F35>Putdelta<F0> integrates the essential functions used in the <F36>sccs
+<F0> check-in process into one utility program.
 
 <header>
 
-OPTIONS
+<|,2>OPTIONS
 
 <paragraph>
 
-The options which you may specify to <F31>putdelta<F0> are passed 
-through to the underlying <F31>admin<F0> and <F31>delta<F0> utilities:
+The options which you may specify to <F35>putdelta<F0> are passed 
+through to the underlying <F35>admin<F0> and <F35>delta<F0> utilities:
 
 <options>
 
--<F31>s<F0><Tab>suppresses some of the messages generated by the <F32>sccs
-<F0> <F31>admin <F0>and <F31>delta<F0> utilities describing the 
-number of lines changed, etc.
+-<F35>s<F0><Tab>suppresses some of the messages generated by the <F36>sccs
+<F0> <F35>admin <F0>and <F35>delta<F0> utilities describing the number 
+of lines changed, etc.
 
--<F31>y<F0> <F32>text<F0><Tab>specifies the change-history text.  
+<options>
+
+-<F35>y<F0> <F36>text<F0><Tab>specifies the change-history text.  
 You will be prompted for this if you do not supply it, in versions 
-after the first, by the <F31>delta<F0> utility.
+after the first, by the <F35>delta<F0> utility.
 
 <header>
 
@@ -217,7 +232,7 @@ OPERATIONS
 
 <paragraph>
 
-<F31>Putdelta<F0> is designed to operate with the standard <F31>sccs<F0> 
+<F35>Putdelta<F0> is designed to operate with the standard <F35>sccs<F0> 
 utilities with a minimum of fuss and bother.  It retains your working 
 file after check-in since that facilitates development.  In effect, 
 it simply appends the current version of each file which you specify 
@@ -229,18 +244,20 @@ ENVIRONMENT
 
 <paragraph>
 
-Environment variables imported by <F31>putdelta<F0> include:
+Environment variables imported by <F35>putdelta<F0> include:
 
 <options>
 
-<F49>SCCS_DIR<F0><Tab>specifies the directory into which the <F32>sccs<F0> 
-<#7f>s." files are stored.  If no specified, <F31>putdelta<F0> assumes 
+<F56>SCCS_DIR<F0><Tab>specifies the directory into which the <F36>sccs<F0> 
+<#7f>s." files are stored.  If no specified, <F35>putdelta<F0> assumes 
 <#7f>sccs".
 
-<F49>TZ<F0><Tab>is the prevailing timezone, which <F31>putdelta<F0> 
-uses to set the check-in date in the <#7f>s." file.  <F31>Putdelta<F0> 
-sets the timezone to <F49>EST5EDT<F0>, in part to avoid conflict 
-with <F31>get<F0>'s date checking.
+<options>
+
+<F56>TZ<F0><Tab>is the prevailing timezone, which <F35>putdelta<F0> 
+uses to set the check-in date in the <#7f>s." file.  <F35>Putdelta<F0> 
+sets the timezone to <F56>EST5EDT<F0>, in part to avoid conflict with <F35>get
+<F0>'s date checking.
 
 <header>
 
@@ -248,7 +265,7 @@ FILES
 
 <paragraph>
 
-<F31>Putdelta<F0> is a single binary file, written in C.  It runs 
+<F35>Putdelta<F0> is a single binary file, written in C.  It runs 
 in a unix<F6>T<F0> environment.
 
 <header>
@@ -257,7 +274,7 @@ ANTICIPATED CHANGES
 
 <paragraph>
 
-Provide a mechanism for inserting dummy version numbers so that <F31>putdelta
+Provide a mechanism for inserting dummy version numbers so that <F35>putdelta
 <F0> can bump the release number (for genuine major releases).  Currently, 
 the SID's are restricted to 1.1, 1.2, 1.3, etc.
 
@@ -271,7 +288,7 @@ sccsput, sccsget, getdelta, admin<SP>(1), delta<SP>(1)
 
 <header>
 
-<|,3>AUTHOR:
+AUTHOR:
 
 <paragraph>
 

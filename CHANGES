@@ -1,3 +1,35 @@
+1989-04-18  dickey@software.org
+
+	* user/sccsput.doc: resaved under tps4.0
+
+1989-04-18  ste_cm@software.org
+
+	* user/sccsput.doc: BASELINE Mon Jul 10 09:31:07 EDT 1989
+
+1989-04-18  dickey@software.org
+
+	* user/sccsget.doc: resaved under tps4.0
+
+1989-04-18  ste_cm@software.org
+
+	* user/sccsget.doc: BASELINE Mon Jul 10 09:31:07 EDT 1989
+
+1989-04-18  dickey@software.org
+
+	* user/putdelta.doc: resaved under tps4.0
+
+1989-04-18  ste_cm@software.org
+
+	* user/putdelta.doc: BASELINE Mon Jul 10 09:31:07 EDT 1989
+
+1989-04-18  dickey@software.org
+
+	* user/getdelta.doc: resaved under tps4.0
+
+1989-04-18  ste_cm@software.org
+
+	* user/getdelta.doc: BASELINE Mon Jul 10 09:31:07 EDT 1989
+
 1989-03-29  dickey@software.org
 
 	* user/Makefile, bin/Makefile, certify/config.txt, certify/release.txt:
