@@ -70,7 +70,7 @@
 
 #include	<errno.h>
 
-MODULE_ID("$Id: putdelta.c,v 6.8 2000/04/12 14:17:32 tom Exp $")
+MODULE_ID("$Id: putdelta.c,v 6.9 2000/06/30 14:14:12 tom Exp $")
 
 /************************************************************************
  *	local definitions						*
@@ -460,7 +460,7 @@ int	EditDelta(
 		TELL("** old: %s", ctime(&delta));
 		TELL("** new: %s", ctime(&modtime));
 
-		FORMAT(rev_date, put_date, t->tm_year, t->tm_mon+1, t->tm_mday);
+		FORMAT(rev_date, put_date, t->tm_year % 100, t->tm_mon+1, t->tm_mday);
 		FORMAT(rev_time, fmt_time, t->tm_hour, t->tm_min, t->tm_sec);
 		FORMAT(&bfr[LEN_DELTA], fmt_delta,
 			rev_code, rev_date, rev_time, rev_pgmr,

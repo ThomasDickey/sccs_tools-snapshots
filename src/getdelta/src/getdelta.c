@@ -3,6 +3,7 @@
  * Author:	T.E.Dickey
  * Created:	26 Mar 1986 (as a procedure)
  * Modified:
+ *		30 Jun 2000, if -f option is given, do not exit with error-code.
  *		27 Jun 2000, Y2K fix. 
  *		07 Apr 2000, if only a cutoff date is given, set retrieved file
  *			     modification time.
@@ -57,7 +58,7 @@
 #include	<ptypes.h>
 #include	<sccsdefs.h>
 
-MODULE_ID("$Id: getdelta.c,v 6.22 2000/06/27 16:54:18 tom Exp $")
+MODULE_ID("$Id: getdelta.c,v 6.23 2000/06/30 10:31:47 tom Exp $")
 
 /* local definitions */
 #define	NAMELEN		80	/* length of tokens in sccs-header */
@@ -91,6 +92,12 @@ static	char	*sid	= NULL;
 /************************************************************************
  *	local procedures						*
  ************************************************************************/
+
+static
+void	GiveUp (_AR0)
+{
+	exit(force ? EXIT_SUCCESS : EXIT_FAILURE);
+}
 
 static
 int	Dots(
@@ -239,7 +246,7 @@ void	DeHexify(
 		if (first) {
 			if (strncmp(buffer, cmv_binary, 4)) {
 				FPRINTF(stderr, "? not a binary: %s\n", name);
-				exit(EXIT_FAILURE);
+				GiveUp();
 			}
 			first = FALSE;
 			s += 4;
@@ -252,7 +259,7 @@ void	DeHexify(
 				if (a == 0
 				 || b == 0) {
 					FPRINTF(stderr, "? non-hex\n");
-					exit(EXIT_FAILURE);
+					GiveUp();
 				}
 				c = ((a - hex) << 4) + (b - hex);
 				if (c == 'J' && *s == '\n')
@@ -411,7 +418,7 @@ int	is_a_file(
 			return (TRUE);
 		} else {
 			YELL "?? \"%s\" is not a file\n", name);
-			(void)exit(EXIT_FAILURE);
+			GiveUp();
 			/*NOTREACHED*/
 		}
 	}
@@ -511,7 +518,7 @@ void	DoFile (
 		 */
 		if (!file_is_SCCS) {
 			YELL "? file is not stored in SCCS-form: %s\n", name);
-			exit(EXIT_FAILURE);
+			GiveUp();
 		}
 		if (file_is_binary && !writable)
 			catarg(arguments, "-k");

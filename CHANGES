@@ -1,3 +1,10 @@
+2000-06-30  Thomas E. Dickey  <dickey@clark.net>
+
+	* src/putdelta/src/putdelta.c: 'nother Y2K fix (oops)
+
+	* src/getdelta/src/getdelta.c:
+	make the -f option a little stronger so I don't choke in a script
+
 2000-06-27  Thomas E. Dickey  <dickey@clark.net>
 
 	* src/getdelta/src/getdelta.c: oops - a Y2K fix
