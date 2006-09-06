@@ -1,3 +1,7 @@
+2006-09-05  Thomas E. Dickey  <dickey@invisible-island.net>
+
+	* configure, aclocal.m4: resync with my-autoconf
+
 2004-03-07  Thomas E. Dickey  <dickey@invisible-island.net>
 
 	* src/sccs2rcs/src/sccs2rcs.c, src/getdelta/src/getdelta.c, src/getdelta/src/sccsget.c, src/putdelta/src/sccsput.c, src/putdelta/src/putdelta.c, src/fixsccs/src/fixsccs.c:
