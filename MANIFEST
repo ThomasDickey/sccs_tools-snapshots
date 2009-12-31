@@ -1,9 +1,11 @@
-MANIFEST for sccs_tools, version t20060905
+MANIFEST for sccs_tools, version t20091231
 --------------------------------------------------------------------------------
 MANIFEST                        this file
 COPYING                         copyright notice for CM_TOOLS
 README                          top-level read-me file for SCCS_TOOLS
 aclocal.m4                      autoconf macros
+config.guess                    configure utility script
+config.sub                      configure utility script
 configure                       generated
 configure.in                    template for configure script
 install-sh                      BSD-style install script
