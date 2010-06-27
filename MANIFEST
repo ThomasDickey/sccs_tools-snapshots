@@ -1,4 +1,4 @@
-MANIFEST for sccs_tools, version t20100420
+MANIFEST for sccs_tools, version t20100627
 --------------------------------------------------------------------------------
 MANIFEST                        this file
 COPYING                         copyright notice for CM_TOOLS
@@ -20,6 +20,7 @@ certify/makefile.in             makefile for sccs_tools/certify
 certify/release.txt             release-notes for SCCS_TOOLS
 package/debian                  subdirectory
 package/debian/compat           debian build script
+package/debian/docs             debian build script
 src/fixsccs                     subdirectory
 src/fixsccs/makefile.in         makefile for sccs_tools/src/fixsccs
 src/fixsccs/src                 subdirectory
