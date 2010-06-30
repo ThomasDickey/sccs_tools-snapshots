@@ -1,4 +1,4 @@
-# $Id: makefile.in,v 6.2 1997/09/28 19:55:25 tom Exp $
+# $Id: makefile.in,v 6.3 2010/06/29 10:55:49 tom Exp $
 # Top-level makefile for SCCS_TOOLS timestamp-fix utility
 
 THIS	= fixsccs
@@ -33,7 +33,7 @@ distclean::		; $(RM) -r bin
 distclean::		; $(RM) */makefile
 
 install:	all $(IT)
-deinstall:		; $(RM) $(IT)
+uninstall:		; $(RM) $(IT)
 
 ####### (Details of Productions) ###############################################
 $(DIRS):			; mkdir $@
