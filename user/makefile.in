@@ -1,4 +1,4 @@
-# $Id: makefile.in,v 6.2 1997/09/28 20:03:42 tom Exp $
+# $Id: makefile.in,v 6.4 2010/06/30 00:25:47 tom Exp $
 
 
 
@@ -13,7 +13,7 @@ top_srcdir	= @top_srcdir@
 
 USE	= man
 SECTION	= 1
-PREFIX	= $(mandir)/$(USE)$(SECTION)/
+PREFIX	= $(DESTDIR)$(mandir)/$(USE)$(SECTION)/
 
 ####### (Standard Lists) #######################################################
 IT	=\
@@ -36,10 +36,10 @@ clean:				; $(RM) $(CLEAN)
 distclean:	clean		; $(RM) $(ALL)
 run_test:
 install:	$(PREFIX) $(IT)
-deinstall:			; $(RM) $(IT)
+uninstall:			; $(RM) $(IT)
 
 ####### (Details of Productions) ###############################################
-$(PREFIX):			; $(top_srcdir)/mkdirs.sh $@
+$(PREFIX):			; mkdir -p $@
 $(PREFIX)getdelta.$(SECTION):	getdelta.$(USE)	; $(INSTALL_DATA) $? $@
 $(PREFIX)putdelta.$(SECTION):	putdelta.$(USE)	; $(INSTALL_DATA) $? $@
 $(PREFIX)sccs2rcs.$(SECTION):	sccs2rcs.$(USE)	; $(INSTALL_DATA) $? $@

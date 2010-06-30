@@ -1,4 +1,4 @@
-# $Id: makefile.in,v 6.1 1997/09/28 19:35:06 tom Exp $
+# $Id: makefile.in,v 6.5 2010/06/30 00:25:12 tom Exp $
 
 THIS	= sccs_tools
 
@@ -11,7 +11,7 @@ exec_prefix	= @exec_prefix@
 bindir		= @bindir@
 top_srcdir	= @top_srcdir@
 
-B	= $(bindir)
+B	= $(DESTDIR)$(bindir)
 
 IT	=\
 	$B/fixsccs\
@@ -24,17 +24,17 @@ IT	=\
 ####### (Standard Productions) #################################################
 all:
 clean:				; -$(RM) $(CLEAN)
-distclean:	clean		; -$(RM) $(ALL) [a-ln-z]*
+distclean:	clean		; -$(SHELL) -c 'for n in $(ALL) [a-ln-z]*; do test -f "$$n" && rm -f "$$n"; done'
 run_test:
 sources:
 install:	$B $(IT)
-deinstall:			; -$(RM) $(IT)
+uninstall:			; -$(RM) $(IT)
 
 ####### (Details of Productions) ###############################################
 USER	= $(INSTALL) -m  755 $? $@
 ADMIN	= $(INSTALL) -m 4755 $? $@
 
-$B:				; $(top_srcdir)/mkdirs.sh $@
+$B:				; mkdir -p $@
 $B/fixsccs:	fixsccs		; $(USER)
 $B/getdelta:	getdelta	; $(USER)
 $B/putdelta:	putdelta	; $(USER)

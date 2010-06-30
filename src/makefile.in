@@ -1,4 +1,4 @@
-# $Id: makefile.in,v 6.2 1997/09/28 19:51:50 tom Exp $
+# $Id: makefile.in,v 6.3 2010/06/29 10:55:49 tom Exp $
 # Top-level makefile for SCCS_TOOLS src-directory
 
 
@@ -12,7 +12,7 @@ distclean\
 lint.out\
 run_test\
 install\
-deinstall::
+uninstall::
 	cd getdelta;	$(MAKE) $@
 	cd putdelta;	$(MAKE) $@
 	cd sccs2rcs;	$(MAKE) $@
