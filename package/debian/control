@@ -1,0 +1,15 @@
+Source: sccstools
+Maintainer: Thomas E. Dickey <dickey@invisible-island.net>
+Section: devel
+Priority: extra
+Standards-Version: 3.8.4
+Build-Depends: debhelper (>= 5), tdlib-dev, cssc
+Homepage: http://invisible-island.net/ded/
+
+Package: sccstools
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: SCCS utility programs
+ These are utility programs which simplify the use of SCCS,
+ and extend it by preserving timestamps of archived files.
+ The package also includes an improved version of sccs2rcs.

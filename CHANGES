@@ -1,3 +1,18 @@
+2010-07-03  Thomas E. Dickey  <dickey@invisible-island.net>
+
+	* src/fixsccs/src/fixsccs.c, src/sccs2rcs/src/sccs2rcs.c, src/putdelta/src/putdelta.c, src/putdelta/src/sccsput.c, src/getdelta/src/sccsget.c, src/getdelta/src/getdelta.c:
+	stricter gcc warnings
+
+	* package/sccs_tools-12.0.spec:
+	use symbols to iron out diffs in related spec files
+
+	* package/debian/changelog: bump
+
+2010-07-02  Thomas E. Dickey  <dickey@invisible-island.net>
+
+	* package/debian/control, package/debian/rules, package/debian/copyright, package/debian/changelog, package/debian/watch, package/debian/source/format:
+	RCS_BASE
+
 2010-06-30  Thomas E. Dickey  <dickey@invisible-island.net>
 
 	* configure: regen
