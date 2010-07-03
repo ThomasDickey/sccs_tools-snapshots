@@ -37,7 +37,7 @@
 #include	<rcsdefs.h>
 #include	<sccsdefs.h>
 
-MODULE_ID("$Id: sccsput.c,v 6.10 2004/03/08 01:37:20 tom Exp $")
+MODULE_ID("$Id: sccsput.c,v 6.11 2010/07/03 17:12:31 tom Exp $")
 
 #define	DEBUG		if (debug) PRINTF
 #define	VERBOSE		if (!quiet) PRINTF
@@ -302,7 +302,7 @@ do_arg(char *name)
 static void
 usage(int option)
 {
-    static char *tbl[] =
+    static const char *tbl[] =
     {
 	"Usage: sccsput [options] files_or_directories"
 	,""

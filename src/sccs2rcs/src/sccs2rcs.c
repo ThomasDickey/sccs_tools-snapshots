@@ -3,6 +3,9 @@
  * Author: Ken Greer
  *
  * $Log: sccs2rcs.c,v $
+ * Revision 6.10  2010/07/03 17:14:18  tom
+ * stricter gcc warnings
+ *
  * Revision 6.9  2004/03/08 01:45:59  tom
  * remove K&R support, indent'd
  *
@@ -149,7 +152,7 @@
 #include "sccsdefs.h"
 #include <errno.h>
 
-MODULE_ID("$Id: sccs2rcs.c,v 6.9 2004/03/08 01:45:59 tom Exp $")
+MODULE_ID("$Id: sccs2rcs.c,v 6.10 2010/07/03 17:14:18 tom Exp $")
 
 #define SOH	001		/* SCCS lines start with SOH (Control-A) */
 #define RCS	"rcs"
@@ -194,7 +197,7 @@ static void build_new_rcs_file(HEADER *, char *);
 static void print_header(char *, HEADER *);
 
 static void
-quit2(char *fmt, char *args)
+quit2(const char *fmt, const char *args)
 {
     FPRINTF(stderr, "%s: ", WHOAMI);
     FPRINTF(stderr, fmt, args);
@@ -203,7 +206,7 @@ quit2(char *fmt, char *args)
 }
 
 static void
-quit(char *fmt)
+quit(const char *fmt)
 {
     FPRINTF(stderr, "%s: ", WHOAMI);
     FPRINTF(stderr, fmt);
@@ -343,7 +346,7 @@ collect_header(FILE *fd)
 }
 
 static int
-invoke(char *command, char *args)
+invoke(const char *command, const char *args)
 {
     if (trace || verbose)
 	shoarg(stdout, command, args);
@@ -601,7 +604,7 @@ edit_what(char *s)
 }
 
 static int
-match(char *s, char *t)
+match(const char *s, const char *t)
 {
     char *base = s;
 
