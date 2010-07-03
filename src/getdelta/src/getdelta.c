@@ -61,7 +61,7 @@
 #include	<ptypes.h>
 #include	<sccsdefs.h>
 
-MODULE_ID("$Id: getdelta.c,v 6.28 2004/03/08 01:42:43 tom Exp $")
+MODULE_ID("$Id: getdelta.c,v 6.29 2010/07/03 17:11:24 tom Exp $")
 
 /* local definitions */
 #define	NAMELEN		80	/* length of tokens in sccs-header */
@@ -532,7 +532,7 @@ DoFile(char *name, char *options)
 static void
 usage(void)
 {
-    static char *msg[] =
+    static const char *msg[] =
     {
 	"Usage: getdelta [options] files"
 	,""
@@ -576,7 +576,7 @@ _MAIN
 	    /* options interpreted & pass through to "get" */
 	case 'r':
 	    sid = stralloc(optarg);
-	    if ((k = strlen(sid) - 1) > 0)
+	    if ((k = (int) strlen(sid) - 1) > 0)
 		if (sid[k] == '.')
 		    sid[k] = EOS;
 	    TELL("sid: %s\n", sid);

@@ -71,7 +71,7 @@
 
 #include	<errno.h>
 
-MODULE_ID("$Id: putdelta.c,v 6.14 2004/03/08 01:37:19 tom Exp $")
+MODULE_ID("$Id: putdelta.c,v 6.15 2010/07/03 17:13:29 tom Exp $")
 
 /************************************************************************
  *	local definitions						*
@@ -142,7 +142,7 @@ static int d_group;
 static void
 usage(void)
 {
-    static char *msg[] =
+    static const char *msg[] =
     {
 	"Usage: putdelta [options] files"
 	,""
@@ -185,9 +185,9 @@ MakeName(char *dst, int code)
 {
     char *s;
     if ((s = strrchr(strcpy(dst, s_file), '/')) != NULL)
-	*(++s) = code;
+	*(++s) = (char) code;
     else
-	*dst = code;
+	*dst = (char) code;
 }
 
 /*
@@ -700,7 +700,7 @@ _MAIN
  * We have our own 'failed()' to ensure that we clear critical-zone
  */
 void
-failed(char *s)
+failed(const char *s)
 {
     Critical(-1);
     perror(s);

@@ -29,7 +29,7 @@
 #include	<rcsdefs.h>
 #include	<sccsdefs.h>
 
-MODULE_ID("$Id: sccsget.c,v 6.8 2004/03/08 01:42:43 tom Exp $")
+MODULE_ID("$Id: sccsget.c,v 6.9 2010/07/03 17:11:34 tom Exp $")
 
 static char get_opts[BUFSIZ];
 static char *verb = "getdelta";
@@ -169,7 +169,7 @@ do_arg(char *name)
 static void
 usage(void)
 {
-    static char *tbl[] =
+    static const char *tbl[] =
     {
 	"Usage: sccsget [options] files_or_directories"
 	,""
