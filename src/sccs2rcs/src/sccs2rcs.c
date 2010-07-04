@@ -3,6 +3,9 @@
  * Author: Ken Greer
  *
  * $Log: sccs2rcs.c,v $
+ * Revision 6.11  2010/07/04 10:52:08  tom
+ * stricter gcc warnings
+ *
  * Revision 6.10  2010/07/03 17:14:18  tom
  * stricter gcc warnings
  *
@@ -152,7 +155,7 @@
 #include "sccsdefs.h"
 #include <errno.h>
 
-MODULE_ID("$Id: sccs2rcs.c,v 6.10 2010/07/03 17:14:18 tom Exp $")
+MODULE_ID("$Id: sccs2rcs.c,v 6.11 2010/07/04 10:52:08 tom Exp $")
 
 #define SOH	001		/* SCCS lines start with SOH (Control-A) */
 #define RCS	"rcs"
@@ -215,7 +218,7 @@ quit(const char *fmt)
 }
 
 static void *
-xalloc(unsigned size)
+xalloc(size_t size)
 {
     void *p;
     if ((p = malloc(size)) == NULL)
@@ -269,14 +272,14 @@ new_delta(char *line)
 static char *
 concat(char *old_str, char *str)
 {
-    int len;
+    size_t len;
     char *newstring;
 
     if (old_str == NULL)
 	return (string(str));
 
-    len = strlen(old_str) + strlen(str);
-    newstring = xalloc((unsigned) (len + 1));
+    len = strlen(old_str) + strlen(str) + 1;
+    newstring = xalloc(len);
     (void) strcat(strcpy(newstring, old_str), str);
     free(old_str);
     return (newstring);
@@ -357,7 +360,7 @@ invoke(const char *command, const char *args)
  * Build an initiate a command via a pipe
  */
 static FILE *
-to_pipe(char *command, char *args)
+to_pipe(const char *command, const char *args)
 {
     char temp[BUFSIZ];
 
@@ -523,8 +526,8 @@ finalize_rcsfile(char *rcsfile)
 static void
 store_comment(int c)
 {
-    int len = strlen(comments);
-    comments[len++] = c;
+    size_t len = strlen(comments);
+    comments[len++] = (char) c;
     comments[len] = EOS;
 }
 
@@ -586,7 +589,7 @@ edit_what(char *s)
 	    len++;
 	    if ((t = strchr(tmp, '"'))
 		&& (t - tmp < (int) len))
-		len = t - tmp;
+		len = (size_t) (t - tmp);
 	    if (len > 0) {
 		*s++ = '$';
 		/* break up literal because of rcs */
@@ -606,7 +609,7 @@ edit_what(char *s)
 static int
 match(const char *s, const char *t)
 {
-    char *base = s;
+    const char *base = s;
 
     while (*t) {
 	if (*s++ != *t++)
@@ -614,7 +617,7 @@ match(const char *s, const char *t)
     }
     if (isalnum(UCH(*s)))
 	return (0);
-    return (s - base);
+    return (int) (s - base);
 }
 
 #define	SKIP(s)		while(isspace(UCH(*s)))	s++

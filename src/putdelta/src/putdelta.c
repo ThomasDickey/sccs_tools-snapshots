@@ -71,7 +71,7 @@
 
 #include	<errno.h>
 
-MODULE_ID("$Id: putdelta.c,v 6.15 2010/07/03 17:13:29 tom Exp $")
+MODULE_ID("$Id: putdelta.c,v 6.16 2010/07/04 13:52:24 tom Exp $")
 
 /************************************************************************
  *	local definitions						*
@@ -119,7 +119,7 @@ static char fmt_time[] = "%02d:%02d:%02d";
 				/* names of the current file */
 static char g_file[PATHLEN];
 static char s_file[PATHLEN];
-static int s_mode;
+static mode_t s_mode;
 				/* data set by TestDelta */
 static char rev_code[NAMELEN];
 static char rev_pgmr[NAMELEN];
@@ -128,12 +128,12 @@ static char rev_time[9];
 static int rev_this, rev_last;
 
 				/* data used by EditFile */
-static unsigned short chksum;
+static unsigned chksum;
 				/* data used in MkDir */
 static char d_path[PATHLEN];
-static int d_mode;
-static int d_user;
-static int d_group;
+static mode_t d_mode;
+static uid_t d_user;
+static gid_t d_group;
 
 /************************************************************************
  *	local procedures						*
@@ -198,14 +198,14 @@ Critical(int begin)
 {
     char z_file[PATHLEN];
     static int began;
-    static char *msg = "cannot create lock file (cm4)";
+    static const char *msg = "cannot create lock file (cm4)";
 
     if (no_op)
 	return;
 
     MakeName(z_file, 'z');
     if (begin == TRUE) {
-	short id = getpid();
+	short id = (short) getpid();
 	int fd = open(z_file, O_EXCL | O_CREAT | O_WRONLY, 0444);
 	began = TRUE;
 	if (fd < 0
@@ -231,7 +231,7 @@ Critical(int begin)
  * ownership information.
  */
 static void
-NeedDirectory(char *path, Stat_t * sb)
+NeedDirectory(const char *path, Stat_t * sb)
 {
     if (stat(path, sb) < 0)
 	failed(path);
@@ -249,7 +249,7 @@ NeedDirectory(char *path, Stat_t * sb)
  * See if the specified file exists.  If so, verify that it is indeed a file.
  */
 static time_t
-is_a_file(char *name, int *mode_)
+is_a_file(char *name, mode_t * mode_)
 {
     Stat_t sb;
 
@@ -294,7 +294,7 @@ NextDelta(char *this)
     if ((s = strrchr(this, '.')) != NULL) {
 	if (sscanf(++s, "%d", &next) != 1)
 	    next = 1;
-	FORMAT(bfr, "%.*s%d", s - this, this, next + 1);
+	FORMAT(bfr, "%.*s%d", (int) (s - this), this, next + 1);
     } else
 	(void) strcat(strcpy(bfr, this), ".1");
     return (bfr);
@@ -499,7 +499,7 @@ ProcessFile(time_t modtime,	/* file's mod-time */
     if ((fpS = fopen(s_file, "r")) != NULL) {
 	while (fgets(bfr, sizeof(bfr), fpS)) {
 	    lines++;
-	    len = strlen(bfr);
+	    len = (int) strlen(bfr);
 	    if (!changed && TestDelta(bfr)) {
 		if (!EditDelta(bfr, modtime, reftime, &tfix))
 		    break;
@@ -527,7 +527,7 @@ ProcessFile(time_t modtime,	/* file's mod-time */
 static void
 MkDir(void)
 {
-    int old_mask = umask(0);
+    mode_t old_mask = umask(0);
     if (mkdir(d_path, d_mode) < 0)
 	failed(d_path);
     (void) umask(old_mask);
@@ -544,7 +544,9 @@ DoFile(char *name)
     char *s;
     time_t put_time, ref_time = time(0);
     Stat_t sb;
-    char temp[BUFSIZ], *put_verb, put_opts[BUFSIZ];
+    char temp[BUFSIZ];
+    const char *put_verb;
+    char put_opts[BUFSIZ];
     int put_flag = TRUE;
 
     ShowedIt = FALSE;
@@ -565,7 +567,7 @@ DoFile(char *name)
 
     /* If the sccs-directory does not exist, make it */
     if ((s = strrchr(s_file, '/')) != NULL) {
-	size_t len = s - s_file;
+	size_t len = (size_t) (s - s_file);
 	(strncpy(d_path, s_file, len))[len] = EOS;
 
 	if (stat(d_path, &sb) >= 0) {
@@ -589,8 +591,8 @@ DoFile(char *name)
 		 *
 		 * patch: should verify group-compatibility
 		 */
-		if ((int) getuid() != d_user
-		    || (int) getgid() != d_group)
+		if (getuid() != d_user
+		    || getgid() != d_group)
 		    d_mode |= (S_IWRITE >> 3);
 		/* force to group-writeable */
 		if (getuid() == geteuid())
@@ -602,13 +604,13 @@ DoFile(char *name)
     } else			/* ...else... user is putting files in "." */
 	NeedDirectory(".", &sb);
 
-    if ((int) getuid() == d_user) {
+    if (getuid() == d_user) {
 	revert("set-uid mode redundant");
 	d_group = getegid();
     }
 
     /* If the s-file exists, we make a delta; otherwise initial insertion */
-    if (is_a_file(s_file, (int *) 0)) {
+    if (is_a_file(s_file, (mode_t *) 0)) {
 	if (!TestLock())
 	    return;
 	put_verb = DELTA_TOOL;

@@ -1,3 +1,13 @@
+2010-07-04  Thomas E. Dickey  <dickey@invisible-island.net>
+
+	* src/putdelta/src/putdelta.c, src/getdelta/src/sccsget.c, src/fixsccs/src/fixsccs.c, src/sccs2rcs/src/sccs2rcs.c, src/putdelta/src/sccsput.c, src/getdelta/src/getdelta.c:
+	stricter gcc warnings
+
+	* configure: regen
+
+	* aclocal.m4:
+	workaround for finding td_lib.mk when $prefix has not been mkdir'd
+
 2010-07-03  Thomas E. Dickey  <dickey@invisible-island.net>
 
 	* src/fixsccs/src/fixsccs.c, src/sccs2rcs/src/sccs2rcs.c, src/putdelta/src/putdelta.c, src/putdelta/src/sccsput.c, src/getdelta/src/sccsget.c, src/getdelta/src/getdelta.c:
