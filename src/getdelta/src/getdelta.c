@@ -61,7 +61,7 @@
 #include	<ptypes.h>
 #include	<sccsdefs.h>
 
-MODULE_ID("$Id: getdelta.c,v 6.29 2010/07/03 17:11:24 tom Exp $")
+MODULE_ID("$Id: getdelta.c,v 6.30 2010/07/04 09:45:13 tom Exp $")
 
 /* local definitions */
 #define	NAMELEN		80	/* length of tokens in sccs-header */
@@ -253,7 +253,7 @@ DeHexify(char *name)
 		    FPRINTF(stderr, "? non-hex\n");
 		    GiveUp();
 		}
-		c = ((a - hex) << 4) + (b - hex);
+		c = (int) (((a - hex) << 4) + (b - hex));
 		if (c == 'J' && *s == '\n')
 		    break;
 	    }
@@ -310,14 +310,14 @@ PostProcess(char *name, char *s_file)
 		    && !strncmp(s, "c ", 2)
 		    && (s = strstr(s, "\\\001O")) != 0) {
 		    char *base = s;
-		    long num;
+		    unsigned long num;
 
 		    if ((s = strstr(base, ":P")) != 0
 			&& sscanf(s, ":P%lo:", &num))
-			s_mode = S_MODE(num);
+			s_mode = (mode_t) S_MODE(num);
 		    if ((s = strstr(base, ":M")) != 0
-			&& sscanf(s, ":M%ld:", &num))
-			date = num;
+			&& sscanf(s, ":M%lu:", &num))
+			date = (time_t) num;
 		}
 #endif
 		if (opt_c) {

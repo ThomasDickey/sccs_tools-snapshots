@@ -20,7 +20,7 @@
 #include	<sccsdefs.h>
 #include	<time.h>	/* declares 'ctime()' */
 
-MODULE_ID("$Id: fixsccs.c,v 6.11 2010/07/03 17:24:40 tom Exp $")
+MODULE_ID("$Id: fixsccs.c,v 6.12 2010/07/04 10:54:27 tom Exp $")
 
 static int a_opt;		/* all-directory scan */
 static int no_op;		/* no-op mode */
@@ -28,7 +28,7 @@ static int quiet;
 static int fixed;
 
 static void
-FixSCCS(char *path, char *archive, Stat_t * sp)
+FixSCCS(const char *path, const char *archive, Stat_t * sp)
 {
     time_t date;
     char *vers;
@@ -58,6 +58,8 @@ WALK_FUNC(scan_tree)
     char tmp[MAXPATHLEN];
     char *leaf;
 
+    (void) level;
+
     leaf = pathleaf(pathcat(tmp, path, name));
 
     if (sp == 0 || readable < 0) {
@@ -80,7 +82,7 @@ WALK_FUNC(scan_tree)
 }
 
 static void
-do_arg(char *name)
+do_arg(const char *name)
 {
     (void) walktree((char *) 0, name, scan_tree, "r", 0);
 }

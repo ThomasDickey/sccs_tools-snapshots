@@ -37,22 +37,22 @@
 #include	<rcsdefs.h>
 #include	<sccsdefs.h>
 
-MODULE_ID("$Id: sccsput.c,v 6.11 2010/07/03 17:12:31 tom Exp $")
+MODULE_ID("$Id: sccsput.c,v 6.12 2010/07/04 10:40:03 tom Exp $")
 
 #define	DEBUG		if (debug) PRINTF
 #define	VERBOSE		if (!quiet) PRINTF
 
 static char diff_opts[BUFSIZ];
-static char *verb = "putdelta";
+static const char *verb = "putdelta";
 static char comment[BUFSIZ];
 static FILE *log_fp;
 static int a_opt;		/* all-directory scan */
 static int no_op;		/* no-op mode */
-static char *pager;		/* nonzero if we don't cat diffs */
+static const char *pager;	/* nonzero if we don't cat diffs */
 static int Force, force;
 static int e_opt;
-static char *k_opt = "";
-static char *r_opt = "";
+static const char *k_opt = "";
+static const char *r_opt = "";
 static char *LogName = NULL;
 static int debug;
 static int quiet;
@@ -70,7 +70,7 @@ ExitProgram(int code)
 }
 
 static void
-cat2fp(FILE *fp, char *name)
+cat2fp(FILE *fp, const char *name)
 {
     FILE *ifp;
     char t[BUFSIZ];
@@ -85,7 +85,7 @@ cat2fp(FILE *fp, char *name)
 }
 
 static int
-pipe2file(char *cmd, char *name)
+pipe2file(const char *cmd, char *name)
 {
     FILE *ifp, *ofp;
     char buffer[BUFSIZ];
@@ -114,7 +114,7 @@ pipe2file(char *cmd, char *name)
 }
 
 static int
-different(char *working, char *archive)
+different(const char *working, const char *archive)
 {
     static char format[] = "------- %s -------\n";
     char buffer[BUFSIZ];
@@ -170,7 +170,7 @@ different(char *working, char *archive)
 }
 
 static int
-ok_file(char *name)
+ok_file(const char *name)
 {
     if (!Force && !istextfile(name)) {
 	PRINTF("*** \"%s\" does not seem to be a text file\n", name);
@@ -180,11 +180,11 @@ ok_file(char *name)
 }
 
 static void
-SccsPut(char *path, char *name)
+SccsPut(const char *path, const char *name)
 {
     char args[BUFSIZ];
-    char *working = sccs2name(name, FALSE);
-    char *archive = name2sccs(name, FALSE);
+    const char *working = sccs2name(name, FALSE);
+    const char *archive = name2sccs(name, FALSE);
     int first;
 #if defined(S_FILES_14)
     char temp[MAXPATHLEN];
@@ -294,7 +294,7 @@ WALK_FUNC(scan_tree)
 }
 
 static void
-do_arg(char *name)
+do_arg(const char *name)
 {
     (void) walktree((char *) 0, name, scan_tree, "r", 0);
 }

@@ -29,22 +29,22 @@
 #include	<rcsdefs.h>
 #include	<sccsdefs.h>
 
-MODULE_ID("$Id: sccsget.c,v 6.9 2010/07/03 17:11:34 tom Exp $")
+MODULE_ID("$Id: sccsget.c,v 6.10 2010/07/04 13:52:23 tom Exp $")
 
 static char get_opts[BUFSIZ];
-static char *verb = "getdelta";
+static const char *verb = "getdelta";
 static int a_opt;		/* all-directory scan */
 static int no_op;		/* no-op mode */
 static int force;
 static int debug;
 static int dir_only;		/* expand names via archive-directories */
-static char *working_path;	/* used to resolve SCCS working/archive dirs */
+static const char *working_path;	/* used to resolve SCCS working/archive dirs */
 
 static void
-checkout(char *name)
+checkout(const char *name)
 {
-    auto char args[BUFSIZ];
-    auto char *working = sccs2name(name, FALSE);
+    char args[BUFSIZ];
+    char *working = sccs2name(name, FALSE);
 
     if (!strncmp("p.", pathleaf(name), 2)) {
 	return;
@@ -62,7 +62,7 @@ checkout(char *name)
 }
 
 static void
-SetWd(char *path)
+SetWd(const char *path)
 {
     if (debug)
 	shoarg(stdout, "chdir", path);
@@ -73,7 +73,7 @@ SetWd(char *path)
 }
 
 static int
-fexists(char *name)
+fexists(const char *name)
 {
     Stat_t sb;
     return (stat_file(name, &sb) >= 0);
@@ -83,7 +83,7 @@ fexists(char *name)
 static int
 WALK_FUNC(do_archive)
 {
-    char *archive = name2sccs(name, FALSE);
+    const char *archive = name2sccs(name, FALSE);
 
     if (fexists(archive)) {
 	if (debug)
@@ -105,8 +105,10 @@ WALK_FUNC(do_archive)
 static int
 WALK_FUNC(scan_tree)
 {
-    auto char tmp1[MAXPATHLEN], vault[MAXPATHLEN], *s = pathcat(tmp1, path, name);
-    auto Stat_t sb;
+    char tmp1[MAXPATHLEN];
+    char vault[MAXPATHLEN];
+    char *s = pathcat(tmp1, path, name);
+    Stat_t sb;
 
     working_path = path;
     if (sp == 0 || readable < 0) {
@@ -158,7 +160,7 @@ WALK_FUNC(scan_tree)
 }
 
 static void
-do_arg(char *name)
+do_arg(const char *name)
 {
     Stat_t sb;
     dir_only = (stat_dir(name, &sb) >= 0)
