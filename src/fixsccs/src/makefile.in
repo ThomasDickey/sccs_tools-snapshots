@@ -1,4 +1,4 @@
-# $Id: makefile.in,v 6.2 2010/06/30 23:34:36 tom Exp $
+# $Id: makefile.in,v 6.3 2010/07/05 21:43:33 tom Exp $
 # Make-file for SCCS timestamp utility
 
 THIS	= fixsccs
@@ -20,7 +20,7 @@ all\
 install:	$(SOURCES) $B $(ALL)
 clean:				; $(RM) $(CLEAN)
 distclean:	clean		; $(RM) $(ALL)
-run_test:
+check:
 
 ####### (Details of Productions) ###############################################
 $B:				; mkdir $@

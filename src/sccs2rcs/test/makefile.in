@@ -1,4 +1,4 @@
-# $Id: makefile.in,v 6.1 1997/09/28 19:22:43 tom Exp $
+# $Id: makefile.in,v 6.2 2010/07/05 21:44:38 tom Exp $
 # make-file for testing sccs/RCS conversion utility
 
 
@@ -21,7 +21,7 @@ all:	$(SOURCES) $(ALL)
 clean:				; $(RM) $(CLEAN) *.RCS *.SCCS
 distclean:	clean		; -$(RM) $(ALL)
 lint.out:
-run_test:	$(SOURCES)	; $(RUN_TESTS)
+check:		$(SOURCES)	; $(RUN_TESTS)
 
 ####### (Details of Productions) ###############################################
 $(SOURCES):

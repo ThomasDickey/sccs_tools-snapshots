@@ -29,7 +29,7 @@
 #include	<rcsdefs.h>
 #include	<sccsdefs.h>
 
-MODULE_ID("$Id: sccsget.c,v 6.10 2010/07/04 13:52:23 tom Exp $")
+MODULE_ID("$Id: sccsget.c,v 6.11 2010/07/05 21:46:38 tom Exp $")
 
 static char get_opts[BUFSIZ];
 static const char *verb = "getdelta";
@@ -85,6 +85,9 @@ WALK_FUNC(do_archive)
 {
     const char *archive = name2sccs(name, FALSE);
 
+    (void) sp;
+    (void) level;
+
     if (fexists(archive)) {
 	if (debug)
 	    track_wd(path);
@@ -109,6 +112,8 @@ WALK_FUNC(scan_tree)
     char vault[MAXPATHLEN];
     char *s = pathcat(tmp1, path, name);
     Stat_t sb;
+
+    (void) level;
 
     working_path = path;
     if (sp == 0 || readable < 0) {

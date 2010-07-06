@@ -20,7 +20,7 @@
 #include	<sccsdefs.h>
 #include	<time.h>	/* declares 'ctime()' */
 
-MODULE_ID("$Id: fixsccs.c,v 6.12 2010/07/04 10:54:27 tom Exp $")
+MODULE_ID("$Id: fixsccs.c,v 6.13 2010/07/05 21:46:38 tom Exp $")
 
 static int a_opt;		/* all-directory scan */
 static int no_op;		/* no-op mode */
@@ -31,8 +31,8 @@ static void
 FixSCCS(const char *path, const char *archive, Stat_t * sp)
 {
     time_t date;
-    char *vers;
-    char *locker;
+    const char *vers;
+    const char *locker;
 
     sccslast(path, sccs2name(archive, TRUE), &vers, &date, &locker);
     if (*vers != '?'

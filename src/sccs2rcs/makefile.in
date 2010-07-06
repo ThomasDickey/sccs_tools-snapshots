@@ -1,4 +1,4 @@
-# $Id: makefile.in,v 6.3 2010/06/29 10:55:49 tom Exp $
+# $Id: makefile.in,v 6.4 2010/07/05 21:44:38 tom Exp $
 # Top-level makefile for SCCS_TOOLS sccs/RCS conversion utility
 
 THIS	= sccs2rcs
@@ -16,12 +16,12 @@ DIRS	=\
 
 ####### (Standard Productions) #################################################
 all\
-run_test::	$(DIRS)
+check::		$(DIRS)
 
 all\
 clean\
 distclean\
-run_test\
+check\
 lint.out::
 	cd src;		$(MAKE) $@
 	cd test;	$(MAKE) $@

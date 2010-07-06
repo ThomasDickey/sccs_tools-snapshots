@@ -1,4 +1,4 @@
-# $Id: makefile.in,v 6.3 2010/06/29 10:55:49 tom Exp $
+# $Id: makefile.in,v 6.4 2010/07/05 21:43:33 tom Exp $
 # Top-level make-file for SCCS_TOOLS
 
 THIS	= sccs_tools
@@ -30,7 +30,7 @@ sources::
 	cd user;	$(MAKE) $@
 	cd bin;		$(MAKE) $@
 
-run_test\
+check\
 lint.out:
 	cd src;		$(MAKE) $@
 

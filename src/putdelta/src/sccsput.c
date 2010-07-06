@@ -37,7 +37,7 @@
 #include	<rcsdefs.h>
 #include	<sccsdefs.h>
 
-MODULE_ID("$Id: sccsput.c,v 6.12 2010/07/04 10:40:03 tom Exp $")
+MODULE_ID("$Id: sccsput.c,v 6.13 2010/07/05 21:46:38 tom Exp $")
 
 #define	DEBUG		if (debug) PRINTF
 #define	VERBOSE		if (!quiet) PRINTF
@@ -220,7 +220,7 @@ SccsPut(const char *path, const char *name)
 	    return;
     } else {
 	time_t date;
-	char *vers, *locker;
+	const char *vers, *locker;
 	sccslast(path, working, &vers, &date, &locker);
 	if (*vers == '?') {
 	    first = TRUE;	/* no revisions present */
@@ -268,6 +268,8 @@ WALK_FUNC(scan_tree)
 {
     char tmp[MAXPATHLEN];
     char *s = pathcat(tmp, path, name);
+
+    (void) level;
 
     if (sp == 0 || readable < 0) {
 	readable = -1;
