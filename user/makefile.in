@@ -1,4 +1,4 @@
-# $Id: makefile.in,v 6.4 2010/06/30 00:25:47 tom Exp $
+# $Id: makefile.in,v 6.5 2010/07/05 21:43:33 tom Exp $
 
 
 
@@ -34,7 +34,7 @@ SOURCES	=\
 all:	$(SOURCES) $(ALL)	; @echo '** use "make install"'
 clean:				; $(RM) $(CLEAN)
 distclean:	clean		; $(RM) $(ALL)
-run_test:
+check:
 install:	$(PREFIX) $(IT)
 uninstall:			; $(RM) $(IT)
 

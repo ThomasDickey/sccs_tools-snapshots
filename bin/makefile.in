@@ -1,4 +1,4 @@
-# $Id: makefile.in,v 6.5 2010/06/30 00:25:12 tom Exp $
+# $Id: makefile.in,v 6.6 2010/07/05 21:43:33 tom Exp $
 
 THIS	= sccs_tools
 
@@ -25,7 +25,7 @@ IT	=\
 all:
 clean:				; -$(RM) $(CLEAN)
 distclean:	clean		; -$(SHELL) -c 'for n in $(ALL) [a-ln-z]*; do test -f "$$n" && rm -f "$$n"; done'
-run_test:
+check:
 sources:
 install:	$B $(IT)
 uninstall:			; -$(RM) $(IT)
