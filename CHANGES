@@ -1,3 +1,24 @@
+2013-12-07  Thomas E. Dickey  <dickey@invisible-island.net>
+
+	* configure: regen
+
+	* aclocal.m4: resync with my-autoconf, as well as using CF_PROG_CC:
+		CF_ADD_SUBDIR_PATH CF_CHECK_CACHE CF_DISABLE_ECHO CF_FIND_TDLIB
+		CF_GCC_ATTRIBUTES CF_GCC_VERSION CF_GCC_WARNINGS CF_INTEL_COMPILER
+		CF_LIB_PREFIX CF_MAKE_INCLUDE CF_MSG_LOG CF_PATHSEP CF_PROGRAM_FULLPATH
+		CF_PROG_EXT
+
+	* user/makefile.in: honor --datarootdir
+
+	* configure.in: resync with my-autoconf, as well as using CF_PROG_CC:
+		CF_ADD_SUBDIR_PATH CF_CHECK_CACHE CF_DISABLE_ECHO CF_FIND_TDLIB
+		CF_GCC_ATTRIBUTES CF_GCC_VERSION CF_GCC_WARNINGS CF_INTEL_COMPILER
+		CF_LIB_PREFIX CF_MAKE_INCLUDE CF_MSG_LOG CF_PATHSEP CF_PROGRAM_FULLPATH
+		CF_PROG_EXT
+
+	* package/debian/copyright, COPYING, package/debian/changelog, package/sccs_tools-12.0.spec:
+	bump
+
 2013-10-25  Thomas E. Dickey  <dickey@invisible-island.net>
 
 	* config.sub: 2013-10-01
