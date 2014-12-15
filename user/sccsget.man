@@ -1,13 +1,24 @@
-.\" $Id: sccsget.man,v 6.0 1991/10/24 08:31:26 ste_cm Rel $
-.de DS
-.RS
+.\" $Id: sccsget.man,v 6.1 2014/12/14 20:28:19 tom Exp $
+.de Es
+.ne \\$1
+.nr mE \\n(.f
+.RS 5n
+.sp .7
 .nf
-.sp
+.nh
+.ta 9n 17n 25n 33n 41n 49n
+.ft CW
 ..
-.de DE
+.de Ex
+.ft \\n(mE
 .fi
+.hy \\n(HY
 .RE
-.sp .5
+.sp .7
+..
+.\" Bulleted paragraph
+.de bP
+.IP \(bu 4
 ..
 .TH SCCSGET 1
 .SH NAME
@@ -40,17 +51,17 @@ the correct modification date:
 .TP
 .BI \-c cutoff
 specifies the \fIsccs\fR cutoff date, in the format
-.DS
+.Es
 YY[MM[DD[HH[MM[SS]]]]]
-.DE
+.Ex
 .RS
 .PP
 Punctuation in the date is permitted.
 For example,
-.DS
+.Es
 -c 77/2/2 9:22:25
 -c 770202092225
-.DE
+.Ex
 .PP
 represent the same date.
 .RE

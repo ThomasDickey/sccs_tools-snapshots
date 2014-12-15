@@ -1,13 +1,24 @@
-.\" $Id: sccsput.man,v 6.0 1991/10/24 08:43:08 ste_cm Rel $
-.de DS
-.RS
+.\" $Id: sccsput.man,v 6.1 2014/12/14 20:41:01 tom Exp $
+.de Es
+.ne \\$1
+.nr mE \\n(.f
+.RS 5n
+.sp .7
 .nf
-.sp
+.nh
+.ta 9n 17n 25n 33n 41n 49n
+.ft CW
 ..
-.de DE
+.de Ex
+.ft \\n(mE
 .fi
+.hy \\n(HY
 .RE
-.sp .5
+.sp .7
+..
+.\" Bulleted paragraph
+.de bP
+.IP \(bu 4
 ..
 .TH SCCSPUT 1
 .SH NAME
@@ -28,25 +39,20 @@ previously archived version and prompts you for change history comments.
 named "SCCS".
 It is more than an integration of the \fBadmin\fR
 and \fBdelta\fR utilities, however:
-.TP
-.B \-
+.bP
 It checks to ensure that each file is indeed a text
 file (so that you do not accidentally archive ".o" files, for
 example).
-.TP
-.B \-
+.bP
 If you give \fBsccsput\fR a directory name, it will
 recur, checking-in files in the directory.
-.TP
-.B \-
+.bP
 For each file which has a corresponding "s." file, \fBsccsput\fR compares the two (using \fBdiff\fR) and pipes the result
 through the pager.
-.TP
-.B \-
+.bP
 An option is provided so that you may direct \fBsccsput\fR
 to perform the differencing without checking the file into sccs.
-.TP
-.B \-
+.bP
 The "s." file is post-processed by \fBsccsput\fR
 so that the check-in date matches the file's modification date.
 .PP
@@ -64,7 +70,7 @@ easily back
 up to a meaningful version \- by date, rather than version
 number.
 (By working exclusively in terms of modification date,
-you lose the ability to specify sccs release numbers --
+you lose the ability to specify sccs release numbers \-
 given the complexity
 of \fIsccs\fR's interface for release and version numbers, this
 is probably not such a great loss).
@@ -111,8 +117,7 @@ etc.
 The \fBsccsput\fR utility is designed for use in small development
 projects.
 The methodology for this tool follows:
-.TP
-.B \-
+.bP
 Develop source files "normally".
 Each file should
 contain sccs keywords (see \fIget\ (1)\fR) so that you will be
@@ -123,40 +128,35 @@ In
 C language programs, the convention is to make a string which will
 permit the \fBwhat\fR utility to show the versions of the modules
 which make up a program:
-.DS
+.Es
 #ifndef	lint
 static	char	sccs_id[] = "@(#)sccsput.doc	1.1 88/05/05
 08:07:16";
 #endif
-.DE
-.TP
-.B \-
+.Ex
+.bP
 Periodically archive (with \fBsccsput\fR) those
 versions of files which you wish to keep
 (You should never have programs which have new features
 which you wish to keep, while there are defects in other parts of
-the program -- that would be an unsound approach to development!).
-.TP
-.B \-
+the program \- that would be an unsound approach to development!).
+.bP
 When you reach the point of releasing the program, ensure
 that all source files have been checked-in.
 The directory editor
 (\fBded\fR) is useful for reviewing the check-in dates.
-.TP
-.B \-
+.bP
 Copy the directory containing your program to the release
 directory.
 Purge all files, except those which are stored in the \fIsccs\fR subdirectories.
 Use \fBsccsget\fR to extract the files
 (the unadorned \fBget\fR utility will work, of course,
 but it retains the file modification dates).
-.TP
-.B \-
+.bP
 Ensure that all files have been checked-in and released.
 You may use \fBdiff\fR to compare the directories \- the only
 differences should be the substituted \fIsccs\fR keywords.
-.TP
-.B \-
+.bP
 Build the released version of your program.
 All files
 should be present.
