@@ -1,13 +1,24 @@
-.\" $Id: getdelta.man,v 6.0 1991/10/24 08:12:54 ste_cm Rel $
-.de DS
-.RS
+.\" $Id: getdelta.man,v 6.1 2014/12/14 20:29:15 tom Exp $
+.de Es
+.ne \\$1
+.nr mE \\n(.f
+.RS 5n
+.sp .7
 .nf
-.sp
+.nh
+.ta 9n 17n 25n 33n 41n 49n
+.ft CW
 ..
-.de DE
+.de Ex
+.ft \\n(mE
 .fi
+.hy \\n(HY
 .RE
-.sp .5
+.sp .7
+..
+.\" Bulleted paragraph
+.de bP
+.IP \(bu 4
 ..
 .TH GETDELTA 1
 .SH NAME
@@ -53,10 +64,10 @@ YY[MM[DD[HH[MM[SS]]]]]
 .TP
 Punctuation in the date is permitted.
 For example,
-.DS
+.Es
 -c 77/2/2 9:22:25
 -c 770202092225
-.DE
+.Ex
 .TP
 represent the same date.
 .RE
@@ -114,7 +125,7 @@ of the check-in date in the "s." file is \fBEST5EDT\fR.
 .SH FILES
 .PP
 \fBGetdelta\fR consists of a single binary file written in C.
-It runs in a UNIX\*R environment.
+It runs in a POSIX environment.
 .SH ANTICIPATED CHANGES
 .PP
 None.

@@ -1,3 +1,8 @@
+2014-12-14  Thomas E. Dickey  <dickey@invisible-island.net>
+
+	* user/sccsput.man, user/putdelta.man, user/getdelta.man, user/sccsget.man:
+	adapt/reuse macros from cm_tools to improve groff's translation to html
+
 2013-12-07  Thomas E. Dickey  <dickey@invisible-island.net>
 
 	* configure: regen
