@@ -1,3 +1,9 @@
+2015-05-02  Thomas E. Dickey  <dickey@invisible-island.net>
+
+	* config.guess: 2015-03-04
+
+	* config.sub: 2015-03-08
+
 2014-12-14  Thomas E. Dickey  <dickey@invisible-island.net>
 
 	* user/sccsput.man, user/putdelta.man, user/getdelta.man, user/sccsget.man:
