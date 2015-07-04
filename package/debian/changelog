@@ -1,3 +1,9 @@
+sccstools (20150704) unstable; urgency=high
+
+  * update configure script
+
+ -- Thomas E. Dickey <dickey@invisible-island.net>  Sat, 04 Jul 2015 15:30:31 -0400
+
 sccstools (20131207) unstable; urgency=high
 
   * update configure script

@@ -1,4 +1,4 @@
-# $Id: makefile.in,v 6.6 2013/12/07 19:30:26 tom Exp $
+# $Id: makefile.in,v 6.7 2015/07/04 19:45:55 tom Exp $
 
 
 
@@ -33,7 +33,7 @@ SOURCES	=\
 
 ####### (Standard Productions) #################################################
 all:	$(SOURCES) $(ALL)	; @echo '** use "make install"'
-clean:				; $(RM) $(CLEAN)
+clean:				; $(RM) $(CLEAN) $(CLEAN__MAN)
 distclean:	clean		; $(RM) $(ALL)
 check:
 install:	$(PREFIX) $(IT)
