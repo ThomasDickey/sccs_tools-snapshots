@@ -1,4 +1,0 @@
-$Header: /users/source/archives/sccs_tools.vcs/certify/RCS/README,v 6.0 1991/06/07 09:38:28 ste_cm Rel $
-
-The SCCS utilities in this package have been tested on an Apollo Domain
-system (bsd4.3) and Sun platforms.
