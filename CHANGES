@@ -1,3 +1,18 @@
+2018-01-07  Thomas E. Dickey  <dickey@invisible-island.net>
+
+	* package/debian/copyright, COPYING, package/debian/changelog, package/sccs_tools-12.0.spec:
+	bump
+
+	* configure: regen
+
+	* aclocal.m4, configure.in: resync with my-autoconf
+
+2017-11-25  Thomas E. Dickey  <dickey@invisible-island.net>
+
+	* config.guess: 2017-11-07
+
+	* config.sub: 2017-11-23
+
 2015-07-04  Thomas E. Dickey  <dickey@invisible-island.net>
 
 	* user/makefile.in: improve clean-rule
@@ -408,7 +423,7 @@
 	* src/getdelta/src/Makefile, src/getdelta/src/getdelta.c:
 	autoconf adjustments
 
-1994-06-07  dickey@clark.net
+1994-06-07  Thomas E. Dickey  <dickey@clark.net>
 
 	* src/fixsccs/src/fixsccs.c:
 	use a "-q" option rather than the kludgey thing with SCCS_DEBUG
@@ -459,7 +474,7 @@
 
 	* COPYING: BASELINE Wed May  5 11:05:31 1993 -- TD_LIB #12
 
-1993-05-05  Thomas E. Dickey  <dickey@software.org>
+1993-05-05  dickey@software.org
 
 	* COPYING: updated notice
 
