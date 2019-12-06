@@ -3,6 +3,7 @@
  * Author:	T.E.Dickey
  * Created:	08 May 1990 (from sccsput.sh and rcsput.c)
  * Modified:
+ *		06 Dec 2019, use DYN-strings to replace catarg.
  *		14 Oct 1995, allow archive leafname to be limited to 14-chars
  *		27 May 1994, added "-e" and "-C" options.  Made verbosity
  *			more consistent with CM_TOOLS.
@@ -34,15 +35,16 @@
 
 #define	STR_PTYPES
 #include	<ptypes.h>
+#include	<dyn_str.h>
 #include	<rcsdefs.h>
 #include	<sccsdefs.h>
 
-MODULE_ID("$Id: sccsput.c,v 6.13 2010/07/05 21:46:38 tom Exp $")
+MODULE_ID("$Id: sccsput.c,v 6.14 2019/12/06 22:29:50 tom Exp $")
 
 #define	DEBUG		if (debug) PRINTF
 #define	VERBOSE		if (!quiet) PRINTF
 
-static char diff_opts[BUFSIZ];
+static ARGV *diff_opts;
 static const char *verb = "putdelta";
 static char comment[BUFSIZ];
 static FILE *log_fp;
@@ -85,7 +87,7 @@ cat2fp(FILE *fp, const char *name)
 }
 
 static int
-pipe2file(const char *cmd, char *name)
+pipe2file(DYN * cmd, char *name)
 {
     FILE *ifp, *ofp;
     char buffer[BUFSIZ];
@@ -97,10 +99,10 @@ pipe2file(const char *cmd, char *name)
     if (!(ofp = fopen(name, "w")))
 	failed("tmpnam-open");
     if (debug) {
-	FORMAT(buffer, "%s > ", cmd);
+	FORMAT(buffer, "%s > ", dyn_string(cmd));
 	shoarg(stdout, buffer, name);
     }
-    if (!(ifp = popen(bldcmd(buffer, cmd, sizeof(buffer)), "r")))
+    if (!(ifp = popen(dyn_string(cmd), "r")))
 	failed("popen");
     /* copy the result to a file so we can send it two places */
     while ((n = fread(buffer, sizeof(char), sizeof(buffer), ifp)) > 0) {
@@ -117,29 +119,34 @@ static int
 different(const char *working, const char *archive)
 {
     static char format[] = "------- %s -------\n";
-    char buffer[BUFSIZ];
+    ARGV *args;
+    DYN *str;
     char in_diff[MAXPATHLEN];
     char out_diff[MAXPATHLEN];
     int changed;
 
-    *buffer = EOS;
-    catarg(buffer, "get");
-    catarg(buffer, "-p");
+    args = sccs_argv("get");
+    argv_append(&args, "-p");
     if (!debug)
-	catarg(buffer, "-s");
+	argv_append(&args, "-s");
     if (*k_opt)
-	catarg(buffer, k_opt);
+	argv_append(&args, k_opt);
     if (*r_opt)
-	catarg(buffer, r_opt);
-    catarg(buffer, archive);
-    (void) pipe2file(buffer, in_diff);
+	argv_append(&args, r_opt);
+    argv_append(&args, archive);
+    str = argv_flatten(args);
+    (void) pipe2file(str, in_diff);
+    argv_free(&args);
+    dyn_free(str);
 
-    *buffer = EOS;
-    catarg(buffer, "diff");
-    (void) strcat(buffer, diff_opts);
-    catarg(buffer, in_diff);
-    catarg(buffer, working);
-    changed = pipe2file(buffer, out_diff);
+    args = argv_init1("diff");
+    argv_merge(&args, diff_opts);
+    argv_append(&args, in_diff);
+    argv_append(&args, working);
+    str = argv_flatten(args);
+    changed = pipe2file(str, out_diff);
+    argv_free(&args);
+    dyn_free(str);
 
     if (changed) {
 	if (!quiet) {
@@ -182,7 +189,7 @@ ok_file(const char *name)
 static void
 SccsPut(const char *path, const char *name)
 {
-    char args[BUFSIZ];
+    ARGV *args;
     const char *working = sccs2name(name, FALSE);
     const char *archive = name2sccs(name, FALSE);
     int first;
@@ -232,18 +239,18 @@ SccsPut(const char *path, const char *name)
 	}
     }
 
-    *args = EOS;
+    args = argv_init1(verb);
     if (!debug)
-	catarg(args, "-s");
+	argv_append(&args, "-s");
     if (force)
-	catarg(args, "-f");
+	argv_append(&args, "-f");
     if (*k_opt)
-	catarg(args, k_opt);
+	argv_append(&args, k_opt);
     if (*r_opt)
-	catarg(args, r_opt);
+	argv_append(&args, r_opt);
     if (*comment)
-	catarg(args, comment);
-    catarg(args, working);
+	argv_append(&args, comment);
+    argv_append(&args, working);
 
     if (!no_op) {
 	VERBOSE("*** %s \"%s\"\n",
@@ -251,8 +258,8 @@ SccsPut(const char *path, const char *name)
 		: "Applying SCCS delta to",
 		name);
 	if (debug)
-	    shoarg(stdout, verb, args);
-	if (execute(verb, args) < 0)
+	    show_argv(stdout, argv_values(args));
+	if (executev(argv_values(args)) < 0)
 	    failed(working);
     } else {
 	VERBOSE("--- %s \"%s\"\n",
@@ -260,6 +267,7 @@ SccsPut(const char *path, const char *name)
 		: "Delta would be applied to",
 		name);
     }
+    argv_free(&args);
 }
 
 /*ARGSUSED*/
@@ -331,8 +339,11 @@ usage(int option)
     unsigned j;
     for (j = 0; j < sizeof(tbl) / sizeof(tbl[0]); j++)
 	FPRINTF(stderr, "%s\n", tbl[j]);
-    if (option == '?')
-	(void) system("putdelta -?");
+    if (option == '?') {
+	ARGV *args = argv_init1("putdelta");
+	argv_append(&args, "-?");
+	executev(argv_values(args));
+    }
     exit(FAIL);
 }
 
@@ -353,10 +364,10 @@ _MAIN
 	    a_opt = TRUE;
 	    break;
 	case 'b':
-	    catarg(diff_opts, "-b");
+	    argv_append(&diff_opts, "-b");
 	    break;
 	case 'C':
-	    catarg(diff_opts, "-c");
+	    argv_append(&diff_opts, "-c");
 	    break;
 	case 'c':
 	    pager = 0;
@@ -368,7 +379,7 @@ _MAIN
 	    force = TRUE;
 	    break;
 	case 'h':
-	    catarg(diff_opts, "-h");
+	    argv_append(&diff_opts, "-h");
 	    break;
 	case 'k':
 	    k_opt = "-k";
@@ -393,7 +404,7 @@ _MAIN
 		   (int) (sizeof(comment) - 3), optarg);
 	    break;
 	case 'D':
-	    catarg(diff_opts, DEFERRED);
+	    argv_append(&diff_opts, DEFERRED);
 	    break;
 	case 'F':
 	    Force = TRUE;

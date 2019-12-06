@@ -3,6 +3,8 @@
  * Author:	T.E.Dickey
  * Created:	26 Mar 1986 (as a procedure)
  * Modified:
+ *		06 Dec 2019, use DYN-strings to replace catarg, and provide
+ *			     for sccs-wrapper.
  *		30 Apr 2002, use sccsyear() to isolate against buggy data from
  *			     SunOS 4.x
  *		21 Apr 2002, don't add 1900 to year for packdate().
@@ -59,9 +61,10 @@
 #define	STR_PTYPES
 #define	TIM_PTYPES
 #include	<ptypes.h>
+#include	<dyn_str.h>
 #include	<sccsdefs.h>
 
-MODULE_ID("$Id: getdelta.c,v 6.30 2010/07/04 09:45:13 tom Exp $")
+MODULE_ID("$Id: getdelta.c,v 6.31 2019/12/06 22:14:52 tom Exp $")
 
 /* local definitions */
 #define	NAMELEN		80	/* length of tokens in sccs-header */
@@ -381,7 +384,7 @@ PostProcess(char *name, char *s_file)
  * See if the specified file exists.  If so, verify that it is indeed a file.
  */
 static int
-is_a_file(char *name, mode_t * mode_)
+is_a_file(char *name, mode_t *mode_)
 {
     Stat_t sb;
 
@@ -425,17 +428,24 @@ Permitted(char *name, int read_only)
  * file to be checked-out from the sccs file name.
  */
 static void
-DoFile(char *name, char *options)
+DoFile(char *name, ARGV * options)
 {
-    auto int ok = TRUE;
-    auto char *working = sccs2name(name, FALSE);
-    auto char *archive = name2sccs(name, FALSE);
-    auto char old_wd[MAXPATHLEN], new_wd[MAXPATHLEN], s_file[MAXPATHLEN],
-    buffer[MAXPATHLEN], *arguments = options + strlen(options), *s;
+    int ok = TRUE;
+    char *working = sccs2name(name, FALSE);
+    char *archive = name2sccs(name, FALSE);
+    char old_wd[MAXPATHLEN];
+    char new_wd[MAXPATHLEN];
+    char s_file[MAXPATHLEN];
+    char buffer[MAXPATHLEN];
+    char *s;
+    ARGV *args;
 
     if ((!piped && !Permitted(working, FALSE))
 	|| !Permitted(archive, !lockit))
 	return;
+
+    args = argv_init();
+    argv_merge(&args, options);
 
     /*
      * SCCS 'get' extracts only into the current directory.  Perform a
@@ -483,7 +493,7 @@ DoFile(char *name, char *options)
 	    GiveUp();
 	}
 	if (file_is_binary && !writable)
-	    catarg(arguments, "-k");
+	    argv_append(&args, "-k");
 #endif
 	if (is_a_file(name, (mode_t *) 0)) {
 	    if (piped) {
@@ -505,18 +515,21 @@ DoFile(char *name, char *options)
      * Process the file if we found no errors
      */
     if (ok) {
-	(void) strcat(arguments, s_file);
+	ARGV *get = sccs_argv(GET_TOOL);
+	argv_merge(&get, args);
+	argv_append(&get, s_file);
 	if (!silent)
-	    shoarg(stdout, GET_TOOL, options);
+	    show_argv(stdout, argv_values(get));
 	if (!noop) {
 	    newzone(0, 0, FALSE);	/* do this in GMT zone */
-	    if (execute(sccspath(GET_TOOL), options) < 0)
+	    if (executev(argv_values(get)) < 0)
 		failed(name);
 	}
 	if (!piped)
 	    PostProcess(name, s_file);
-	*arguments = EOS;
+	argv_free(&get);
     }
+    argv_free(&args);
 
     /*
      * Restore the working-directory if we had to alter it.
@@ -565,11 +578,10 @@ _MAIN
     char temp[BUFSIZ];
     char r_opt[BUFSIZ];
     int j, k;
-    char get_opts[BUFSIZ + MAXPATHLEN];
+    ARGV *get_opts = argv_init();
 
     oldzone();
 
-    get_opts[0] = EOS;
     *r_opt = EOS;
     while ((j = getopt(argc, argv, "bc:efknpr:s")) != EOF) {
 	switch (j) {
@@ -589,13 +601,13 @@ _MAIN
 	    opt_c = cutoff(argc, argv);
 	    while (k < optind)
 		(void) strcat(strcat(temp, " "), argv[k++]);
-	    catarg(get_opts, temp);
+	    argv_append(&get_opts, temp);
 	    TELL("cutoff: %s\n", ctime(&opt_c));
 	    break;
 
 	case 'p':
 	    piped = TRUE;
-	    catarg(get_opts, "-p");
+	    argv_append(&get_opts, "-p");
 	    break;
 
 	case 's':
@@ -607,7 +619,7 @@ _MAIN
 	    lockit = TRUE;
 	case 'k':
 	    FORMAT(temp, "-%c", j);
-	    catarg(get_opts, temp);
+	    argv_append(&get_opts, temp);
 	    writable = S_IWRITE;
 	    break;
 
@@ -625,9 +637,9 @@ _MAIN
 
     /* Use 'get' options once-only, since it complains otherwise */
     if (*r_opt != EOS)
-	catarg(get_opts, r_opt);
+	argv_append(&get_opts, r_opt);
     if (silent)
-	catarg(get_opts, "-s");
+	argv_append(&get_opts, "-s");
 
     if (optind < argc) {
 	for (j = optind; j < argc; j++)

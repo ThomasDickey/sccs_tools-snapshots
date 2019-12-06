@@ -1,4 +1,4 @@
-.\" $Id: getdelta.man,v 6.1 2014/12/14 20:29:15 tom Exp $
+.\" $Id: getdelta.man,v 6.2 2019/12/06 21:53:21 tom Exp $
 .de Es
 .ne \\$1
 .nr mE \\n(.f
@@ -9,7 +9,7 @@
 .ta 9n 17n 25n 33n 41n 49n
 .ft CW
 ..
-.de Ex
+.de Eh
 .ft \\n(mE
 .fi
 .hy \\n(HY
@@ -18,7 +18,8 @@
 ..
 .\" Bulleted paragraph
 .de bP
-.IP \(bu 4
+.ie n  .IP \(bu 4
+.el    .IP \(bu 2
 ..
 .TH GETDELTA 1
 .SH NAME
@@ -67,7 +68,7 @@ For example,
 .Es
 -c 77/2/2 9:22:25
 -c 770202092225
-.Ex
+.Eh
 .TP
 represent the same date.
 .RE
