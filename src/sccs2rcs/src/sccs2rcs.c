@@ -3,6 +3,9 @@
  * Author: Ken Greer
  *
  * $Log: sccs2rcs.c,v $
+ * Revision 6.12  2019/12/06 23:01:03  tom
+ * stricter gcc warnings
+ *
  * Revision 6.11  2010/07/04 10:52:08  tom
  * stricter gcc warnings
  *
@@ -155,7 +158,7 @@
 #include "sccsdefs.h"
 #include <errno.h>
 
-MODULE_ID("$Id: sccs2rcs.c,v 6.11 2010/07/04 10:52:08 tom Exp $")
+MODULE_ID("$Id: sccs2rcs.c,v 6.12 2019/12/06 23:01:03 tom Exp $")
 
 #define SOH	001		/* SCCS lines start with SOH (Control-A) */
 #define RCS	"rcs"
@@ -209,10 +212,9 @@ quit2(const char *fmt, const char *args)
 }
 
 static void
-quit(const char *fmt)
+quit(const char *msg)
 {
-    FPRINTF(stderr, "%s: ", WHOAMI);
-    FPRINTF(stderr, fmt);
+    fprintf(stderr, "%s: %s", WHOAMI, msg);
     exit(FAIL);
     /*NOTREACHED */
 }
@@ -499,7 +501,7 @@ install_deltas(DELTA * delta, char *sccsfile, char *rcsfile)
 	catarg(command, rcsfile);
 
 	if ((pd = to_pipe(CI, command)) != NULL) {
-	    FPRINTF(pd, delta->commentary);
+	    FPRINTF(pd, "%s", delta->commentary);
 	    if (pclose(pd) < 0)
 		return (-1);
 	} else if (trace) {
@@ -652,7 +654,7 @@ edit_log(char *s)
     /* make a copy in uppercase to simplify matching */
     for (t = base = s; (tmp[t - s] = *t) != EOS; t++)
 	if (isalpha(UCH(*t)) && islower(UCH(*t)))
-	    tmp[t - s] = toupper(*t);
+	    tmp[t - s] = (char) toupper(*t);
 
     while (*s) {
 	SKIP(s);

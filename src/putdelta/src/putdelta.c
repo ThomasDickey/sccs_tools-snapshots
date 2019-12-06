@@ -3,6 +3,7 @@
  * Author:	T.E.Dickey
  * Created:	25 Apr 1986
  * Modified:
+ *		06 Dec 2019, use DYN-strings to replace catarg
  *		21 Apr 2002, don't add 1900 to year for packdate().
  *		12 Apr 2000, Y2K fix for rev_date.
  *		03 Sep 1996, added '-b' option
@@ -67,11 +68,12 @@
 #define	STR_PTYPES
 #define	TIM_PTYPES
 #include	<ptypes.h>
+#include	<dyn_str.h>
 #include	<sccsdefs.h>
 
 #include	<errno.h>
 
-MODULE_ID("$Id: putdelta.c,v 6.16 2010/07/04 13:52:24 tom Exp $")
+MODULE_ID("$Id: putdelta.c,v 6.17 2019/12/06 22:29:50 tom Exp $")
 
 /************************************************************************
  *	local definitions						*
@@ -107,8 +109,8 @@ static int no_op = FALSE;
 static int ShowedIt;
 static char *sid;
 static char username[NAMELEN];
-static char admin_opts[BUFSIZ];
-static char delta_opts[BUFSIZ];
+static ARGV *admin_opts;
+static ARGV *delta_opts;
 
 static char fmt_lock[] = "%s %s %s %8s %8s\n";
 static char fmt_delta[] = "%s %8s %8s %s %d %d\n";
@@ -249,7 +251,7 @@ NeedDirectory(const char *path, Stat_t * sb)
  * See if the specified file exists.  If so, verify that it is indeed a file.
  */
 static time_t
-is_a_file(char *name, mode_t * mode_)
+is_a_file(char *name, mode_t *mode_)
 {
     Stat_t sb;
 
@@ -462,8 +464,8 @@ EditFile(time_t modtime, long lines)
     FPRINTF(fpS, "\001h%05d\n", 0xffff & chksum);
     (void) rewind(fpT);
     for (j = 1; j < lines; j++) {
-	(void) fgets(bfr, sizeof(bfr), fpT);
-	(void) fputs(bfr, fpS);
+	if (fgets(bfr, sizeof(bfr), fpT) != NULL)
+	    fputs(bfr, fpS);
     }
     FCLOSE(fpS);
     if (setmtime(x_file, modtime, (time_t) 0) < 0)
@@ -546,7 +548,7 @@ DoFile(char *name)
     Stat_t sb;
     char temp[BUFSIZ];
     const char *put_verb;
-    char put_opts[BUFSIZ];
+    ARGV *put_opts;
     int put_flag = TRUE;
 
     ShowedIt = FALSE;
@@ -614,22 +616,25 @@ DoFile(char *name)
 	if (!TestLock())
 	    return;
 	put_verb = DELTA_TOOL;
-	catarg(strcpy(put_opts, delta_opts), s_file);
+	put_opts = sccs_argv(put_verb);
+	argv_merge(&put_opts, delta_opts);
+	argv_append(&put_opts, s_file);
 	put_flag = FALSE;
     } else {
 	put_verb = ADMIN_TOOL;
+	put_opts = sccs_argv(put_verb);
 	FORMAT(temp, "-i%s", g_file);
-	(void) strcpy(put_opts, admin_opts);
+	argv_merge(&put_opts, admin_opts);
 	if (o_keys)
-	    catarg(put_opts, "-fi");
-	catarg(put_opts, temp);
-	catarg(put_opts, s_file);
+	    argv_append(&put_opts, "-fi");
+	argv_append(&put_opts, temp);
+	argv_append(&put_opts, s_file);
     }
 
     if (VERBOSE)
-	shoarg(stdout, put_verb, put_opts);
+	show_argv(stdout, argv_values(put_opts));
     if (!no_op) {
-	if (execute(sccspath(put_verb), put_opts) < 0)
+	if (executev(argv_values(put_opts)) < 0)
 	    failed(put_verb);
 	ProcessFile(put_time, ref_time);
 	if (put_flag && !geteuid()) {
@@ -637,6 +642,7 @@ DoFile(char *name)
 		failed("chown");
 	}
     }
+    argv_free(&put_opts);
 }
 
 /************************************************************************
@@ -651,12 +657,14 @@ _MAIN
 
     COPY(username, getuser());
 
-    catarg(delta_opts, "-n");
+    admin_opts = argv_init();
+    delta_opts = argv_init();
+    argv_append(&delta_opts, "-n");
     fpT = tmpfile();
     while ((j = getopt(argc, argv, "bfknr:sYy:")) != EOF)
 	switch (j) {
 	case 'b':
-	    catarg(admin_opts, "-b");
+	    argv_append(&admin_opts, "-b");
 	    break;
 	case 'f':
 	    force = TRUE;
@@ -669,21 +677,21 @@ _MAIN
 	    break;
 	case 'r':
 	    FORMAT(tmp, "-r%s", sid = optarg);
-	    catarg(delta_opts, tmp);
-	    catarg(admin_opts, tmp);
+	    argv_append(&delta_opts, tmp);
+	    argv_append(&admin_opts, tmp);
 	    break;
 	case 's':
 	    silent = TRUE;
-	    catarg(delta_opts, "-s");
+	    argv_append(&delta_opts, "-s");
 	    break;
 	case 'Y':
-	    catarg(admin_opts, "-y");
-	    catarg(delta_opts, "-y");
+	    argv_append(&admin_opts, "-y");
+	    argv_append(&delta_opts, "-y");
 	    break;
 	case 'y':
 	    FORMAT(tmp, "-y%s", optarg);
-	    catarg(admin_opts, tmp);
-	    catarg(delta_opts, tmp);
+	    argv_append(&admin_opts, tmp);
+	    argv_append(&delta_opts, tmp);
 	    break;
 	default:
 	    usage();

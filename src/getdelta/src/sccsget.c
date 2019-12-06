@@ -3,6 +3,7 @@
  * Author:	T.E.Dickey
  * Created:	23 May 1991 (from sccsget.sh and rcsget.c)
  * Modified:
+ *		06 Dec 2019, use DYN-strings to replace catarg
  *		19 Jul 1994, added dir-only logic, made this work with the
  *			     SCCS_VAULT config, and defined repeated "-n"
  *			     option for debugging.  Use 'sccs_debug()'.
@@ -26,12 +27,13 @@
 
 #define	STR_PTYPES
 #include	<ptypes.h>
+#include	<dyn_str.h>
 #include	<rcsdefs.h>
 #include	<sccsdefs.h>
 
-MODULE_ID("$Id: sccsget.c,v 6.11 2010/07/05 21:46:38 tom Exp $")
+MODULE_ID("$Id: sccsget.c,v 6.12 2019/12/06 17:52:38 tom Exp $")
 
-static char get_opts[BUFSIZ];
+static ARGV *get_opts;
 static const char *verb = "getdelta";
 static int a_opt;		/* all-directory scan */
 static int no_op;		/* no-op mode */
@@ -43,22 +45,24 @@ static const char *working_path;	/* used to resolve SCCS working/archive dirs */
 static void
 checkout(const char *name)
 {
-    char args[BUFSIZ];
+    ARGV *args;
     char *working = sccs2name(name, FALSE);
 
     if (!strncmp("p.", pathleaf(name), 2)) {
 	return;
     }
-    (void) strcpy(args, get_opts);
+    args = argv_init1(verb);
+    argv_merge(&args, get_opts);
     if (no_op > 1)
-	catarg(args, "-n");
-    catarg(args, working);
+	argv_append(&args, "-n");
+    argv_append(&args, working);
     if (debug)
-	shoarg(stdout, verb, args);
+	show_argv(stdout, argv_values(args));
     if (no_op != 1) {
-	if (execute(verb, args) < 0)
+	if (executev(argv_values(args)) < 0)
 	    failed(working);
     }
+    argv_free(&args);
 }
 
 static void
@@ -207,6 +211,7 @@ _MAIN
     if (debug)
 	track_wd((char *) 0);
 
+    get_opts = argv_init();
     while ((j = getopt(argc, argv, "ac:efknr:s")) != EOF) {
 	char tmp[BUFSIZ];
 	FORMAT(tmp, "-%c", j);
@@ -216,26 +221,26 @@ _MAIN
 	    a_opt = TRUE;
 	    break;
 	case 'c':
-	    catarg(get_opts, OPT);
+	    argv_append(&get_opts, OPT);
 	    break;
 	case 'f':
 	    force = TRUE;
 	case 'e':
 	case 'k':
-	    catarg(get_opts, tmp);
+	    argv_append(&get_opts, tmp);
 	    break;
 	case 'n':
 	    no_op++;
 	    break;
 	case 'r':
-	    catarg(get_opts, OPT);
+	    argv_append(&get_opts, OPT);
 	    break;
 	default:
 	    usage();
 	}
     }
     if (!debug)
-	catarg(get_opts, "-s");
+	argv_append(&get_opts, "-s");
 
     if (optind < argc) {
 	for (j = optind; j < argc; j++)
