@@ -3,6 +3,7 @@
  * Author:	T.E.Dickey
  * Created:	08 May 1990 (from sccsput.sh and rcsput.c)
  * Modified:
+ *		21 Dec 2019, suppress pager if not a tty.
  *		06 Dec 2019, use DYN-strings to replace catarg.
  *		14 Oct 1995, allow archive leafname to be limited to 14-chars
  *		27 May 1994, added "-e" and "-C" options.  Made verbosity
@@ -39,7 +40,7 @@
 #include	<rcsdefs.h>
 #include	<sccsdefs.h>
 
-MODULE_ID("$Id: sccsput.c,v 6.14 2019/12/06 22:29:50 tom Exp $")
+MODULE_ID("$Id: sccsput.c,v 6.15 2019/12/21 23:59:09 tom Exp $")
 
 #define	DEBUG		if (debug) PRINTF
 #define	VERBOSE		if (!quiet) PRINTF
@@ -150,7 +151,7 @@ different(const char *working, const char *archive)
 
     if (changed) {
 	if (!quiet) {
-	    if (pager == 0) {
+	    if (pager == 0 || !isatty(fileno(stdout))) {
 		PRINTF(format, working);
 		cat2fp(stdout, out_diff);
 	    } else {
