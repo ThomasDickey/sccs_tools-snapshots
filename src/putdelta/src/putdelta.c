@@ -73,7 +73,7 @@
 
 #include	<errno.h>
 
-MODULE_ID("$Id: putdelta.c,v 6.17 2019/12/06 22:29:50 tom Exp $")
+MODULE_ID("$Id: putdelta.c,v 6.18 2019/12/21 14:07:40 tom Exp $")
 
 /************************************************************************
  *	local definitions						*
@@ -634,6 +634,7 @@ DoFile(char *name)
     if (VERBOSE)
 	show_argv(stdout, argv_values(put_opts));
     if (!no_op) {
+	fflush(stdout);
 	if (executev(argv_values(put_opts)) < 0)
 	    failed(put_verb);
 	ProcessFile(put_time, ref_time);
