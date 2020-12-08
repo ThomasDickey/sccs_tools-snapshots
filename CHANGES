@@ -1,3 +1,29 @@
+2020-12-08  Thomas E. Dickey  <dickey@invisible-island.net>
+
+	* package/debian/changelog, package/sccs_tools-12.0.spec: bump
+
+2020-12-07  Thomas E. Dickey  <dickey@invisible-island.net>
+
+	* src/getdelta/test/makefile.in, src/putdelta/test/makefile.in, src/sccs2rcs/test/makefile.in, src/fixsccs/test/makefile.in, src/getdelta/src/makefile.in, src/putdelta/src/makefile.in, src/sccs2rcs/src/makefile.in, src/fixsccs/src/makefile.in:
+	use VPATH
+
+2020-12-06  Thomas E. Dickey  <dickey@invisible-island.net>
+
+	* package/debian/copyright, COPYING, package/debian/changelog, package/sccs_tools-12.0.spec:
+	bump
+
+2020-11-26  Thomas E. Dickey  <dickey@invisible-island.net>
+
+	* configure: regen
+
+	* aclocal.m4: resync with my-autoconf
+
+	* configure.in: without-X
+
+2020-08-16  Thomas E. Dickey  <dickey@invisible-island.net>
+
+	* config.guess, config.sub: 2020-08-17
+
 2019-12-21  Thomas E. Dickey  <dickey@invisible-island.net>
 
 	* src/putdelta/src/sccsput.c: suppress pager if not a tty
