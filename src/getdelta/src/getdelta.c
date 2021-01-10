@@ -64,7 +64,7 @@
 #include	<dyn_str.h>
 #include	<sccsdefs.h>
 
-MODULE_ID("$Id: getdelta.c,v 6.31 2019/12/06 22:14:52 tom Exp $")
+MODULE_ID("$Id: getdelta.c,v 6.32 2021/01/10 19:52:14 tom Exp $")
 
 /* local definitions */
 #define	NAMELEN		80	/* length of tokens in sccs-header */
@@ -615,8 +615,10 @@ _MAIN
 	    break;
 
 	case 'b':
+	    /* FALLTHRU */
 	case 'e':
 	    lockit = TRUE;
+	    /* FALLTHRU */
 	case 'k':
 	    FORMAT(temp, "-%c", j);
 	    argv_append(&get_opts, temp);

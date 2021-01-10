@@ -1,10 +1,10 @@
-$Id: COPYING,v 6.7 2020/12/06 16:35:03 tom Exp $
+$Id: COPYING,v 6.8 2021/01/10 19:50:46 tom Exp $
 
 SCCS_TOOLS
 
 --------------------------------------------------------------------------------
 
-Copyright 1993-2019,2020 by Thomas E. Dickey.  All Rights Reserved.
+Copyright 1993-2020,2021 by Thomas E. Dickey.  All Rights Reserved.
 
 Permission to use, copy, modify, and distribute this software and its
 documentation for any purpose and without fee is hereby granted, provided that
