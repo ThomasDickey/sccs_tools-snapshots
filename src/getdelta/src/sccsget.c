@@ -31,7 +31,7 @@
 #include	<rcsdefs.h>
 #include	<sccsdefs.h>
 
-MODULE_ID("$Id: sccsget.c,v 6.12 2019/12/06 17:52:38 tom Exp $")
+MODULE_ID("$Id: sccsget.c,v 6.13 2021/01/10 19:52:14 tom Exp $")
 
 static ARGV *get_opts;
 static const char *verb = "getdelta";
@@ -225,7 +225,9 @@ _MAIN
 	    break;
 	case 'f':
 	    force = TRUE;
+	    /*FALLTHRU */
 	case 'e':
+	    /*FALLTHRU */
 	case 'k':
 	    argv_append(&get_opts, tmp);
 	    break;
@@ -245,8 +247,9 @@ _MAIN
     if (optind < argc) {
 	for (j = optind; j < argc; j++)
 	    do_arg(argv[j]);
-    } else
+    } else {
 	do_arg(".");
+    }
 
     exit(SUCCESS);
     /*NOTREACHED */

@@ -3,6 +3,9 @@
  * Author: Ken Greer
  *
  * $Log: sccs2rcs.c,v $
+ * Revision 6.13  2021/01/10 19:52:14  tom
+ * gcc-warnings
+ *
  * Revision 6.12  2019/12/06 23:01:03  tom
  * stricter gcc warnings
  *
@@ -158,7 +161,7 @@
 #include "sccsdefs.h"
 #include <errno.h>
 
-MODULE_ID("$Id: sccs2rcs.c,v 6.12 2019/12/06 23:01:03 tom Exp $")
+MODULE_ID("$Id: sccs2rcs.c,v 6.13 2021/01/10 19:52:14 tom Exp $")
 
 #define SOH	001		/* SCCS lines start with SOH (Control-A) */
 #define RCS	"rcs"
@@ -557,6 +560,7 @@ find_comment(char *filename)
 	switch (code = rcskeys(key)) {
 	case S_COMMENT:
 	    s = rcsparse_str(s, store_comment);
+	    /*FALLTHRU */
 	case S_VERS:
 	    header = FALSE;
 	    break;
