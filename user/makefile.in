@@ -1,4 +1,4 @@
-# $Id: makefile.in,v 6.7 2015/07/04 19:45:55 tom Exp $
+# $Id: makefile.in,v 6.8 2022/10/12 00:29:12 tom Exp $
 
 
 
@@ -34,9 +34,9 @@ SOURCES	=\
 ####### (Standard Productions) #################################################
 all:	$(SOURCES) $(ALL)	; @echo '** use "make install"'
 clean:				; $(RM) $(CLEAN) $(CLEAN__MAN)
-distclean:	clean		; $(RM) $(ALL)
+distclean:	clean		; $(RM) $(ALL) install-sh
 check:
-install:	$(PREFIX) $(IT)
+install:	install-sh $(PREFIX) $(IT)
 uninstall:			; $(RM) $(IT)
 
 ####### (Details of Productions) ###############################################
@@ -48,3 +48,5 @@ $(PREFIX)sccsget.$(SECTION):	sccsget.$(USE)	; $(INSTALL_DATA) $? $@
 $(PREFIX)sccsput.$(SECTION):	sccsput.$(USE)	; $(INSTALL_DATA) $? $@
 
 $(SOURCES):
+install-sh : $(top_srcdir)/install-sh
+	cp $? $@

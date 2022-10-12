@@ -1,5 +1,5 @@
 #!/bin/sh
-# $Id: run_test.sh,v 6.1 2019/12/06 18:04:36 tom Exp $
+# $Id: run_test.sh,v 6.2 2022/10/11 08:12:28 tom Exp $
 # test-script for see that 'putdelta' is working.
 #
 SCCS=${SCCS_DIR-SCCS}
@@ -19,7 +19,7 @@ copy $myfile dummy
 if ( $tool -fs dummy )
 then
 	N=`ls -l dummy $myfile |\
-		fgrep -v otal |\
+		grep -v otal |\
 		sed -e s/dummy/$myfile/ |\
 		uniq | wc -l`
 	if test $N != 1
