@@ -1,3 +1,11 @@
+2022-12-31  Thomas E. Dickey  <dickey@invisible-island.net>
+
+	* package/debian/changelog, package/sccs_tools-12.0.spec: bump
+
+	* configure: regen
+
+	* aclocal.m4: resync with my-autoconf
+
 2022-10-11  Thomas E. Dickey  <dickey@invisible-island.net>
 
 	* user/makefile.in: use install-sh if needed
@@ -51,8 +59,7 @@
 	* src/getdelta/test/makefile.in, src/putdelta/test/makefile.in,
 	  src/sccs2rcs/test/makefile.in, src/fixsccs/test/makefile.in,
 	  src/getdelta/src/makefile.in, src/putdelta/src/makefile.in,
-	  src/sccs2rcs/src/makefile.in,
-	  src/fixsccs/src/makefile.in:
+	  src/sccs2rcs/src/makefile.in, src/fixsccs/src/makefile.in:
 	use VPATH
 
 2020-12-06  Thomas E. Dickey  <dickey@invisible-island.net>
@@ -60,6 +67,10 @@
 	* package/debian/copyright, COPYING, package/debian/changelog,
 	  package/sccs_tools-12.0.spec:
 	bump
+
+2020-11-30  Thomas E. Dickey  <dickey@invisible-island.net>
+
+	* install-sh: update to 2020-11-14
 
 2020-11-26  Thomas E. Dickey  <dickey@invisible-island.net>
 
@@ -148,8 +159,7 @@
 	* user/makefile.in: improve clean-rule
 
 	* package/sccs_tools-12.0.spec, package/debian/copyright,
-	  package/debian/changelog,
-	  COPYING:
+	  package/debian/changelog, COPYING:
 	bump
 
 	* configure: regen
@@ -220,8 +230,7 @@
 
 	* src/putdelta/src/putdelta.c, src/getdelta/src/sccsget.c,
 	  src/fixsccs/src/fixsccs.c, src/sccs2rcs/src/sccs2rcs.c,
-	  src/putdelta/src/sccsput.c,
-	  src/getdelta/src/getdelta.c:
+	  src/putdelta/src/sccsput.c, src/getdelta/src/getdelta.c:
 	stricter gcc warnings
 
 	* configure: regen
@@ -233,8 +242,7 @@
 
 	* src/fixsccs/src/fixsccs.c, src/sccs2rcs/src/sccs2rcs.c,
 	  src/putdelta/src/putdelta.c, src/putdelta/src/sccsput.c,
-	  src/getdelta/src/sccsget.c,
-	  src/getdelta/src/getdelta.c:
+	  src/getdelta/src/sccsget.c, src/getdelta/src/getdelta.c:
 	stricter gcc warnings
 
 	* package/sccs_tools-12.0.spec:
@@ -246,8 +254,7 @@
 
 	* package/debian/control, package/debian/rules,
 	  package/debian/copyright, package/debian/changelog,
-	  package/debian/watch,
-	  package/debian/source/format:
+	  package/debian/watch, package/debian/source/format:
 	RCS_BASE
 
 2010-06-30  Thomas E. Dickey  <dickey@invisible-island.net>
@@ -260,8 +267,7 @@
 	add --enable-warnings here, to allow for different compiler/options than td_lib
 
 	* src/fixsccs/src/makefile.in, src/getdelta/src/makefile.in,
-	  src/putdelta/src/makefile.in,
-	  src/sccs2rcs/src/makefile.in:
+	  src/putdelta/src/makefile.in, src/sccs2rcs/src/makefile.in:
 	allow for compiler/options different from td_lib
 
 2010-06-29  Thomas E. Dickey  <dickey@invisible-island.net>
@@ -281,8 +287,7 @@
 
 	* bin/makefile.in, makefile.in, src/fixsccs/makefile.in,
 	  src/getdelta/makefile.in, src/makefile.in, src/putdelta/makefile.in,
-	  src/sccs2rcs/makefile.in,
-	  user/makefile.in:
+	  src/sccs2rcs/makefile.in, user/makefile.in:
 	s/deinstall/uninstall/
 
 	* aclocal.m4: various updates to configure-script macros
@@ -309,8 +314,7 @@
 
 	* src/sccs2rcs/src/sccs2rcs.c, src/getdelta/src/getdelta.c,
 	  src/getdelta/src/sccsget.c, src/putdelta/src/sccsput.c,
-	  src/putdelta/src/putdelta.c,
-	  src/fixsccs/src/fixsccs.c:
+	  src/putdelta/src/putdelta.c, src/fixsccs/src/fixsccs.c:
 	remove K&R support, indent'd
 
 	* makefile.in: remove certify
@@ -354,8 +358,7 @@
 2001-12-11  Thomas E. Dickey  <dickey@invisible-island.net>
 
 	* src/sccs2rcs/src/sccs2rcs.c, src/putdelta/src/sccsput.c,
-	  src/putdelta/src/putdelta.c,
-	  src/getdelta/src/sccsget.c:
+	  src/putdelta/src/putdelta.c, src/getdelta/src/sccsget.c:
 	change interface to rcs_dir()
 
 2001-06-22  Thomas E. Dickey  <dickey@clark.net>
@@ -427,8 +430,7 @@
 	* user/makefile.in: make install prefix work
 
 	* src/fixsccs/makefile.in, src/getdelta/makefile.in,
-	  src/putdelta/makefile.in, src/sccs2rcs/makefile.in,
-	  src/makefile.in:
+	  src/putdelta/makefile.in, src/sccs2rcs/makefile.in, src/makefile.in:
 	distclean:makefiles
 
 	* makefile.in, src/fixsccs/src/makefile.in: RCS_BASE
@@ -444,8 +446,7 @@
 	  src/fixsccs/test/makefile.in, src/getdelta/test/makefile.in,
 	  src/putdelta/src/makefile.in, src/putdelta/test/makefile.in,
 	  src/sccs2rcs/src/makefile.in, src/sccs2rcs/test/makefile.in,
-	  src/getdelta/src/makefile.in,
-	  configure.in:
+	  src/getdelta/src/makefile.in, configure.in:
 	RCS_BASE
 
 1997-09-13  Thomas E. Dickey  <dickey@clark.net>
@@ -595,8 +596,7 @@
 	added -e, -C options, and made less verbose
 
 	* src/sccs2rcs/src/Makefile, src/putdelta/src/sccsput.c,
-	  src/putdelta/src/putdelta.c,
-	  src/putdelta/src/Makefile:
+	  src/putdelta/src/putdelta.c, src/putdelta/src/Makefile:
 	autoconf-adjustments
 
 	* src/getdelta/src/Makefile, src/getdelta/src/getdelta.c:
@@ -759,8 +759,7 @@
 1993-04-29  dickey@software.org
 
 	* src/sccs2rcs/test/Makefile, bin/Makefile, src/Makefile,
-	  src/getdelta/src/Makefile,
-	  src/getdelta/test/Makefile:
+	  src/getdelta/src/Makefile, src/getdelta/test/Makefile:
 	shorten-filenames
 
 1993-04-29  ste_cm@software.org
@@ -772,15 +771,13 @@
 1993-04-29  dickey@software.org
 
 	* src/putdelta/src/Makefile, src/putdelta/test/Makefile,
-	  src/sccs2rcs/src/Makefile,
-	  user/Makefile:
+	  src/sccs2rcs/src/Makefile, user/Makefile:
 	shorten-filenames
 
 1993-04-29  ste_cm@software.org
 
 	* src/putdelta/src/Makefile, src/putdelta/test/Makefile,
-	  src/sccs2rcs/src/Makefile,
-	  user/Makefile:
+	  src/sccs2rcs/src/Makefile, user/Makefile:
 	BASELINE Wed May  5 11:05:31 1993 -- TD_LIB #12
 
 1992-10-19  dickey@software.org
@@ -798,8 +795,7 @@
 	  src/putdelta/test/Makefile, src/putdelta/src/Makefile,
 	  src/putdelta/Makefile, src/getdelta/test/Makefile,
 	  src/getdelta/src/Makefile, src/getdelta/Makefile, src/Makefile,
-	  certify/Makefile, bin/Makefile,
-	  Makefile:
+	  certify/Makefile, bin/Makefile, Makefile:
 	adapted to CM_LIBRARY #12
 
 1992-07-20  dickey@software.org
@@ -1921,8 +1917,7 @@
 	use (parallel) module CM_TOOLS for library-location
 
 	* src/sccs2rcs/Makefile, src/putdelta/Makefile, src/getdelta/Makefile,
-	  src/Makefile,
-	  Makefile:
+	  src/Makefile, Makefile:
 	New file.
 
 1989-03-27  dickey@software.org
@@ -2157,8 +2152,7 @@
 1988-07-29  dickey@software.org
 
 	* src/getdelta/src/Makefile, src/putdelta/src/putdelta.c,
-	  src/putdelta/src/Makefile,
-	  src/putdelta/src/sccsput.sh:
+	  src/putdelta/src/Makefile, src/putdelta/src/sccsput.sh:
 	New file.
 
 	* src/putdelta/src/sccsput.sh: sccs2rcs keywords

@@ -1,4 +1,4 @@
-dnl $Id: aclocal.m4,v 6.17 2022/10/11 07:43:21 tom Exp $
+dnl $Id: aclocal.m4,v 6.18 2022/12/31 12:40:08 tom Exp $
 dnl Macros for SCCS_TOOLS configure script.
 dnl ---------------------------------------------------------------------------
 dnl
@@ -34,7 +34,6 @@ dnl ---------------------------------------------------------------------------
 dnl See
 dnl     https://invisible-island.net/autoconf/autoconf.html
 dnl     https://invisible-island.net/autoconf/my-autoconf.html
-dnl ---------------------------------------------------------------------------
 dnl ---------------------------------------------------------------------------
 dnl ---------------------------------------------------------------------------
 dnl CF_ACVERSION_CHECK version: 5 updated: 2014/06/04 19:11:49
@@ -174,14 +173,14 @@ ifelse([$5],NONE,,[{ test -z "$5" || test "x$5" = xNONE || test "x$4" != "x$5"; 
 }
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_ALL_MAKEFILES version: 3 updated: 2021/01/10 18:48:45
+dnl CF_ALL_MAKEFILES version: 4 updated: 2022/12/31 06:42:21
 dnl ----------------
 dnl List all makefiles, derived from the existing makefile.in files, saving as
 dnl a cache variable
 AC_DEFUN([CF_ALL_MAKEFILES],
 [
 AC_CACHE_VAL(cf_cv_all_makefiles,[
-cf_cf_all_makefiles=""
+cf_cv_all_makefiles=""
 for cf_makefile in `find "$srcdir" -type f -name makefile.in -print`
 do
 	cf_cv_all_makefiles="$cf_cv_all_makefiles `echo \"$cf_makefile\" | sed -e s@\"$srcdir\"/@[]@ -e 's@.in$[]@[]@'`"
@@ -617,7 +616,7 @@ fi
 ])
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_FIND_TDLIB version: 11 updated: 2021/01/10 18:45:11
+dnl CF_FIND_TDLIB version: 13 updated: 2022/12/31 07:07:05
 dnl -------------
 dnl Locate TD_LIB, which is available in one of these configurations:
 dnl a) installed, with headers, library and include-file for make
@@ -674,12 +673,15 @@ if test "$cf_cv_tdlib_devel" = no ; then
 			fi
 		done
 	else
-		cf_libdir=`echo "$cf_libdir" | sed -e 's,/lib[[^/]]*$,share,'`
+		cf_libdir=`echo "$cf_libdir" | sed -e 's,/td_lib.mk,,' -e 's,/lib[[^/]]*,/share,'`
 		if test -f "$cf_libdir/td_lib.mk" ; then
+			cf_td_lib_rules=yes
+		elif test -f "$cf_libdir/td/td_lib.mk" ; then
+			cf_libdir="$cf_libdir/td"
 			cf_td_lib_rules=yes
 		fi
 	fi
-	test $cf_td_lib_rules = no && AC_MSG_ERROR(Cannot find td_lib.mk)
+	test "$cf_td_lib_rules" = yes || AC_MSG_ERROR(Cannot find td_lib.mk)
 	TD_LIB_rules=$cf_libdir
 else
 	CPPFLAGS="$CPPFLAGS -I$cf_cv_tdlib_devel/include $CPPFLAGS"
@@ -760,6 +762,7 @@ then
 	AC_CHECKING([for $CC __attribute__ directives])
 cat > "conftest.$ac_ext" <<EOF
 #line __oline__ "${as_me:-configure}"
+#include <stdio.h>
 #include "confdefs.h"
 #include "conftest.h"
 #include "conftest.i"
