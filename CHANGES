@@ -1,3 +1,14 @@
+2023-01-19  Thomas E. Dickey  <dickey@invisible-island.net>
+
+	* package/sccs_tools-12.0.spec:
+	use td_lib package, rather than side-by-side configuration
+
+	* configure: regen
+
+	* aclocal.m4: provide for finding td_lib using pkg-config
+
+	* package/debian/copyright, COPYING: bump
+
 2022-12-31  Thomas E. Dickey  <dickey@invisible-island.net>
 
 	* package/debian/changelog, package/sccs_tools-12.0.spec: bump
@@ -2081,7 +2092,7 @@
 
 1988-09-02  dickey@software.org
 
-	* user/getdelta.doc: removed --d option.
+	* user/getdelta.doc: removed --d option.
 
 	* user/sccsput.doc: added "-f" option.
 
