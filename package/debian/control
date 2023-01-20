@@ -1,10 +1,11 @@
 Source: sccstools
 Maintainer: Thomas E. Dickey <dickey@invisible-island.net>
 Section: devel
-Priority: extra
-Standards-Version: 3.8.4
-Build-Depends: debhelper (>= 5), tdlib-dev, cssc
-Homepage: http://invisible-island.net/ded/
+Priority: optional
+Standards-Version: 4.6.1
+Rules-Requires-Root: no
+Build-Depends: debhelper (>= 5), tdlib-dev (>= 20230121), cssc
+Homepage: https://invisible-island.net/ded/
 
 Package: sccstools
 Architecture: any

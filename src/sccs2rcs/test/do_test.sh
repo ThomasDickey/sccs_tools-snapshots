@@ -1,5 +1,5 @@
 #!/bin/sh
-# $Id: do_test.sh,v 6.0 1993/04/29 12:39:50 ste_cm Rel $
+# $Id: do_test.sh,v 6.1 2023/01/20 23:51:02 tom Exp $
 # Run a specified regression test on the sccs/RCS conversion utility.
 # Arguments:
 #	$1 = option(s) for sccs2rcs
@@ -25,30 +25,30 @@ shift
 #
 F=$1
 shift
-rm -f $D/$F,v $F.RCS $F.SCCS
+rm -f "$D"/"$F",v "$F".RCS "$F".SCCS
 #
-echo '********('$F')********'
-sccs2rcs "$O" s.$F
+echo "********($F)********"
+sccs2rcs "$O" s."$F"
 echo
 #
-for V in $*
+for V in "$@"
 do
-	echo '********(version = '$V')********'
-	getdelta -s -f -r$V s.$F
-	mv $F $F.SCCS
-	checkout -q -r$V $F
-	mv $F $F.RCS
-	ls -l $F.RCS $F.SCCS
-	if (cmp -s $F.RCS $F.SCCS)
+	echo "********(version = $V)********"
+	getdelta -s -f -r"$V" s."$F"
+	mv "$F" "$F".SCCS
+	checkout -q -r"$V" "$F"
+	mv "$F" "$F".RCS
+	ls -l "$F".RCS "$F".SCCS
+	if (cmp -s "$F".RCS "$F".SCCS)
 	then
 		echo
 	else
 		echo '-------- diff --------'
-		diff  $F.RCS $F.SCCS
+		diff  "$F".RCS "$F".SCCS
 	fi
-	rm -f $F.RCS $F.SCCS
+	rm -f "$F".RCS "$F".SCCS
 done
-rm -f $D/$F,v
+rm -f "$D"/"$F",v
 if test -d RCS-
 then	mv RCS- RCS
 fi

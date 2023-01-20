@@ -2,9 +2,9 @@ Summary: SCCS Tools
 %define AppProgram sccs_tools
 %define AppLibrary td_lib
 %define AppVersion 12.x
-%define AppRelease 20230119
-%define LibRelease 20230117
-# $Id: sccs_tools-12.0.spec,v 1.17 2023/01/20 01:19:46 tom Exp $
+%define AppRelease 20230121
+%define LibRelease 20230121
+# $Id: sccs_tools-12.0.spec,v 1.18 2023/01/20 09:15:37 tom Exp $
 Name: %{AppProgram}
 Version: %{AppVersion}
 Release: %{AppRelease}

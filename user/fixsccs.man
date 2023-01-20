@@ -1,0 +1,64 @@
+.\" $Id: fixsccs.man,v 6.1 2023/01/20 23:18:28 tom Exp $
+.de Es
+.ne \\$1
+.nr mE \\n(.f
+.RS 5n
+.sp .7
+.nf
+.nh
+.ta 9n 17n 25n 33n 41n 49n
+.ft CW
+..
+.de Eh
+.ft \\n(mE
+.fi
+.hy \\n(HY
+.RE
+.sp .7
+..
+.TH FIXSCCS 1
+.SH NAME
+.PP
+\fBfixsccs\fR \- SCCS repair utility
+.SH USAGE
+.PP
+\fBfixsccs\fI [options] [file-specifications]\fR
+.SH SYNOPSIS
+Sets SCCS archive file times to match the checkin time of the tip version.
+.PP
+.SH DESCRIPTION
+Touchs sccs files so that their modification times match the
+checkin-time recorded for the tip version.
+This is used to accommodate SunOS's make facility,
+which has a get-from-sccs rule.
+Normally, \fBputdelta\fR does this;
+\fBfixsccs\fR is used to
+handle the cases when someone bypasses \fBputdelta\fR and uses
+\fBadmin\fR or \fBdelta\fR directly.
+.SH OPTIONS
+.TP
+.B \-a
+process all directories, including those beginning with \".\"
+.TP
+.B \-n
+scan archives only, do not try to set modification-times
+.TP
+.B \-q
+quiet
+.SH ENVIRONMENT
+.PP
+\fBFixsccs\fR is a standalone utility, which does not directly depend upon
+the \fIsccs\fP applications.
+.SH FILES
+.PP
+\fBFixsccs\fR consists of a single binary file written in C.
+It runs in a POSIX environment.
+.SH ANTICIPATED CHANGES
+.PP
+None.
+.SH SEE ALSO
+.PP
+getdelta, putdelta, sccsget, sccsput, get\ (1)
+.SH AUTHOR
+.PP
+Thomas E. Dickey

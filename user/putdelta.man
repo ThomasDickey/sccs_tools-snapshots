@@ -1,4 +1,4 @@
-.\" $Id: putdelta.man,v 6.3 2019/12/06 23:23:42 tom Exp $
+.\" $Id: putdelta.man,v 6.4 2023/01/20 09:27:46 tom Exp $
 .de Es
 .ne \\$1
 .nr mE \\n(.f
@@ -27,7 +27,7 @@
 \fBputdelta\fR \- SCCS check-in utility
 .SH USAGE
 .PP
-\fBputdelta\fI [options] [file-specifications]
+\fBputdelta\fI [options] [file-specifications]\fR
 .SH SYNOPSIS
 .PP
 \fBPutdelta\fR is a simple, easy to use interface to \fIsccs\fR

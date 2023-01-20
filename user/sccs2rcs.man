@@ -1,14 +1,4 @@
-.\" $Id: sccs2rcs.man,v 6.2 1994/07/19 15:29:55 tom Exp $
-.de DS
-.RS
-.nf
-.sp
-..
-.de DE
-.fi
-.RE
-.sp .5
-..
+.\" $Id: sccs2rcs.man,v 6.3 2023/01/20 23:19:38 tom Exp $
 .hy 0
 .TH SCCS2RCS 1
 .SH NAME
@@ -17,7 +7,7 @@
 .
 .SH USAGE
 .PP
-\fBsccs2rcs\fI [options] [file-specifications]
+\fBsccs2rcs\fI [options] [file-specifications]\fR
 .
 .SH SYNOPSIS
 .PP

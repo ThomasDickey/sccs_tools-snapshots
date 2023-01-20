@@ -1,4 +1,4 @@
-.\" $Id: getdelta.man,v 6.2 2019/12/06 21:53:21 tom Exp $
+.\" $Id: getdelta.man,v 6.3 2023/01/20 09:27:46 tom Exp $
 .de Es
 .ne \\$1
 .nr mE \\n(.f
@@ -27,7 +27,7 @@
 \fBgetdelta\fR \- SCCS check-out utility
 .SH USAGE
 .PP
-\fBgetdelta\fI [options] [file-specifications]
+\fBgetdelta\fI [options] [file-specifications]\fR
 .SH SYNOPSIS
 .PP
 \fBGetdelta\fR is a simple interface to \fIsccs\fR (\fBs\fRource

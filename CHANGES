@@ -1,3 +1,33 @@
+2023-01-20  Thomas E. Dickey  <dickey@invisible-island.net>
+
+	* src/getdelta/test/run_test.sh, src/sccs2rcs/test/run_test.sh,
+	  src/sccs2rcs/test/do_test.sh:
+	shellcheck warnings
+
+	* src/putdelta/test/run_test.sh: fix shellcheck warnings
+
+	* src/putdelta/test/run_test.sh:
+	discard stderr (some variants complain profusely about missing keywords)
+
+	* src/getdelta/test/run_test.sh:
+	modify to ensure the files have SCCS keywords, since some variants do not handle this gracefully
+
+	* user/sccs2rcs.man: check-manpage
+
+	* user/fixsccs.man: RCS_BASE
+
+	* user/sccsget.man, user/sccsput.man, user/getdelta.man,
+	  user/putdelta.man:
+	check-manpage
+
+	* user/makefile.in: add manpage for fixsccs
+
+	* package/debian/changelog, package/sccs_tools-12.0.spec: bump
+
+	* package/debian/control: update standards
+
+	* package/debian/compat: bump
+
 2023-01-19  Thomas E. Dickey  <dickey@invisible-island.net>
 
 	* package/sccs_tools-12.0.spec:

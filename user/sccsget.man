@@ -1,4 +1,4 @@
-.\" $Id: sccsget.man,v 6.2 2019/12/06 21:58:18 tom Exp $
+.\" $Id: sccsget.man,v 6.3 2023/01/20 09:27:57 tom Exp $
 .de Es
 .ne \\$1
 .nr mE \\n(.f
@@ -27,7 +27,7 @@
 \fBsccsget\fR \- SCCS check-out script
 .SH USAGE
 .PP
-\fBsccsget\fI [options] [file-specifications]
+\fBsccsget\fI [options] [file-specifications]\fR
 .SH SYNOPSIS
 .PP
 \fBSccsget\fR is a simple interface to \fIsccs\fR
