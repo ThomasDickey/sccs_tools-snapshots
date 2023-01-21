@@ -1,4 +1,4 @@
-# $Id: makefile.in,v 6.6 2010/07/05 21:43:33 tom Exp $
+# $Id: makefile.in,v 6.7 2023/01/21 23:23:21 tom Exp $
 
 THIS	= sccs_tools
 
@@ -31,13 +31,13 @@ install:	$B $(IT)
 uninstall:			; -$(RM) $(IT)
 
 ####### (Details of Productions) ###############################################
-USER	= $(INSTALL) -m  755 $? $@
-ADMIN	= $(INSTALL) -m 4755 $? $@
+AS_USER		= $(INSTALL) -m  755 $? $@
+AS_ADMIN	= $(INSTALL) -m 4755 $? $@
 
 $B:				; mkdir -p $@
-$B/fixsccs:	fixsccs		; $(USER)
-$B/getdelta:	getdelta	; $(USER)
-$B/putdelta:	putdelta	; $(USER)
-$B/sccs2rcs:	sccs2rcs	; $(USER)
-$B/sccsget:	sccsget		; $(USER)
-$B/sccsput:	sccsput		; $(USER)
+$B/fixsccs:	fixsccs		; $(AS_USER)
+$B/getdelta:	getdelta	; $(AS_USER)
+$B/putdelta:	putdelta	; $(AS_USER)
+$B/sccs2rcs:	sccs2rcs	; $(AS_USER)
+$B/sccsget:	sccsget		; $(AS_USER)
+$B/sccsput:	sccsput		; $(AS_USER)

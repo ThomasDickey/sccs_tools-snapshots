@@ -4,7 +4,7 @@ Summary: SCCS Tools
 %define AppVersion 12.x
 %define AppRelease 20230121
 %define LibRelease 20230121
-# $Id: sccs_tools-12.0.spec,v 1.18 2023/01/20 09:15:37 tom Exp $
+# $Id: sccs_tools-12.0.spec,v 1.19 2023/01/21 10:00:48 tom Exp $
 Name: %{AppProgram}
 Version: %{AppVersion}
 Release: %{AppRelease}
@@ -12,7 +12,7 @@ License: MIT-X11
 Group: Development/Tools
 URL: https://invisible-island.net/ded
 Source0: https://invisible-island.net/archives/ded/%{AppProgram}-%{AppRelease}.tgz
-BuildRequires: td_lib >= %{AppVersion}
+BuildRequires: td_lib <= %{AppRelease}
 Vendor: Thomas Dickey <dickey@invisible-island.net>
 
 %description
@@ -52,6 +52,7 @@ make install DESTDIR=$RPM_BUILD_ROOT
 %{_bindir}/sccs2rcs
 %{_bindir}/putdelta
 %{_bindir}/sccsget
+%{_mandir}/man1/fixsccs.*
 %{_mandir}/man1/getdelta.*
 %{_mandir}/man1/sccsput.*
 %{_mandir}/man1/sccs2rcs.*

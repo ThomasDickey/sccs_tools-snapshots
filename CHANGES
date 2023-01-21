@@ -1,3 +1,10 @@
+2023-01-21  Thomas E. Dickey  <dickey@invisible-island.net>
+
+	* bin/makefile.in:
+	s/USER/AS_USER/ to avoid environment-variable conflict
+
+	* package/sccs_tools-12.0.spec: amended the version-dependency
+
 2023-01-20  Thomas E. Dickey  <dickey@invisible-island.net>
 
 	* src/getdelta/test/run_test.sh, src/sccs2rcs/test/run_test.sh,
