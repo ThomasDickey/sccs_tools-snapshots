@@ -1,3 +1,25 @@
+2024-04-27  Thomas E. Dickey  <dickey@invisible-island.net>
+
+	* package/debian/copyright, COPYING, package/debian/changelog,
+	  package/sccs_tools-12.0.spec:
+	bump
+
+2024-04-24  Thomas E. Dickey  <dickey@invisible-island.net>
+
+	* configure: regen
+
+	* aclocal.m4:
+	resync with my-autoconf, fixes some compiler-warnings as well as detecting
+	the side-by-side td_lib build-tree
+
+2023-12-27  Thomas E. Dickey  <dickey@invisible-island.net>
+
+	* config.sub: 2023-12-27
+
+2023-12-02  Thomas E. Dickey  <dickey@invisible-island.net>
+
+	* config.guess: 2023-12-02
+
 2023-01-21  Thomas E. Dickey  <dickey@invisible-island.net>
 
 	* bin/makefile.in:

@@ -1,3 +1,9 @@
+sccstools (20240427) unstable; urgency=low
+
+  * maintenance updates
+
+ -- Thomas E. Dickey <dickey@invisible-island.net>  Sat, 27 Apr 2024 20:12:31 -0400
+
 sccstools (20230121) unstable; urgency=low
 
   * maintenance updates

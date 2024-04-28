@@ -1,7 +1,8 @@
-MANIFEST for sccs_tools, version t20230121
+MANIFEST for sccs_tools, version t20240427
 --------------------------------------------------------------------------------
 MANIFEST                        this file
-COPYING                         copyright notice for CM_TOOLS
+CHANGES                         generated changelog
+COPYING                         copyright notice to SCCS_TOOLS
 README                          top-level read-me file for SCCS_TOOLS
 aclocal.m4                      autoconf macros
 config.guess                    configure utility script
@@ -12,6 +13,8 @@ install-sh                      BSD-style install script
 makefile.in                     makefile for sccs_tools
 bin                             subdirectory
 bin/makefile.in                 makefile for sccs_tools/bin
+package                         subdirectory
+package/sccs_tools-12.0.spec    build-script for sccs_tools
 package/debian                  subdirectory
 package/debian/changelog        debian build script
 package/debian/compat           debian build script
@@ -19,12 +22,11 @@ package/debian/control          debian build script
 package/debian/copyright        debian build script
 package/debian/docs             debian build script
 package/debian/rules            debian build script
+package/debian/watch            debian build script
 package/debian/source           subdirectory
 package/debian/source/format    debian build script
-package/debian                  subdirectory
-package/debian/watch            debian build script
-package                         subdirectory
-package/sccs_tools-12.0.spec    build-script for sccs_tools
+src                             subdirectory
+src/makefile.in                 makefile for sccs_tools/src
 src/fixsccs                     subdirectory
 src/fixsccs/makefile.in         makefile for sccs_tools/src/fixsccs
 src/fixsccs/src                 subdirectory
@@ -42,8 +44,6 @@ src/getdelta/src/sccsget.c      c-language version of 'sccsget.sh'
 src/getdelta/test               subdirectory
 src/getdelta/test/makefile.in   makefile for sccs_tools/src/getdelta/test
 src/getdelta/test/run_test.sh   test-script for 'getdelta'
-src                             subdirectory
-src/makefile.in                 makefile for sccs_tools/src
 src/putdelta                    subdirectory
 src/putdelta/makefile.in        makefile for sccs_tools/src/putdelta
 src/putdelta/src                subdirectory
