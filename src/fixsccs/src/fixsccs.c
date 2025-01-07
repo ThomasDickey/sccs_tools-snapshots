@@ -3,8 +3,8 @@
  * Author:	T.E.Dickey
  * Created:	07 Jun 1994
  * Modified:
- *		
- * Function:	
+ *
+ * Function:
  *		Touchs sccs files so that their modification times match the
  *		checkin-time recorded for the tip version.  This is used to
  *		accommodate SunOS's make facility, which has a get-from-sccs
@@ -20,7 +20,7 @@
 #include	<sccsdefs.h>
 #include	<time.h>	/* declares 'ctime()' */
 
-MODULE_ID("$Id: fixsccs.c,v 6.13 2010/07/05 21:46:38 tom Exp $")
+MODULE_ID("$Id: fixsccs.c,v 6.14 2025/01/07 01:03:39 tom Exp $")
 
 static int a_opt;		/* all-directory scan */
 static int no_op;		/* no-op mode */
@@ -62,7 +62,7 @@ WALK_FUNC(scan_tree)
 
     leaf = pathleaf(pathcat(tmp, path, name));
 
-    if (sp == 0 || readable < 0) {
+    if (sp == NULL || readable < 0) {
 	readable = -1;
 	perror(name);
     } else if (isDIR(sp->st_mode)) {

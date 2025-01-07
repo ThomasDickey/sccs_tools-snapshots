@@ -9,7 +9,7 @@
  *			     SunOS 4.x
  *		21 Apr 2002, don't add 1900 to year for packdate().
  *		30 Jun 2000, if -f option is given, do not exit with error-code.
- *		27 Jun 2000, Y2K fix. 
+ *		27 Jun 2000, Y2K fix.
  *		07 Apr 2000, if only a cutoff date is given, set retrieved file
  *			     modification time.
  *		07 Feb 2000, don't use variable named 'new', since gcc 2.95.2
@@ -64,7 +64,7 @@
 #include	<dyn_str.h>
 #include	<sccsdefs.h>
 
-MODULE_ID("$Id: getdelta.c,v 6.32 2021/01/10 19:52:14 tom Exp $")
+MODULE_ID("$Id: getdelta.c,v 6.33 2025/01/07 01:02:26 tom Exp $")
 
 /* local definitions */
 #define	NAMELEN		80	/* length of tokens in sccs-header */
@@ -176,7 +176,7 @@ CheckForBinary(char *s_file)
     file_is_SCCS = TRUE;
     if ((fp = fopen(s_file, "r")) != NULL) {
 	char buf[BUFSIZ];
-	while (fgets(buf, sizeof(buf), fp) != 0) {
+	while (fgets(buf, sizeof(buf), fp) != NULL) {
 	    if (state == 0) {
 		if (buf[0] != CTL_A
 		    || buf[1] != 'h') {
@@ -226,10 +226,10 @@ DeHexify(char *name)
 
     (void) strcpy(dirname, pathhead(name, &sb));
     temp = tempnam(dirname, "get");
-    if ((ifp = fopen(name, "r")) == 0)
+    if ((ifp = fopen(name, "r")) == NULL)
 	failed(name);
 
-    if ((ofp = fopen(temp, "w")) == 0)
+    if ((ofp = fopen(temp, "w")) == NULL)
 	failed(temp);
 
     /* we're reading lines no longer than 256 characters */
@@ -251,8 +251,8 @@ DeHexify(char *name)
 	    if ((c = *s++) == '\\') {
 		char *a = strchr(hex, *s++);
 		char *b = strchr(hex, *s++);
-		if (a == 0
-		    || b == 0) {
+		if (a == NULL
+		    || b == NULL) {
 		    FPRINTF(stderr, "? non-hex\n");
 		    GiveUp();
 		}
@@ -277,7 +277,7 @@ static char *
 LeafOf(char *name)
 {
     char *leaf = fleaf(name);
-    if (leaf == 0)
+    if (leaf == NULL)
 	leaf = name;
     return leaf;
 }
@@ -299,7 +299,7 @@ PostProcess(char *name, char *s_file)
 
     if ((fp = fopen(s_file, "r")) != NULL) {
 	newzone(5, 0, FALSE);	/* interpret in EST/EDT zone */
-	while ((s = fgets(bfr, sizeof(bfr), fp)) != 0
+	while ((s = fgets(bfr, sizeof(bfr), fp)) != NULL
 	       && (*s++ == CTL_A)) {
 	    if (sscanf(s, "d D %s %[^/]/%d/%d %d:%d:%d ",
 		       version,
@@ -308,17 +308,17 @@ PostProcess(char *name, char *s_file)
 		&& ((year = sccsyear(bfr2)) > 0)) {
 		date = packdate(year, mon, mday, hour, min, sec);
 #ifdef CMV_PATH			/* for CmVision */
-		if ((s = fgets(bfr, sizeof(bfr), fp)) != 0
+		if ((s = fgets(bfr, sizeof(bfr), fp)) != NULL
 		    && (*s++ == CTL_A)
 		    && !strncmp(s, "c ", 2)
-		    && (s = strstr(s, "\\\001O")) != 0) {
+		    && (s = strstr(s, "\\\001O")) != NULL) {
 		    char *base = s;
 		    unsigned long num;
 
-		    if ((s = strstr(base, ":P")) != 0
+		    if ((s = strstr(base, ":P")) != NULL
 			&& sscanf(s, ":P%lo:", &num))
 			s_mode = (mode_t) S_MODE(num);
-		    if ((s = strstr(base, ":M")) != 0
+		    if ((s = strstr(base, ":M")) != NULL
 			&& sscanf(s, ":M%lu:", &num))
 			date = (time_t) num;
 		}
@@ -412,7 +412,7 @@ Permitted(char *name, int read_only)
     int mode = X_OK | R_OK;
     char *mark = fleaf_delim(pathcat(path, ".", name));
 
-    if (mark != 0)
+    if (mark != NULL)
 	*mark = EOS;
     if (!read_only)
 	mode |= W_OK;

@@ -24,7 +24,7 @@
  *		07 Jun 1991, use 'getopt()'; cleanup option processing,
  *			including those that we pass-thru to 'putdelta'
  *			corrected pathname of "-l" value
- *		
+ *
  * Function:	Use 'putdelta' to archive one or more files from the
  *		SCCS-directory which is located in the current working
  *		directory, and then, to set the delta date of the  checked-in
@@ -40,7 +40,7 @@
 #include	<rcsdefs.h>
 #include	<sccsdefs.h>
 
-MODULE_ID("$Id: sccsput.c,v 6.15 2019/12/21 23:59:09 tom Exp $")
+MODULE_ID("$Id: sccsput.c,v 6.16 2025/01/07 01:02:57 tom Exp $")
 
 #define	DEBUG		if (debug) PRINTF
 #define	VERBOSE		if (!quiet) PRINTF
@@ -64,7 +64,7 @@ static int found_diffs;		/* true iff we keep logfile */
 static void
 ExitProgram(int code)
 {
-    if (log_fp != 0) {
+    if (log_fp != NULL) {
 	FCLOSE(log_fp);
 	if (!found_diffs)
 	    (void) unlink(LogName);
@@ -151,7 +151,7 @@ different(const char *working, const char *archive)
 
     if (changed) {
 	if (!quiet) {
-	    if (pager == 0 || !isatty(fileno(stdout))) {
+	    if (pager == NULL || !isatty(fileno(stdout))) {
 		PRINTF(format, working);
 		cat2fp(stdout, out_diff);
 	    } else {
@@ -159,7 +159,7 @@ different(const char *working, const char *archive)
 		    failed(pager);
 	    }
 	}
-	if (log_fp != 0) {
+	if (log_fp != NULL) {
 	    VERBOSE("... appending to logfile");
 	    FPRINTF(log_fp, format, working);
 	    cat2fp(log_fp, out_diff);
@@ -280,7 +280,7 @@ WALK_FUNC(scan_tree)
 
     (void) level;
 
-    if (sp == 0 || readable < 0) {
+    if (sp == NULL || readable < 0) {
 	readable = -1;
 	perror(name);
 	if (!Force)
@@ -371,7 +371,7 @@ _MAIN
 	    argv_append(&diff_opts, "-c");
 	    break;
 	case 'c':
-	    pager = 0;
+	    pager = NULL;
 	    break;
 	case 'e':
 	    e_opt = TRUE;

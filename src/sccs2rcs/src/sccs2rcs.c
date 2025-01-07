@@ -3,6 +3,9 @@
  * Author: Ken Greer
  *
  * $Log: sccs2rcs.c,v $
+ * Revision 6.14  2025/01/07 01:03:32  tom
+ * gcc15-warnings
+ *
  * Revision 6.13  2021/01/10 19:52:14  tom
  * gcc-warnings
  *
@@ -41,117 +44,117 @@
  *
  * Revision 6.0  93/04/29  12:30:16  ste_cm
  * BASELINE Wed May  5 11:05:31 1993 -- TD_LIB #12
- * 
+ *
  * Revision 5.3  93/04/29  12:30:16  dickey
  * missed an option
- * 
+ *
  * Revision 5.2  93/04/29  10:11:34  dickey
  * provided "-q" option for CI-tool
- * 
+ *
  * Revision 5.1  93/04/29  09:06:28  dickey
  * shorten-filenames
- * 
+ *
  * Revision 5.0  91/10/24  09:17:22  ste_cm
  * BASELINE Mon Jul 20 12:41:28 1992 -- CM_TOOLS #11
- * 
+ *
  * Revision 4.0  91/10/24  09:17:22  ste_cm
  * BASELINE Tue Dec 17 11:56:35 1991
- * 
+ *
  * Revision 3.7  91/10/24  09:17:22  dickey
  * compile against CM_TOOLS #10
- * 
+ *
  * Revision 3.6  91/07/24  11:49:53  dickey
  * use name2sccs/sccs2name to simplify/standardize pathname translation
- * 
+ *
  * Revision 3.5  91/07/24  11:39:29  dickey
  * quieted the 'rcs' command also
- * 
+ *
  * Revision 3.4  91/07/24  11:24:47  dickey
  * corrected logic (introduced in last version) when invoking 'ci' to add
  * a new delta. tuned verbosity.
- * 
+ *
  * Revision 3.3  91/07/24  09:24:49  dickey
  * use catarg/shoarg/bldcmd2/execute to simplify the process of escaping
  * spaces.
- * 
+ *
  * Revision 3.2  91/07/24  08:29:59  dickey
  * test for exceptions to error-failure after 'mkdir()'
- * 
+ *
  * Revision 3.1  91/07/24  08:20:12  dickey
  * lint (apollo sr10.3); also corrected code that passes quiet-option to CI
  * and CO (GET was ok)
- * 
+ *
  * Revision 3.0  91/05/23  09:09:16  ste_cm
  * BASELINE Tue Jun 18 08:04:39 1991 -- apollo sr10.3
- * 
+ *
  * Revision 2.4  91/05/23  09:09:16  dickey
  * apollo sr10.3 cpp complains about endif-tags
- * 
+ *
  * Revision 2.3  90/06/22  07:46:59  dickey
  * altered interface to 'name2rcs()'
- * 
+ *
  * Revision 2.2  89/10/10  15:26:37  dickey
  * use RCS_DIR environment variable ('rcs_dir()' function) where needed to
  * make this work better with CM_TOOLS
- * 
+ *
  * Revision 2.1  89/10/05  10:53:38  dickey
  * changed ident-keyword to 'Id' from 'Header'
- * 
+ *
  * Revision 2.0  89/04/28  14:48:28  ste_cm
  * BASELINE Mon Jul 10 09:22:04 EDT 1989
- * 
+ *
  * Revision 1.11  89/04/28  14:48:28  dickey
  * "toupper" is more portable than "_toupper"
- * 
+ *
  * Revision 1.10  89/03/23  13:32:25  dickey
  * translate only one Log-keyword per file
- * 
+ *
  * Revision 1.9  89/03/23  10:37:26  dickey
  * require a colon after reserved-words before splitting a Log-line.
- * 
+ *
  * Revision 1.8  89/03/23  08:14:08  dickey
  * added '-c' option (to pass-thru to 'rcs'), refined code which splits line
  * after Log-keyword.
- * 
+ *
  * Revision 1.7  89/03/22  15:04:39  dickey
  * added code to support "-e" option (edit sccs keywords, changing them to
  * RCS keywords).
- * 
+ *
  * Revision 1.6  89/03/22  10:37:00  dickey
  * linted, use "ptypes.h" and 'getopt()'.
  * added -e option (not done)
- * 
+ *
  * Revision 1.5  89/03/20  11:05:07  dickey
  * rewrote, making this smart enough to preserve checkin-dates, and to work
  * with the conventional RCS and sccs directory convention.  Renamed to avoid
  * confusion with the dumb version.
- * 
+ *
  * Revision 1.4  84/10/17  21:12:11  root
  * FROM_KEYS
- * 
+ *
  * Revision 1.4  84/10/17  21:12:11  root
  * Added check for having multiple deltas in a row for the same revision.
  * --ks
- * 
+ *
  * Revision 1.3  84/10/17  20:53:18  root
  * Put in SCCS string in comment for telling who checked it in..
  * --ks
- * 
+ *
  * Revision 1.2  84/10/17  12:22:14  root
  * Fixed the case when a delta was removed.
  * Also, use -f on checkin so comments are kept even if the file
  * didn't change between deltas.
  * --ks
- * 
+ *
  * Revision 1.1  84/10/07  14:59:47  root
  * Initial revision
- * 
+ *
  * Revision 1.2  83/03/27  11:21:17  root
  * Returns non-zero exit codes on soft errors also.
- * 
+ *
  * Revision 1.1  83/03/24  14:33:24  root
  * Initial revision
- * 
+ *
  */
 
 #define	CHR_PTYPES
@@ -161,7 +164,7 @@
 #include "sccsdefs.h"
 #include <errno.h>
 
-MODULE_ID("$Id: sccs2rcs.c,v 6.13 2021/01/10 19:52:14 tom Exp $")
+MODULE_ID("$Id: sccs2rcs.c,v 6.14 2025/01/07 01:03:32 tom Exp $")
 
 #define SOH	001		/* SCCS lines start with SOH (Control-A) */
 #define RCS	"rcs"
@@ -372,7 +375,7 @@ to_pipe(const char *command, const char *args)
     if (trace || verbose)
 	shoarg(stdout, command, args);
     return trace
-	? 0
+	? NULL
 	: popen(bldcmd2(temp, command, args, sizeof(temp)), "w");
 }
 
@@ -406,7 +409,7 @@ read_sccs(char *sccsfile)
     FILE *fd;
 
     if (!fexists(workfile = sccs2name(sccsfile, FALSE)))
-	workfile = 0;
+	workfile = NULL;
     sccsfile = name2sccs(sccsfile, FALSE);
     if ((fd = fopen(sccsfile, "r")) == NULL) {
 	FPRINTF(stderr, "%s: cannot open.\n", sccsfile);
@@ -546,7 +549,7 @@ find_comment(char *filename)
     char key[80];
     char *rcsfile;
     int code = S_FAIL;
-    char *s = 0;
+    char *s = NULL;
 
     if (comment_opt) {
 	(void) strcpy(comments, comment_opt);

@@ -73,7 +73,7 @@
 
 #include	<errno.h>
 
-MODULE_ID("$Id: putdelta.c,v 6.18 2019/12/21 14:07:40 tom Exp $")
+MODULE_ID("$Id: putdelta.c,v 6.19 2025/01/07 01:02:41 tom Exp $")
 
 /************************************************************************
  *	local definitions						*
@@ -544,7 +544,7 @@ static void
 DoFile(char *name)
 {
     char *s;
-    time_t put_time, ref_time = time(0);
+    time_t put_time, ref_time = time(NULL);
     Stat_t sb;
     char temp[BUFSIZ];
     const char *put_verb;

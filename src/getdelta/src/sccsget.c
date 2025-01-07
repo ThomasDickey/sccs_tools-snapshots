@@ -10,7 +10,7 @@
  *		23 Sep 1993, gcc warnings
  *		24 Oct 1991, converted to ANSI
  *		20 Jun 1991, pass-thru "-e" option, use 'shoarg()'
- *		
+ *
  * Function:	Use SCCS-get to checkout one or more files from the sccs-
  *		directory which is located in the current working directory.
  *		Then, use 'sccsdate' to set the modification date of the
@@ -31,7 +31,7 @@
 #include	<rcsdefs.h>
 #include	<sccsdefs.h>
 
-MODULE_ID("$Id: sccsget.c,v 6.13 2021/01/10 19:52:14 tom Exp $")
+MODULE_ID("$Id: sccsget.c,v 6.14 2025/01/07 01:02:41 tom Exp $")
 
 static ARGV *get_opts;
 static const char *verb = "getdelta";
@@ -120,7 +120,7 @@ WALK_FUNC(scan_tree)
     (void) level;
 
     working_path = path;
-    if (sp == 0 || readable < 0) {
+    if (sp == NULL || readable < 0) {
 	if (!dir_only) {
 	    if (!fexists(name2sccs(name, FALSE))) {
 		readable = -1;
